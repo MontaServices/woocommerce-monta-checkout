@@ -5,9 +5,9 @@
  * Description: Montapakcing Check-out extension
  * Version: 1.0.1
  * Author: Montapacking
- * Author URI: https://montapacking.nl/
+ * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
- * Developer URI: https://montapacking.nl/
+ * Developer URI: https://www.montapacking.nl/
  * Text Domain: woocommerce-extension
  * Domain Path: /languages
  *
@@ -262,16 +262,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     if ( is_array( $extras ) ) {
 
                         ## Extra's toeveogen
-                        foreach ( $extras as $extra ) {
-
-                            if ( isset( $method->extras[ $extra ] ) ) {
-
-                                $xtra = $method->extras[ $extra ];
-                                $item->add_meta_data( __( 'Extra', TKEY ), $xtra->code . '|' . $xtra->name, true );
-
-                            }
-
-                        }
+                        $item->add_meta_data( __( 'Extras', TKEY ),$extras, true );
 
                     }
 
