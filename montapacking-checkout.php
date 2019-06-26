@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: Montapacking Checkout WooCommerce Extension
- * Plugin URI:
- * Description: Your extension's description text.
+ * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
+ * Description: Montapakcing Check-out extension
  * Version: 1.0.1
- * Author: WooCommerce
- * Author URI: http://woocommerce.com/
- * Developer: Your Name
- * Developer URI: http://yourdomain.com/
+ * Author: Montapacking
+ * Author URI: https://montapacking.nl/
+ * Developer: Montapacking
+ * Developer URI: https://montapacking.nl/
  * Text Domain: woocommerce-extension
  * Domain Path: /languages
  *
@@ -23,895 +23,897 @@ include( 'montapacking-config.php' );
 
 ## Check of we in woocommerce zijn
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-	## Add config actions
-	add_action( 'admin_menu', 'init_menu' );
+    ## Add config actions
+    add_action( 'admin_menu', 'init_menu' );
 
-	add_action( 'admin_init', function () {
-		register_setting( 'montapacking-plugin-settings', 'monta_shop' );
-		register_setting( 'montapacking-plugin-settings', 'monta_username' );
-		register_setting( 'montapacking-plugin-settings', 'monta_password' );
-		register_setting( 'montapacking-plugin-settings', 'monta_google_key' );
-	} );
+    add_action( 'admin_init', function () {
+        register_setting( 'montapacking-plugin-settings', 'monta_shop' );
+        register_setting( 'montapacking-plugin-settings', 'monta_username' );
+        register_setting( 'montapacking-plugin-settings', 'monta_password' );
+        register_setting( 'montapacking-plugin-settings', 'monta_google_key' );
+    } );
 
-	function plugin_add_settings_link( $links ) {
-		$settings_link[] = '<a href="options-general.php?page=montapacking-settings">' . __( 'Settings' ) . '</a>';
+    function plugin_add_settings_link( $links ) {
+        $settings_link[] = '<a href="options-general.php?page=montapacking-settings">' . __( 'Settings' ) . '</a>';
 
-		#array_push( $links, $settings_link );
-		return array_merge( $settings_link, $links );
-	}
+        #array_push( $links, $settings_link );
+        return array_merge( $settings_link, $links );
+    }
 
-	$plugin = plugin_basename( __FILE__ );
-	add_filter( "plugin_action_links_$plugin", 'plugin_add_settings_link' );
+    $plugin = plugin_basename( __FILE__ );
+    add_filter( "plugin_action_links_$plugin", 'plugin_add_settings_link' );
 
-	## Standaard woocommerce verzending uitschakelen
-	add_filter( 'woocommerce_shipping_calculator_enable_postcode', false );
-	add_filter( 'woocommerce_shipping_calculator_enable_city', false );
+    ## Standaard woocommerce verzending uitschakelen
+    add_filter( 'woocommerce_shipping_calculator_enable_postcode', false );
+    add_filter( 'woocommerce_shipping_calculator_enable_city', false );
 
-	## Shipping form in checkout plaatsen
-	add_action( 'woocommerce_before_order_notes', array( 'montapacking', 'shipping' ), 10 );
+    ## Shipping form in checkout plaatsen
+    add_action( 'woocommerce_before_order_notes', array( 'montapacking', 'shipping' ), 10 );
 
-	## Shipping package toevoegen
-	add_action( 'woocommerce_cart_shipping_packages', array( 'montapacking', 'shipping_package' ), 10 );
+    ## Shipping package toevoegen
+    add_action( 'woocommerce_cart_shipping_packages', array( 'montapacking', 'shipping_package' ), 10 );
 
-	## Shipping cost calculation
-	add_action( 'woocommerce_package_rates', array( 'montapacking', 'shipping_calculate' ), 10 );
+    ## Shipping cost calculation
+    add_action( 'woocommerce_package_rates', array( 'montapacking', 'shipping_calculate' ), 10 );
 
-	## Shipping cost calculation
-	add_action( 'woocommerce_review_order_before_shipping', array( 'montapacking', 'shipping_calculate' ), 10 );
-	add_filter( 'woocommerce_cart_get_total', array( 'montapacking', 'shipping_total' ), 10, 1 );
-	add_filter( 'woocommerce_cart_get_shipping_total', array( 'montapacking', 'shipping_total' ), 10, 1 );
+    ## Shipping cost calculation
+    add_action( 'woocommerce_review_order_before_shipping', array( 'montapacking', 'shipping_calculate' ), 10 );
+    add_filter( 'woocommerce_cart_get_total', array( 'montapacking', 'shipping_total' ), 10, 1 );
+    add_filter( 'woocommerce_cart_get_shipping_total', array( 'montapacking', 'shipping_total' ), 10, 1 );
 
-	## Shipping cost calculation
-	update_option( 'woocommerce_enable_shipping_calc', 'no' );
-	update_option( 'woocommerce_shipping_cost_requires_address', 'no' );
+    ## Shipping cost calculation
+    update_option( 'woocommerce_enable_shipping_calc', 'no' );
+    update_option( 'woocommerce_shipping_cost_requires_address', 'no' );
 
-	## Validation rules
-	add_action( 'woocommerce_after_checkout_validation', array( 'montapacking', 'checkout_validate' ), 10, 2 );
+    ## Validation rules
+    add_action( 'woocommerce_after_checkout_validation', array( 'montapacking', 'checkout_validate' ), 10, 2 );
 
-	## Shipment data opslaan bij order
-	add_action( 'woocommerce_checkout_create_order', array( 'montapacking', 'checkout_store' ), 10, 2 );
+    ## Shipment data opslaan bij order
+    add_action( 'woocommerce_checkout_create_order', array( 'montapacking', 'checkout_store' ), 10, 2 );
 
-	## CSS registreren
-	wp_enqueue_style( 'montapacking_checkout_storelocator', plugins_url( 'montapacking-checkout/assets/css/monta-storelocator.css' ) );
-	wp_enqueue_style( 'montapacking_checkout_plugin', plugins_url( 'montapacking-checkout/assets/css/monta-shipping.css' ) );
+    ## CSS registreren
+    wp_enqueue_style( 'montapacking_checkout_storelocator', plugins_url( 'montapacking-checkout/assets/css/monta-storelocator.css' ) );
+    wp_enqueue_style( 'montapacking_checkout_plugin', plugins_url( 'montapacking-checkout/assets/css/monta-shipping.css' ) );
 
-	## JS registreren
-	wp_enqueue_script( 'montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . MONTA_GOOGLE_KEY, [ 'jquery' ] );
-	wp_enqueue_script( 'montapacking_checkout_plugin_handlebars', plugins_url( 'montapacking-checkout/assets/js/monta-handlebars.js' ), [ 'jquery' ] );
-	wp_enqueue_script( 'montapacking_checkout_plugin_storelocator_js', plugins_url( 'montapacking-checkout/assets/js/monta-storelocator.js' ), [ 'jquery' ]  );
-	wp_enqueue_script( 'montapacking_checkout_plugin_monta', plugins_url( 'montapacking-checkout/assets/js/monta-shipping.js' ), [ 'jquery' ] );
+    ## JS registreren
+    wp_enqueue_script( 'montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . MONTA_GOOGLE_KEY, [ 'jquery' ] );
+    wp_enqueue_script( 'montapacking_checkout_plugin_handlebars', plugins_url( 'montapacking-checkout/assets/js/monta-handlebars.js' ), [ 'jquery' ] );
+    wp_enqueue_script( 'montapacking_checkout_plugin_storelocator_js', plugins_url( 'montapacking-checkout/assets/js/monta-storelocator.js' ), [ 'jquery' ]  );
+    wp_enqueue_script( 'montapacking_checkout_plugin_monta', plugins_url( 'montapacking-checkout/assets/js/monta-shipping.js' ), [ 'jquery' ] );
 
-	## Ajax actions
-	add_action( 'wp_ajax_monta_shipping_options', array( 'montapacking', 'shipping_options' ) );
-	add_action( 'wp_ajax_nopriv_monta_shipping_options', array( 'montapacking', 'shipping_options' ) );
+    ## Ajax actions
+    add_action( 'wp_ajax_monta_shipping_options', array( 'montapacking', 'shipping_options' ) );
+    add_action( 'wp_ajax_nopriv_monta_shipping_options', array( 'montapacking', 'shipping_options' ) );
 
-	## Init session usage
-	add_action( 'init', 'register_session' );
+    ## Init session usage
+    add_action( 'init', 'register_session' );
 
-	add_action( 'wp_footer', 'montapacking_footer' );
+    add_action( 'wp_footer', 'montapacking_footer' );
 
-	function montapacking_footer() {
-		require_once 'views/pickup.php';
-	}
+    function montapacking_footer() {
+        require_once 'views/pickup.php';
+    }
 
-	class Montapacking {
+    class Montapacking {
 
-		public static function shipping_package() {
+        public static function shipping_package() {
 
-			return [];
+            return [];
 
-		}
+        }
 
-		public function checkout_validate( $data, $errors ) {
+        public function checkout_validate( $data, $errors ) {
 
-			$type     = $_POST['montapacking'];
-			$pickup   = $type['pickup'];
-			$shipment = $type['shipment'];
+            $type     = $_POST['montapacking'];
+            $pickup   = $type['pickup'];
+            $shipment = $type['shipment'];
 
-			$time    = $shipment['time'];
-			$shipper = $shipment['shipper'];
+            $time    = $shipment['time'];
+            $shipper = $shipment['shipper'];
 
-			$items = null;
+            $items = null;
 
-			if ( ! isset( $shipment['type'] ) || $shipment['type'] == '' ) {
-				$errors->add( 'shipment', __( 'Select a shipping method.', TKEY ) );
-			}
+            if ( ! isset( $shipment['type'] ) || $shipment['type'] == '' ) {
+                $errors->add( 'shipment', __( 'Select a shipping method.', TKEY ) );
+            }
 
-			switch ( $shipment['type'] ) {
-				case 'delivery':
+            switch ( $shipment['type'] ) {
+                case 'delivery':
 
-					$frames = self::get_frames( 'delivery' );
-					if ( $frames !== null ) {
+                    $frames = self::get_frames( 'delivery' );
+                    if ( $frames !== null ) {
 
-						## Frames naar handige array zetten
-						$items = self::format_frames( $frames );
+                        ## Frames naar handige array zetten
+                        $items = self::format_frames( $frames );
+
+                    }
+
+                    break;
+                case 'pickup':
+
+                    if ( ! isset( $pickup ) || ! isset( $pickup['code'] ) || $pickup['code'] == '' ) {
+                        $errors->add( 'shipment', __( 'Select a pickup location.', TKEY ) );
+                    }
+
+                    break;
+            }
+
+            ## Check of timeframes bekend zijn en niet van een te oude sessie
+            if ( $items !== null ) {
+
+                $error = false;
+                if ( isset( $items[ $time ] ) ) {
+
+                    ## Check of timeframe opties heeft
+                    $frame = $items[ $time ];
+                    if ( isset( $frame->options ) ) {
+
+                        ## Gekozen shipper ophalen
+                        $found = false;
+                        foreach ( $frame->options as $option ) {
+
+                            $code = implode( ',', $option->codes );
+                            if ( $code == $shipper ) {
+
+                                $found = true;
+                                break;
+
+                            }
+
+                        }
+
+                        ## Check of optie is gevonden
+                        if ( ! $found ) {
+                            $error = true;
+                        }
+
+                    } else {
+
+                        $error = true;
+
+                    }
+
+                } else {
+
+                    $error = true;
+
+                }
+
+                if ( $error ) {
+                    $errors->add( 'shipment', __( 'The shipment options you choose are not longer available at this time, please select other options.', TKEY ) );
+                }
+
+            }
+
+        }
+
+        public function checkout_store( $order ) {
+
+            ## Shipping regel aanmaken bij order
+            $item = new WC_Order_Item_Shipping();
+            $item->set_props( array(
+                'method_title' => 'Monta Shipping',
+                'method_id' => 0,
+                'total' => wc_format_decimal( self::get_shipping_total( $_POST ) )
+            ) );
+
+            ## Ingevulde meta data ophslaan
+            $type     = $_POST['montapacking'];
+            $shipment = $type['shipment'];
+
+            $time    = $shipment['time'];
+            $shipper = $shipment['shipper'];
+            $extras  = $shipment['extras'];
+            $pickup  = $type['pickup'];
+
+            $items = null;
+            switch ( $shipment['type'] ) {
+                case 'delivery':
+
+                    $frames = self::get_frames( 'delivery' );
+                    if ( $frames !== null ) {
+
+                        ## Frames naar handige array zetten
+                        $items = self::format_frames( $frames, $time );
 
 					}
 
-					break;
-				case 'pickup':
+                    break;
+                case 'pickup':
 
-					if ( ! isset( $pickup ) || ! isset( $pickup['code'] ) || $pickup['code'] == '' ) {
-						$errors->add( 'shipment', __( 'Select a pickup location.', TKEY ) );
-					}
+                    $item->add_meta_data( __( 'Pickup Data', TKEY ), $pickup, true );
 
-					break;
-			}
+                    break;
+            }
 
-			## Check of timeframes bekend zijn en niet van een te oude sessie
-			if ( $items !== null ) {
+            ## Check of gekozen timeframe bestaat
+            if ( isset( $items[ $time ] ) ) {
 
-				$error = false;
-				if ( isset( $items[ $time ] ) ) {
+                $method = null;
 
-					## Check of timeframe opties heeft
-					$frame = $items[ $time ];
-					if ( isset( $frame->options ) ) {
+                ## Check of timeframe opties heeft
+                $frame = $items[ $time ];
+                if ( isset( $frame->options ) ) {
 
-						## Gekozen shipper ophalen
-						$found = false;
-						foreach ( $frame->options as $option ) {
+                    ## Gekozen shipper ophalen
+                    foreach ( $frame->options as $option ) {
 
-							$code = implode( ',', $option->codes );
-							if ( $code == $shipper ) {
+                        $code = implode( ',', $option->codes );
+                        if ( $code == $shipper ) {
 
-								$found = true;
-								break;
+                            $method = $option;
+                            break;
 
-							}
+                        }
 
-						}
+                    }
 
-						## Check of optie is gevonden
-						if ( ! $found ) {
-							$error = true;
-						}
+                }
 
-					} else {
+                ## Check of verzendmethode is gevonden
+                if ( $method !== null ) {
 
-						$error = true;
+                    ## Gekozen optie met datum en tijd toevoegen
+                    $item->add_meta_data( __( 'Shipmentmethod', TKEY ), $shipper, true );
+                    $item->add_meta_data( __( 'Delivery date', TKEY ), $frame->date, true );
+                    $item->add_meta_data( __( 'Delivery Timeframe', TKEY ), $method->from . ' ' . $method->to, true );
 
-					}
+                    ## Eventuele extra's bijvoeren
+                    if ( is_array( $extras ) ) {
 
-				} else {
+                        ## Extra's toeveogen
+                        foreach ( $extras as $extra ) {
 
-					$error = true;
+                            if ( isset( $method->extras[ $extra ] ) ) {
 
-				}
+                                $xtra = $method->extras[ $extra ];
+                                $item->add_meta_data( __( 'Extra', TKEY ), $xtra->code . '|' . $xtra->name, true );
 
-				if ( $error ) {
-					$errors->add( 'shipment', __( 'The shipment options you choose are not longer available at this time, please select other options.', TKEY ) );
-				}
+                            }
 
-			}
+                        }
 
-		}
+                    }
 
-		public function checkout_store( $order ) {
+                }
 
-			## Shipping regel aanmaken bij order
-			$item = new WC_Order_Item_Shipping();
-			$item->set_props( array(
-				'method_title' => 'Monta Shipping',
-				'method_id' => 0,
-				'total' => wc_format_decimal( self::get_shipping_total( $_POST ) )
-			) );
+            }
 
-			## Ingevulde meta data ophslaan
-			$type     = $_POST['montapacking'];
-			$shipment = $type['shipment'];
+            // Add item to order and save.
+            $order->add_item( $item );
 
-			$time    = $shipment['time'];
-			$shipper = $shipment['shipper'];
-			$extras  = $shipment['extras'];
-			$pickup  = $type['pickup'];
+        }
 
-			$items = null;
-			switch ( $shipment['type'] ) {
-				case 'delivery':
+        public function shipping_total( $wc_price = 0 ) {
 
-					$frames = self::get_frames( 'delivery' );
-					if ( $frames !== null ) {
+            $data = null;
+            if ( isset( $_POST['montapacking'] ) ) {
+                $data = $_POST;
+            }
 
-						## Frames naar handige array zetten
-						$items = self::format_frames( $frames, $time );
+            $price = self::get_shipping_total( $data );
 
-					}
+            return $wc_price + $price;
+        }
 
-					break;
-				case 'pickup':
-					break;
-			}
+        public function shipping_calculate() {
 
-			$item->add_meta_data( __( 'Pickup Code', TKEY ), $pickup['code'], true );
-			$item->add_meta_data( __( 'Pickup Company', TKEY ), $pickup['company'], true );
-			$item->add_meta_data( __( 'Pickup Address', TKEY ), $pickup['address'], true );
+            $data = null;
+            if ( isset( $_POST['montapacking'] ) ) {
+                $data = $_POST;
+            }
 
-			## Check of gekozen timeframe bestaat
-			if ( isset( $items[ $time ] ) ) {
+            $price = self::get_shipping_total( $data );
+            ?>
+            <tr>
+                <th><?php _e( 'Shipping', 'woocommerce' ); ?></th>
+                <td>&euro; <?php echo number_format( $price, 2, ',', '' ); ?></td>
+            </tr>
+            <?php
 
-				$method = null;
+        }
 
-				## Check of timeframe opties heeft
-				$frame = $items[ $time ];
-				if ( isset( $frame->options ) ) {
+        public function get_shipping_total( $data = null ) {
 
-					## Gekozen shipper ophalen
-					foreach ( $frame->options as $option ) {
+            if ( $data === null ) {
+                parse_str( $_POST['post_data'], $data );
+            }
 
-						$code = implode( ',', $option->codes );
-						if ( $code == $shipper ) {
+            $price = 0;
 
-							$method = $option;
-							break;
+            $monta   = null;
+            $time    = null;
+            $shipper = null;
+            $extras  = null;
 
-						}
+            ## Postdata ophalen
+            if ( isset( $data['montapacking'] ) ) {
 
-					}
+                $monta = $data['montapacking'];
 
-				}
+                $shipment = $monta['shipment'];
+                $pickup   = $monta['pickup'];
 
-				## Check of verzendmethode is gevonden
-				if ( $method !== null ) {
+                $type    = $shipment['type'];
+                $time    = $shipment['time'];
+                $shipper = $shipment['shipper'];
+                $extras  = $shipment['extras'];
 
-					## Gekozen optie met datum en tijd toevoegen
-					$item->add_meta_data( __( 'Shipmentmethod', TKEY ), $shipper . '| ' . $method->name, true );
-					$item->add_meta_data( __( 'Delivery date', TKEY ), $frame->date, true );
-					$item->add_meta_data( __( 'Delivery Timeframe', TKEY ), $method->from . ' ' . $method->to, true );
-					$item->add_meta_data( __( 'Pickup', TKEY ), $pickup, true );
+            }
 
-					## Eventuele extra's bijvoeren
-					if ( is_array( $extras ) ) {
+            ## Check by type
+            if ( $type == 'delivery' ) {
 
-						## Extra's toeveogen
-						foreach ( $extras as $extra ) {
+                ## Timeframes uit sessie ophalen
+                $frames = $_SESSION['montapacking-frames'];
+                if ( is_array( $frames ) ) {
 
-							if ( isset( $method->extras[ $extra ] ) ) {
+                    ## Check of gekozen timeframe bestaat
+                    if ( isset( $frames[ $time ] ) ) {
 
-								$xtra = $method->extras[ $extra ];
-								$item->add_meta_data( __( 'Extra', TKEY ), $xtra->code . '| ' . $xtra->name, true );
+                        $method = null;
 
-							}
+                        ## Check of timeframe opties heeft
+                        $frame = $frames[ $time ];
+                        if ( isset( $frame->options ) ) {
 
-						}
+                            ## Gekozen shipper ophalen
+                            foreach ( $frame->options as $option ) {
 
-					}
+                                $code = implode( ',', $option->codes );
+                                if ( $code == $shipper ) {
 
-				}
+                                    $method = $option;
+                                    break;
 
-			}
+                                }
 
-			// Add item to order and save.
-			$order->add_item( $item );
+                            }
 
-		}
+                        }
 
-		public function shipping_total( $wc_price = 0 ) {
+                        ## Check of verzendmethode is gevonden
+                        if ( $method !== null ) {
 
-			$data = null;
-			if ( isset( $_POST['montapacking'] ) ) {
-				$data = $_POST;
-			}
+                            ## Basis prijs bepalen
+                            $price += $method->price_raw;
 
-			$price = self::get_shipping_total( $data );
+                            ## Eventuele extra's bijvoeren
+                            if ( is_array( $extras ) ) {
 
-			return $wc_price + $price;
-		}
+                                ## Extra's toeveogen
+                                foreach ( $extras as $extra ) {
 
-		public function shipping_calculate() {
+                                    if ( isset( $method->extras[ $extra ] ) ) {
 
-			$data = null;
-			if ( isset( $_POST['montapacking'] ) ) {
-				$data = $_POST;
-			}
+                                        ## Extra bedrag toevoegen
+                                        $price += $method->extras[ $extra ]->price_raw;
 
-			$price = self::get_shipping_total( $data );
-			?>
-			<tr>
-				<th><?php _e( 'Shipping', 'woocommerce' ); ?></th>
-				<td>&euro; <?php echo number_format( $price, 2, ',', '' ); ?></td>
-			</tr>
-			<?php
+                                    }
 
-		}
+                                }
 
-		public function get_shipping_total( $data = null ) {
+                            }
 
-			if ( $data === null ) {
-				parse_str( $_POST['post_data'], $data );
-			}
+                        }
 
-			$price = 0;
+                    }
 
-			$monta   = null;
-			$time    = null;
-			$shipper = null;
-			$extras  = null;
+                }
 
-			## Postdata ophalen
-			if ( isset( $data['montapacking'] ) ) {
+            } else if ( $type == 'pickup' ) {
 
-				$monta = $data['montapacking'];
+                $price = $pickup['price'];
 
-				$shipment = $monta['shipment'];
-				$pickup   = $monta['pickup'];
+            }
 
-				$type    = $shipment['type'];
-				$time    = $shipment['time'];
-				$shipper = $shipment['shipper'];
-				$extras  = $shipment['extras'];
+            return $price;
 
-			}
+        }
 
-			## Check by type
-			if ( $type == 'delivery' ) {
+        public function shipping_options() {
 
-				## Timeframes uit sessie ophalen
-				$frames = $_SESSION['montapacking-frames'];
-				if ( is_array( $frames ) ) {
+            $type     = $_POST['montapacking'];
+            $shipment = $type['shipment'];
 
-					## Check of gekozen timeframe bestaat
-					if ( isset( $frames[ $time ] ) ) {
+            switch ( $shipment['type'] ) {
+                case 'delivery':
 
-						$method = null;
+                    $frames = self::get_frames( 'delivery' );
+                    if ( $frames !== null ) {
 
-						## Check of timeframe opties heeft
-						$frame = $frames[ $time ];
-						if ( isset( $frame->options ) ) {
+                        ## Frames naar handige array zetten
+                        $items = self::format_frames( $frames );
+                        if ( $items !== null ) {
 
-							## Gekozen shipper ophalen
-							foreach ( $frame->options as $option ) {
+                            header( 'Content-Type: application/json' );
+                            echo json_encode( [
+                                'success' => true,
+                                'frames' => $items
+                            ] );
 
-								$code = implode( ',', $option->codes );
-								if ( $code == $shipper ) {
+                        } else {
 
-									$method = $option;
-									break;
+                            header( 'Content-Type: application/json' );
+                            echo json_encode( [
+                                'success' => false,
+                                'message' => $frames
+                                //'message' => translate( $frames, TKEY )
+                                //'message' => translate( '1 No deliveries available for the chosen delivery address, please try again ', TKEY )
+                            ] );
 
-								}
+                        }
 
-							}
+                    } else {
 
-						}
+                        header( 'Content-Type: application/json' );
+                        echo json_encode( [
+                            'success' => false,
+                            'message' => $frames
+                            //'message' => translate( $frames, TKEY )
+                            //'message' => translate( '2 No deliveries available for the chosen delivery address, please try again ', TKEY )
+                        ] );
 
-						## Check of verzendmethode is gevonden
-						if ( $method !== null ) {
+                    }
 
-							## Basis prijs bepalen
-							$price += $method->price_raw;
+                    break;
+                case 'pickup':
 
-							## Eventuele extra's bijvoeren
-							if ( is_array( $extras ) ) {
+                    #echo '<pre>';
+                    $frames = self::get_frames( 'pickup' );
+                    if ( $frames !== null ) {
 
-								## Extra's toeveogen
-								foreach ( $extras as $extra ) {
+                        ## Frames naar handige array zetten
+                        $items = self::format_pickups( $frames );
+                        #print_r($items);
+                        if ( $items !== null ) {
 
-									if ( isset( $method->extras[ $extra ] ) ) {
+                            ## Get order location
+                            // Get lat and long by address
+                            if ( isset( $_POST['ship_to_different_address'] ) && $_POST['ship_to_different_address'] == 1 ) {
 
-										## Extra bedrag toevoegen
-										$price += $method->extras[ $extra ]->price_raw;
+                                $address = $_POST['shipping_address_1'] . ' ' .
+                                    $_POST['shipping_address_2'] . ' ' .
+                                    $_POST['shipping_postcode'] . ', ' .
+                                    $_POST['shipping_city'] . ' ' .
+                                    $_POST['shipping_country'] . '';
 
-									}
+                            } else {
 
-								}
+                                $address = $_POST['billing_address_1'] . ' ' .
+                                    $_POST['billing_address_2'] . ' ' .
+                                    $_POST['billing_postcode'] . ', ' .
+                                    $_POST['billing_city'] . ' ' .
+                                    $_POST['billing_country'] . '';
 
-							}
+                            }
+                            $prepAddr = str_replace( '  ', ' ', $address );
+                            $prepAddr = str_replace( ' ', '+', $prepAddr );
 
-						}
+                            $geocode = file_get_contents( 'https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . MONTA_GOOGLE_KEY );
+                            $output  = json_decode( $geocode );
 
-					}
+                            $result = end( $output->results );
+                            if ( isset( $result->geometry ) ) {
+                                $latitude  = $result->geometry->location->lat;
+                                $longitude = $result->geometry->location->lng;
+                            } else {
+                                $latitude  = 0;
+                                $longitude = 0;
+                            }
 
-				}
+                            header( 'Content-Type: application/json' );
+                            echo json_encode( [
+                                'success' => true,
+                                'default' => (object) [
+                                    'lat' => $latitude,
+                                    'lng' => $longitude,
+                                ],
+                                'pickups' => $items
+                            ] );
 
-			} else if ( $type == 'pickup' ) {
+                        } else {
 
-				$price = $pickup['price'];
+                            header( 'Content-Type: application/json' );
+                            echo json_encode( [
+                                'success' => false,
+                                'message' => translate( '1 No pickups available for the chosen delivery address, please try again ', TKEY )
+                            ] );
 
-			}
+                        }
 
-			return $price;
+                    } else {
 
-		}
+                        header( 'Content-Type: application/json' );
+                        echo json_encode( [
+                            'success' => false,
+                            'message' => translate( '2 No pickups available for the chosen delivery address, please try again ', TKEY )
+                        ] );
 
-		public function shipping_options() {
+                    }
 
-			$type     = $_POST['montapacking'];
-			$shipment = $type['shipment'];
+                    break;
+            }
 
-			switch ( $shipment['type'] ) {
-			case 'delivery':
+            wp_die();
 
-				$frames = self::get_frames( 'delivery' );
-				if ( $frames !== null ) {
+        }
 
-					## Frames naar handige array zetten
-					$items = self::format_frames( $frames );
-					if ( $items !== null ) {
+        public static function get_frames( $type = 'delivery' ) {
 
-						header( 'Content-Type: application/json' );
-						echo json_encode( [
-							'success' => true,
-							'frames' => $items
-						] );
+            global $woocommerce;
 
-					} else {
+            ## Postdata escapen
+            $data = $_POST;
+            foreach ( $data as $field => $value ) {
+                $data[ $field ] = ( $value != '' && $value != null && ! is_array( $value ) ) ? htmlspecialchars( $value ) : $value;
+            }
+            $data = (object) $data;
 
-						header( 'Content-Type: application/json' );
-						echo json_encode( [
-							'success' => false,
-							'message' => translate( '1 No deliveries available for the chosen delivery address, please try again ', TKEY )
-						] );
+            ## Monta packing API aanroepen
+            $api = new MontapackingShipping( MONTA_SHOP, MONTA_USER, MONTA_PASS, true );
+            #$api->debug = true;
 
-					}
+            if ( ! isset( $data->ship_to_different_address ) ) {
 
-				} else {
+                ## Set address of customer
+                $api->setAddress(
+                    $data->billing_address_1,
+                    '',
+                    $data->billing_address_2,
+                    $data->billing_postcode,
+                    $data->billing_city,
+                    $data->billing_state,
+                    $data->billing_country
+                );
 
-					header( 'Content-Type: application/json' );
-					echo json_encode( [
-						'success' => false,
-						'message' => translate( '2 No deliveries available for the chosen delivery address, please try again ', TKEY )
-					] );
+            } else {
 
-				}
+                ## Set shipping adres of customer when different
+                $api->setAddress(
+                    $data->shipping_address_1,
+                    '',
+                    $data->shipping_address_2,
+                    $data->shipping_postcode,
+                    $data->shipping_city,
+                    $data->shipping_state,
+                    $data->shipping_country
+                );
 
-				break;
-			case 'pickup':
+            }
 
-				#echo '<pre>';
-				$frames = self::get_frames( 'pickup' );
-				if ( $frames !== null ) {
+            ## Fill products
+            $items = $woocommerce->cart->get_cart();
+            foreach ( $items as $item => $values ) {
 
-					## Frames naar handige array zetten
-					$items = self::format_pickups( $frames );
-					#print_r($items);
-					if ( $items !== null ) {
+                $sku = get_post_meta( $values['product_id'], '_sku', true );
 
-						## Get order location
-						// Get lat and long by address
-						if ( isset( $_POST['ship_to_different_address'] ) && $_POST['ship_to_different_address'] == 1 ) {
+                $weight = get_post_meta( $values['product_id'], '_weight', true );
+                $length = get_post_meta( $values['product_id'], '_length', true );
+                $width  = get_post_meta( $values['product_id'], '_width', true );
 
-							$address = $_POST['shipping_address_1'] . ' ' .
-							           $_POST['shipping_address_2'] . ' ' .
-							           $_POST['shipping_postcode'] . ', ' .
-							           $_POST['shipping_city'] . ' ' .
-							           $_POST['shipping_country'] . '';
+                ## Add product
+                if ( $sku != '' ) {
+                    $api->addProduct( $sku, $values['quantity'], $length, $width, $weight );
+                }
 
-						} else {
+            }
 
-							$address = $_POST['billing_address_1'] . ' ' .
-							           $_POST['billing_address_2'] . ' ' .
-							           $_POST['billing_postcode'] . ', ' .
-							           $_POST['billing_city'] . ' ' .
-							           $_POST['billing_country'] . '';
+            ## Type timeframes ophalen
+            if ( $type == 'delivery' ) {
 
-						}
-						$prepAddr = str_replace( '  ', ' ', $address );
-						$prepAddr = str_replace( ' ', '+', $prepAddr );
+                return $api->getShippingOptions();
 
-						$geocode = file_get_contents( 'https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . MONTA_GOOGLE_KEY );
-						$output  = json_decode( $geocode );
+            } else if ( $type == 'pickup' ) {
 
-						$result = end( $output->results );
-						if ( isset( $result->geometry ) ) {
-							$latitude  = $result->geometry->location->lat;
-							$longitude = $result->geometry->location->lng;
-						} else {
-							$latitude  = 0;
-							$longitude = 0;
-						}
+                return $api->getPickupOptions();
 
-						header( 'Content-Type: application/json' );
-						echo json_encode( [
-							'success' => true,
-							'default' => (object) [
-								'lat' => $latitude,
-								'lng' => $longitude,
-							],
-							'pickups' => $items
-						] );
+            }
 
-					} else {
+        }
 
-						header( 'Content-Type: application/json' );
-						echo json_encode( [
-							'success' => false,
-							'message' => translate( '1 No pickups available for the chosen delivery address, please try again ', TKEY )
-						] );
+        public static function format_frames( $frames ) {
 
-					}
+            $items = null;
 
-				} else {
+            ## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
+            if ( is_array( $frames ) || is_object( $frames ) ) {
 
-					header( 'Content-Type: application/json' );
-					echo json_encode( [
-						'success' => false,
-						'message' => translate( '2 No pickups available for the chosen delivery address, please try again ', TKEY )
-					] );
+                foreach ( $frames as $nr => $frame ) {
 
-				}
+                    ## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
+                    if ( $frame->from != '' && $frame->to != '' ) {
 
-				break;
-			}
+                        ## Loop trough options
+                        $selected = null;
 
-			wp_die();
+                        ## Lowest price
+                        $lowest = 9999999;
 
-		}
+                        ## Currency symbol
+                        $curr = '&euro;';
 
-		public static function get_frames( $type = 'delivery' ) {
+                        ## Shipper opties ophalen
+                        $options = null;
+                        foreach ( $frame->options as $onr => $option ) {
+                            $from = $option->from;
+                            $to   = $option->to;
 
-			global $woocommerce;
+                            ## Check of maximale besteltijd voorbij is
+                            if ( time() < strtotime( $option->date ) && $selected == null ) {
 
-			## Postdata escapen
-			$data = $_POST;
-			foreach ( $data as $field => $value ) {
-				$data[ $field ] = ( $value != '' && $value != null && ! is_array( $value ) ) ? htmlspecialchars( $value ) : $value;
-			}
-			$data = (object) $data;
+                                $selected = $option;
 
-			## Monta packing API aanroepen
-			$api = new MontapackingShipping( MONTA_SHOP, MONTA_USER, MONTA_PASS, true );
-			#$api->debug = true;
+                            }
 
-			if ( ! isset( $data->ship_to_different_address ) ) {
+                            $extras = null;
+                            if ( isset( $option->extras ) && count( $option->extras ) > 0 ) {
 
-				## Set address of customer
-				$api->setAddress(
-					$data->billing_address_1,
-					'',
-					$data->billing_address_2,
-					$data->billing_postcode,
-					$data->billing_city,
-					$data->billing_state,
-					$data->billing_country
-				);
+                                foreach ( $option->extras as $extra ) {
 
-			} else {
+                                    ## Currency symbol
+                                    $curr = '&euro;';
 
-				## Set shipping adres of customer when different
-				$api->setAddress(
-					$data->shipping_address_1,
-					'',
-					$data->shipping_address_2,
-					$data->shipping_postcode,
-					$data->shipping_city,
-					$data->shipping_state,
-					$data->shipping_country
-				);
+                                    ## Extra optie toevoegen
+                                    $extras[ $extra->code ] = (object) [
+                                        'code' => $extra->code,
+                                        'name' => $extra->name,
+                                        'price' => $curr . ' ' . number_format( $extra->price, 2, ',', '' ),
+                                        'price_raw' => $extra->price,
+                                    ];
 
-			}
+                                }
 
-			## Fill products
-			$items = $woocommerce->cart->get_cart();
-			foreach ( $items as $item => $values ) {
+                            }
 
-				$sku = get_post_meta( $values['product_id'], '_sku', true );
+                            ## Shipper optie toevoegen
+                            $options[ $onr ] = (object) [
+                                'codes' => $option->codes,
+                                'name' => $option->description,
+                                'price' => $curr . ' ' . number_format( $option->price, 2, ',', '' ),
+                                'price_raw' => $option->price,
+                                'from' => date( 'H:i', strtotime( $from . ' +1 hour' ) ),
+                                'to' => date( 'H:i', strtotime( $to . ' +1 hour' ) ),
+                                'extras' => $extras,
+                            ];
 
-				$weight = get_post_meta( $values['product_id'], '_weight', true );
-				$length = get_post_meta( $values['product_id'], '_length', true );
-				$width  = get_post_meta( $values['product_id'], '_width', true );
+                            ## Check if we have a lower price
+                            if ( $option->price < $lowest ) {
+                                $lowest = $option->price;
+                            }
 
-				## Add product
-				if ( $sku != '' ) {
-					$api->addProduct( $sku, $values['quantity'], $length, $width, $weight );
-				}
+                        }
 
-			}
 
-			## Type timeframes ophalen
-			if ( $type == 'delivery' ) {
+                        ## Check of er een prijs is
+                        if ( $options !== null ) {
 
-				return $api->getShippingOptions();
+                            ## Sorteer opties op laagste prijs
+                            #usort($options, function($a, $b) {
+                            #	return $a->from - $b->from;
+                            #});
 
-			} else if ( $type == 'pickup' ) {
+                            $items[ $nr ] = (object) [
+                                'code' => $frame->code,
+                                'date' => date( 'd-m-Y', strtotime( $frame->from . ' +1 day' ) ),
+                                'time' => ( date( 'H:i', strtotime( $frame->from ) ) != date( 'H:i', strtotime( $frame->to ) ) ) ? date( 'H:i', strtotime( $frame->from ) ) . '-' . date( 'H:i', strtotime( $frame->to ) ) : '',
+                                'description' => $frame->description,
+                                'price' => $curr . ' ' . number_format( $lowest, 2, ',', '' ),
+                                'options' => $options
+                            ];
 
-				return $api->getPickupOptions();
+                        }
 
-			}
+                    } else {
 
-		}
+                        ## Lowest price
+                        $lowest = 9999999;
 
-		public static function format_frames( $frames ) {
+                        ## Currency symbol
+                        $curr = '&euro;';
 
-			$items = null;
+                        ## Geen begin en eindtijd bekend, dan alleen verzender keuze
+                        $options = null;
+                        foreach ( $frame->options as $nr => $option ) {
 
-			## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
-			if ( is_array( $frames ) || is_object( $frames ) ) {
+                            $extras = null;
+                            if ( isset( $option->extras ) && count( $option->extras ) > 0 ) {
 
-				foreach ( $frames as $nr => $frame ) {
+                                foreach ( $option->extras as $extra ) {
 
-					## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
-					if ( $frame->from != '' && $frame->to != '' ) {
+                                    ## Currency symbol
+                                    $curr = '&euro;';
 
-						## Loop trough options
-						$selected = null;
+                                    ## Extra optie toevoegen
+                                    $extras[ $extra->code ] = (object) [
+                                        'code' => $extra->code,
+                                        'name' => $extra->name,
+                                        'price' => $curr . ' ' . number_format( $extra->price, 2, ',', '' ),
+                                        'price_raw' => $extra->price,
+                                    ];
 
-						## Lowest price
-						$lowest = 9999999;
+                                }
 
-						## Currency symbol
-						$curr = '&euro;';
+                            }
 
-						## Shipper opties ophalen
-						$options = null;
-						foreach ( $frame->options as $onr => $option ) {
-							$from = $option->from;
-							$to   = $option->to;
+                            $options[] = (object) [
+                                'codes' => $option->codes,
+                                'name' => $option->description,
+                                'price' => $curr . ' ' . number_format( $option->price, 2, ',', '' ),
+                                'price_raw' => $option->price,
+                                'from' => null,
+                                'to' => null,
+                                'extras' => $extras,
+                            ];
 
-							## Check of maximale besteltijd voorbij is
-							if ( time() < strtotime( $option->date ) && $selected == null ) {
+                            ## Check if we have a lower price
+                            if ( $option->price < $lowest ) {
+                                $lowest = $option->price;
+                            }
 
-								$selected = $option;
+                        }
 
-							}
+                        ## Create item
+                        $items[1] = (object) [
+                            'code' => 'NOTIMES',
+                            'date' => null,
+                            'time' => null,
+                            'description' => '',
+                            'price' => $lowest,
+                            'options' => $options
+                        ];
 
-							$extras = null;
-							if ( isset( $option->extras ) && count( $option->extras ) > 0 ) {
+                    }
 
-								foreach ( $option->extras as $extra ) {
+                }
 
-									## Currency symbol
-									$curr = '&euro;';
+            }
 
-									## Extra optie toevoegen
-									$extras[ $extra->code ] = (object) [
-										'code' => $extra->code,
-										'name' => $extra->name,
-										'price' => $curr . ' ' . number_format( $extra->price, 2, ',', '' ),
-										'price_raw' => $extra->price,
-									];
+            ## Frames opslaan in sessie voor bepalen kosten
+            $_SESSION['montapacking-frames'] = $items;
 
-								}
+            return $items;
 
-							}
+        }
 
-							## Shipper optie toevoegen
-							$options[ $onr ] = (object) [
-								'codes' => $option->codes,
-								'name' => $option->description,
-								'price' => $curr . ' ' . number_format( $option->price, 2, ',', '' ),
-								'price_raw' => $option->price,
-								'from' => date( 'H:i', strtotime( $from . ' +1 hour' ) ),
-								'to' => date( 'H:i', strtotime( $to . ' +1 hour' ) ),
-								'extras' => $extras,
-							];
+        public static function format_pickups( $frames ) {
 
-							## Check if we have a lower price
-							if ( $option->price < $lowest ) {
-								$lowest = $option->price;
-							}
+            $items = null;
 
-						}
+            ## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
+            if ( is_array( $frames ) || is_object( $frames ) ) {
 
+                #echo '<pre>';
+                #print_r($frames);
+                #echo '</pre>';
 
-						## Check of er een prijs is
-						if ( $options !== null ) {
+                foreach ( $frames as $nr => $frame ) {
 
-							## Sorteer opties op laagste prijs
-							#usort($options, function($a, $b) {
-							#	return $a->from - $b->from;
-							#});
+                    ## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
+                    #if ($frame->from != '' && $frame->to != '') {
 
-							$items[ $nr ] = (object) [
-								'code' => $frame->code,
-								'date' => date( 'd-m-Y', strtotime( $frame->from . ' +1 day' ) ),
-								'time' => ( date( 'H:i', strtotime( $frame->from ) ) != date( 'H:i', strtotime( $frame->to ) ) ) ? date( 'H:i', strtotime( $frame->from ) ) . '-' . date( 'H:i', strtotime( $frame->to ) ) : '',
-								'description' => $frame->description,
-								'price' => $curr . ' ' . number_format( $lowest, 2, ',', '' ),
-								'options' => $options
-							];
+                    ## Loop trough options
+                    $selected = null;
 
-						}
+                    ## Pickup optie ophalen
+                    $option = end( $frame->options );
+                    if ( isset( $option->codes ) ) {
 
-					} else {
+                        $extras = null;
+                        if ( isset( $option->extras ) && count( $option->extras ) > 0 ) {
 
-						## Lowest price
-						$lowest = 9999999;
+                            foreach ( $option->extras as $extra ) {
 
-						## Currency symbol
-						$curr = '&euro;';
+                                ## Extra optie toevoegen
+                                $extras[ $extra->code ] = (object) [
+                                    'code' => $extra->code,
+                                    'name' => $extra->name,
+                                    'price' => number_format( $extra->price, 2, ',', '' ),
+                                    'price_raw' => $extra->price,
+                                ];
 
-						## Geen begin en eindtijd bekend, dan alleen verzender keuze
-						$options = null;
-						foreach ( $frame->options as $nr => $option ) {
+                            }
 
-							$extras = null;
-							if ( isset( $option->extras ) && count( $option->extras ) > 0 ) {
+                        }
 
-								foreach ( $option->extras as $extra ) {
+                        ## Check of er een prijs is
+                        if ( $option !== null ) {
 
-									## Currency symbol
-									$curr = '&euro;';
+                            $items[ $nr ] = (object) [
+                                'code' => implode( ',', $option->codes ),
+                                'date' => date( 'd-m-Y', strtotime( $option->date ) ),
+                                'time' => ( date( 'H:i', strtotime( $frame->from ) ) != date( 'H:i', strtotime( $frame->to ) ) ) ? date( 'H:i', strtotime( $frame->from ) ) . '-' . date( 'H:i', strtotime( $frame->to ) ) : '',
+                                'description' => $option->description,
+                                'details' => $frame->details,
+                                'price' => number_format( $option->price, 2, ',', '' ),
+                                'price_raw' => $option->price,
+                            ];
 
-									## Extra optie toevoegen
-									$extras[ $extra->code ] = (object) [
-										'code' => $extra->code,
-										'name' => $extra->name,
-										'price' => $curr . ' ' . number_format( $extra->price, 2, ',', '' ),
-										'price_raw' => $extra->price,
-									];
+                            ## Sorteer opties op laagste prijs
+                            usort( $items, function ( $a, $b ) {
+                                return $a->price_raw - $b->price_raw;
+                            } );
 
-								}
+                        }
 
-							}
+                    }
 
-							$options[] = (object) [
-								'codes' => $option->codes,
-								'name' => $option->description,
-								'price' => $curr . ' ' . number_format( $option->price, 2, ',', '' ),
-								'price_raw' => $option->price,
-								'from' => null,
-								'to' => null,
-								'extras' => $extras,
-							];
+                    #}
 
-							## Check if we have a lower price
-							if ( $option->price < $lowest ) {
-								$lowest = $option->price;
-							}
+                }
 
-						}
+            }
 
-						## Create item
-						$items[1] = (object) [
-							'code' => 'NOTIMES',
-							'date' => null,
-							'time' => null,
-							'description' => '',
-							'price' => $lowest,
-							'options' => $options
-						];
+            ## Frames opslaan in sessie voor bepalen kosten
+            $_SESSION['montapacking-pickups'] = $items;
 
-					}
+            return $items;
 
-				}
+        }
 
-			}
+        public function shipping() {
 
-			## Frames opslaan in sessie voor bepalen kosten
-			$_SESSION['montapacking-frames'] = $items;
+            include 'views/choice.php';
 
-			return $items;
+        }
 
-		}
+    }
 
-		public static function format_pickups( $frames ) {
+    function register_session() {
+        if ( ! session_id() ) {
+            session_start();
+        }
+    }
 
-			$items = null;
+    function init_menu() {
+        add_submenu_page( 'options-general.php', 'Montapacking', 'Montapacking', 'manage_options', 'montapacking-settings', 'render_montapacking_settings' );
+    }
 
-			## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
-			if ( is_array( $frames ) || is_object( $frames ) ) {
+    function render_montapacking_settings() {
+        // Check that the user is allowed to update options
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( 'You do not have sufficient permissions to access this page.' );
+        }
+        ?>
 
-				#echo '<pre>';
-				#print_r($frames);
-				#echo '</pre>';
+        <div class="wrap">
+            <form action="options.php" method="post">
 
-				foreach ( $frames as $nr => $frame ) {
+                <?php
+                settings_fields( 'montapacking-plugin-settings' );
+                do_settings_sections( 'montapacking-plugin-settings' );
+                ?>
+                <h1>Montapacking API Settings</h1>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="monta_shop">Shop</label></th>
+                        <td><input type="text" name="monta_shop" value="<?php echo esc_attr( get_option( 'monta_shop' ) ); ?>" size="50"/></td>
+                    </tr>
 
-					## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
-					#if ($frame->from != '' && $frame->to != '') {
+                    <tr>
+                        <th scope="row"><label for="monta_username">Username</label></th>
+                        <td><input type="text" name="monta_username" value="<?php echo esc_attr( get_option( 'monta_username' ) ); ?>" size="50"/></td>
+                    </tr>
 
-					## Loop trough options
-					$selected = null;
+                    <tr>
+                        <th scope="row"><label for="monta_password">Password</label></th>
+                        <td><input type="password" name="monta_password" value="<?php echo esc_attr( get_option( 'monta_password' ) ); ?>" size="50"/></td>
+                    </tr>
 
-					## Pickup optie ophalen
-					$option = end( $frame->options );
-					if ( isset( $option->codes ) ) {
+                </table>
 
-						$extras = null;
-						if ( isset( $option->extras ) && count( $option->extras ) > 0 ) {
+                <h1>Google API Settings</h1>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="monta_google_key">API Key</label></th>
+                        <td><input type="text" name="monta_google_key" value="<?php echo esc_attr( get_option( 'monta_google_key' ) ); ?>" size="50"/></td>
+                    </tr>
+                </table>
 
-							foreach ( $option->extras as $extra ) {
+                <?php submit_button(); ?>
 
-								## Extra optie toevoegen
-								$extras[ $extra->code ] = (object) [
-									'code' => $extra->code,
-									'name' => $extra->name,
-									'price' => number_format( $extra->price, 2, ',', '' ),
-									'price_raw' => $extra->price,
-								];
-
-							}
-
-						}
-
-						## Check of er een prijs is
-						if ( $option !== null ) {
-
-							$items[ $nr ] = (object) [
-								'code' => implode( ',', $option->codes ),
-								'date' => date( 'd-m-Y', strtotime( $option->date ) ),
-								'time' => ( date( 'H:i', strtotime( $frame->from ) ) != date( 'H:i', strtotime( $frame->to ) ) ) ? date( 'H:i', strtotime( $frame->from ) ) . '-' . date( 'H:i', strtotime( $frame->to ) ) : '',
-								'description' => $option->description,
-								'details' => $frame->details,
-								'price' => number_format( $option->price, 2, ',', '' ),
-								'price_raw' => $option->price,
-							];
-
-							## Sorteer opties op laagste prijs
-							usort( $items, function ( $a, $b ) {
-								return $a->price_raw - $b->price_raw;
-							} );
-
-						}
-
-					}
-
-					#}
-
-				}
-
-			}
-
-			## Frames opslaan in sessie voor bepalen kosten
-			$_SESSION['montapacking-pickups'] = $items;
-
-			return $items;
-
-		}
-
-		public function shipping() {
-
-			include 'views/choice.php';
-
-		}
-
-	}
-
-	function register_session() {
-		if ( ! session_id() ) {
-			session_start();
-		}
-	}
-
-	function init_menu() {
-		add_submenu_page( 'options-general.php', 'Montapacking', 'Montapacking', 'manage_options', 'montapacking-settings', 'render_montapacking_settings' );
-	}
-
-	function render_montapacking_settings() {
-		// Check that the user is allowed to update options
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( 'You do not have sufficient permissions to access this page.' );
-		}
-		?>
-
-		<div class="wrap">
-			<form action="options.php" method="post">
-
-				<?php
-				settings_fields( 'montapacking-plugin-settings' );
-				do_settings_sections( 'montapacking-plugin-settings' );
-				?>
-				<h1>Montapacking API Settings</h1>
-				<table class="form-table">
-					<tr>
-						<th scope="row"><label for="monta_shop">Shop</label></th>
-						<td><input type="text" name="monta_shop" value="<?php echo esc_attr( get_option( 'monta_shop' ) ); ?>" size="50"/></td>
-					</tr>
-
-					<tr>
-						<th scope="row"><label for="monta_username">Username</label></th>
-						<td><input type="text" name="monta_username" value="<?php echo esc_attr( get_option( 'monta_username' ) ); ?>" size="50"/></td>
-					</tr>
-
-					<tr>
-						<th scope="row"><label for="monta_password">Password</label></th>
-						<td><input type="password" name="monta_password" value="<?php echo esc_attr( get_option( 'monta_password' ) ); ?>" size="50"/></td>
-					</tr>
-
-				</table>
-
-				<h1>Google API Settings</h1>
-				<table class="form-table">
-					<tr>
-						<th scope="row"><label for="monta_google_key">API Key</label></th>
-						<td><input type="text" name="monta_google_key" value="<?php echo esc_attr( get_option( 'monta_google_key' ) ); ?>" size="50"/></td>
-					</tr>
-				</table>
-
-				<?php submit_button(); ?>
-
-			</form>
-		</div>
-		<?php
-	}
+            </form>
+        </div>
+        <?php
+    }
 }
