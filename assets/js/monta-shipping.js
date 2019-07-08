@@ -161,6 +161,8 @@ jQuery( function( $ ) {
                 $.post(ajax_url, data)
                     .done(function (result) {
 
+                        console.log(result);
+
                         if (result.success) {
 
                             // Frames onthouden
@@ -283,6 +285,7 @@ jQuery( function( $ ) {
                                 markers.push({
                                     'id': '1',
                                     'code': item.code + '_' + item.details.code,
+                                    'shippingOptions': item.shipperOptionsWithValue,
                                     'category': item.code,
                                     'name': item.details.name,
                                     'lat': item.details.lat,
@@ -392,6 +395,7 @@ jQuery( function( $ ) {
             selectPickup: function (location) {
 
                 monta_shipping.pickup_selected = location;
+                console.log(location);
 
                 $('.monta-select-pickup').addClass('active');
                 $('.monta-select-pickup').on('click', function () {
@@ -410,6 +414,7 @@ jQuery( function( $ ) {
 
                         $('.monta-pickup-input-code').val(loc.code);
                         $('.monta-pickup-input-shipper').val(loc.category);
+                        $('.monta-pickup-input-shippingOptions').val(loc.shippingOptions);
                         $('.monta-pickup-input-company').val(loc.name);
                         $('.monta-pickup-input-address').val(loc.address);
                         $('.monta-pickup-input-postal').val(loc.postal);

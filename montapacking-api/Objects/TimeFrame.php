@@ -50,6 +50,7 @@ class TimeFrame {
                 $list[$onr] = new ShippingOption(
                     $option->ShipperCodes,
                     $option->ShipperOptionCodes,
+                    $option->ShipperOptionsWithValue,
                     $option->Description,
                     $option->IsMailbox,
                     $option->SellPrice,

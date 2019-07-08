@@ -5,6 +5,7 @@ class ShippingOption {
 
     public $codes;
     public $optioncodes;
+    public $optionsWithValue;
     public $description;
     public $mailbox;
     public $price;
@@ -14,10 +15,11 @@ class ShippingOption {
     public $extras;
     public $date;
 
-    public function __construct($codes, $optioncodes, $description, $mailbox, $price, $currency, $from, $to, $extras, $date){
+    public function __construct($codes, $optioncodes, $optionsWithValue, $description, $mailbox, $price, $currency, $from, $to, $extras, $date){
 
         $this->setCodes($codes);
         $this->setOptionCodes($optioncodes);
+        $this->setOptionsWithValue($optionsWithValue);
         $this->setDescription($description);
         $this->setMailbox($mailbox);
         $this->setPrice($price);
@@ -36,6 +38,11 @@ class ShippingOption {
 
     public function setOptionCodes($optioncodes){
         $this->optioncodes = $optioncodes;
+        return $this;
+    }
+
+    public function setOptionsWithValue($optionsWithValue){
+        $this->optionsWithValue = $optionsWithValue;
         return $this;
     }
 

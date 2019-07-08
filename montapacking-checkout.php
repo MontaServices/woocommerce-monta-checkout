@@ -180,7 +180,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 }
 
                 if ( $error ) {
-                    $errors->add( 'shipment', __( 'The shipment options you choose are not longer available at this time, please select other options.', TKEY ) );
+                    $errors->add( 'shipment', __( 'The shipment option(s) you choose are not available at this time, please select an other option.', TKEY ) );
                 }
 
             }
@@ -542,7 +542,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $data = (object) $data;
 
             ## Monta packing API aanroepen
-            $api = new MontapackingShipping( MONTA_SHOP, MONTA_USER, MONTA_PASS, true );
+            $api = new MontapackingShipping( MONTA_SHOP, MONTA_USER, MONTA_PASS, false );
             #$api->debug = true;
 
             if ( ! isset( $data->ship_to_different_address ) ) {
@@ -810,12 +810,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         ## Check of er een prijs is
                         if ( $option !== null ) {
 
+                            // Maak een string van alle shipperoptions
+                            $shipperOptions = "";
+                            foreach ($option->optionsWithValue as $key=>$value){
+                                $shipperOptions .= $key . "_" . $value . ",";
+                            }
+                            $shipperOptions = rtrim($shipperOptions, " ,");
+
                             $items[ $nr ] = (object) [
                                 'code' => implode( ',', $option->codes ),
                                 'date' => date( 'd-m-Y', strtotime( $option->date ) ),
                                 'time' => ( date( 'H:i', strtotime( $frame->from ) ) != date( 'H:i', strtotime( $frame->to ) ) ) ? date( 'H:i', strtotime( $frame->from ) ) . '-' . date( 'H:i', strtotime( $frame->to ) ) : '',
                                 'description' => $option->description,
                                 'details' => $frame->details,
+                                'shipperOptionsWithValue' => $shipperOptions,
                                 'price' => number_format( $option->price, 2, ',', '' ),
                                 'price_raw' => $option->price,
                             ];
