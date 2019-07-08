@@ -161,8 +161,6 @@ jQuery( function( $ ) {
                 $.post(ajax_url, data)
                     .done(function (result) {
 
-                        console.log(result);
-
                         if (result.success) {
 
                             // Frames onthouden
@@ -263,8 +261,6 @@ jQuery( function( $ ) {
                         // Process pickups
                         if (checked === 'pickup') {
 
-                            //console.log(monta_shipping.pickups);
-
                             $('.monta-close-pickup').on('click', function () {
 
                                 $('body').removeClass('monta-cover-open');
@@ -361,8 +357,6 @@ jQuery( function( $ ) {
                                 }
                             };
 
-                            //console.log(config);
-
                             monta_shipping.pickupLocator = $('#monta-stores').storeLocator(config);
 
                             $('.monta-cover .monta-pickup-loading').addClass('monta-hide');
@@ -395,7 +389,6 @@ jQuery( function( $ ) {
             selectPickup: function (location) {
 
                 monta_shipping.pickup_selected = location;
-                console.log(location);
 
                 $('.monta-select-pickup').addClass('active');
                 $('.monta-select-pickup').on('click', function () {
