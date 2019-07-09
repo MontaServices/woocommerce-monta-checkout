@@ -76,7 +76,8 @@
         <input type="hidden" name="montapacking[pickup][shipper]" class="monta-pickup-input-shipper">
         <input type="hidden" name="montapacking[pickup][shippingOptions]" class="monta-pickup-input-shippingOptions">
         <input type="hidden" name="montapacking[pickup][company]" class="monta-pickup-input-company">
-        <input type="hidden" name="montapacking[pickup][address]" class="monta-pickup-input-address">
+        <input type="hidden" name="montapacking[pickup][street]" class="monta-pickup-input-street">
+        <input type="hidden" name="montapacking[pickup][houseNumber]" class="monta-pickup-input-houseNumber">
         <input type="hidden" name="montapacking[pickup][postal]" class="monta-pickup-input-postal">
         <input type="hidden" name="montapacking[pickup][city]" class="monta-pickup-input-city">
         <input type="hidden" name="montapacking[pickup][country]" class="monta-pickup-input-country">

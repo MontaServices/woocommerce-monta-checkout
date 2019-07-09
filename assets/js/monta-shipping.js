@@ -286,9 +286,11 @@ jQuery( function( $ ) {
                                     'name': item.details.name,
                                     'lat': item.details.lat,
                                     'lng': item.details.lng,
-                                    'address': item.details.address,
+                                    'street': item.details.street,
+                                    'houseNumber': item.details.houseNumber,
                                     'city': item.details.place,
                                     'postal': item.details.zipcode,
+                                    'country': item.details.country,
                                     'description': item.description,
                                     'price': item.price,
                                     'price_raw': item.price_raw,
@@ -397,7 +399,7 @@ jQuery( function( $ ) {
 
                         var loc = monta_shipping.pickup_selected;
                         var html = '<strong>' + loc.name + '</strong><br />';
-                        html += '' + loc.address + '<br />'
+                        html += '' + loc.street + '<br />'
                         html += '' + loc.postal + ' ' + loc.city + '<br />'
                         html += '&euro; ' + loc.price + '<br />'
 
@@ -409,7 +411,8 @@ jQuery( function( $ ) {
                         $('.monta-pickup-input-shipper').val(loc.category);
                         $('.monta-pickup-input-shippingOptions').val(loc.shippingOptions);
                         $('.monta-pickup-input-company').val(loc.name);
-                        $('.monta-pickup-input-address').val(loc.address);
+                        $('.monta-pickup-input-street').val(loc.street);
+                        $('.monta-pickup-input-houseNumber').val(loc.houseNumber);
                         $('.monta-pickup-input-postal').val(loc.postal);
                         $('.monta-pickup-input-city').val(loc.city);
                         $('.monta-pickup-input-country').val(loc.country);

@@ -42,9 +42,11 @@ class PickupPoint {
             $pickup = (object)[
                 'code' => $details->Code,
                 'name' => $details->Company,
-                'address' => $details->Street . ' ' . $details->HouseNumber,
+                'street' => $details->Street,
+                'houseNumber' => $details->HouseNumber,
                 'zipcode' => $details->PostalCode,
                 'place' => $details->City,
+                'country' => $details->CountryCode,
                 'phone' => $details->Phone,
 
                 'distance' => $details->DistanceMeters,
