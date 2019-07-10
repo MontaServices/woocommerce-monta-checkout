@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapakcing Check-out extension
- * Version: 1.0.1
+ * Version: 0.1.1
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -71,15 +71,19 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     ## Shipment data opslaan bij order
     add_action( 'woocommerce_checkout_create_order', array( 'montapacking', 'checkout_store' ), 10, 2 );
 
-    ## CSS registreren
-    wp_enqueue_style( 'montapacking_checkout_storelocator', plugins_url( 'montapacking-checkout/assets/css/monta-storelocator.css' ) );
-    wp_enqueue_style( 'montapacking_checkout_plugin', plugins_url( 'montapacking-checkout/assets/css/monta-shipping.css' ) );
+    // CSS/JS scripts registreren
+    function enqueue_scripts(){
+        // CSS
+        wp_enqueue_style( 'montapacking_checkout_storelocator', plugins_url( 'montapacking-checkout/assets/css/monta-storelocator.css' ) );
+        wp_enqueue_style( 'montapacking_checkout_plugin', plugins_url( 'montapacking-checkout/assets/css/monta-shipping.css' ) );
 
-    ## JS registreren
-    wp_enqueue_script( 'montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . MONTA_GOOGLE_KEY, [ 'jquery' ] );
-    wp_enqueue_script( 'montapacking_checkout_plugin_handlebars', plugins_url( 'montapacking-checkout/assets/js/monta-handlebars.js' ), [ 'jquery' ] );
-    wp_enqueue_script( 'montapacking_checkout_plugin_storelocator_js', plugins_url( 'montapacking-checkout/assets/js/monta-storelocator.js' ), [ 'jquery' ]  );
-    wp_enqueue_script( 'montapacking_checkout_plugin_monta', plugins_url( 'montapacking-checkout/assets/js/monta-shipping.js' ), [ 'jquery' ] );
+        // Javascript
+        wp_enqueue_script( 'montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . MONTA_GOOGLE_KEY, [ 'jquery' ] );
+        wp_enqueue_script( 'montapacking_checkout_plugin_handlebars', plugins_url( 'montapacking-checkout/assets/js/monta-handlebars.js' ), [ 'jquery' ] );
+        wp_enqueue_script( 'montapacking_checkout_plugin_storelocator_js', plugins_url( 'montapacking-checkout/assets/js/monta-storelocator.js' ), [ 'jquery' ]  );
+        wp_enqueue_script( 'montapacking_checkout_plugin_monta', plugins_url( 'montapacking-checkout/assets/js/monta-shipping.js' ), [ 'jquery' ] );
+    }
+    add_action('wp_enqueue_scripts', 'enqueue_scripts');
 
     ## Ajax actions
     add_action( 'wp_ajax_monta_shipping_options', array( 'montapacking', 'shipping_options' ) );
