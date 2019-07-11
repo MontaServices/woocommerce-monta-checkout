@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapakcing Check-out extension
- * Version: 0.1.1
+ * Version: 0.1.2
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -156,8 +156,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         $found = false;
                         foreach ( $frame->options as $option ) {
 
-                            $code = implode( ',', $option->codes );
-                            if ( $code == $shipper ) {
+                            if ( $option->code == $shipper ) {
 
                                 $found = true;
                                 break;
@@ -201,13 +200,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 'total' => wc_format_decimal( self::get_shipping_total( $_POST ) )
             ) );
 
-            ## Ingevulde meta data ophslaan
+            ## Ingevulde meta data opslaan
             $type     = $_POST['montapacking'];
             $shipment = $type['shipment'];
 
             $time    = $shipment['time'];
             $shipper = $shipment['shipper'];
             $extras  = $shipment['extras'];
+
             $pickup  = $type['pickup'];
 
             $items = null;
@@ -234,6 +234,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             if ( isset( $items[ $time ] ) ) {
 
                 $method = null;
+                $shipperCode = null;
 
                 ## Check of timeframe opties heeft
                 $frame = $items[ $time ];
@@ -242,9 +243,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     ## Gekozen shipper ophalen
                     foreach ( $frame->options as $option ) {
 
-                        $code = implode( ',', $option->codes );
-                        if ( $code == $shipper ) {
+                        if($option->code == $shipper){
 
+                            $shipperCode = implode( ',', $option->codes );
                             $method = $option;
                             break;
 
@@ -258,14 +259,34 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 if ( $method !== null ) {
 
                     ## Gekozen optie met datum en tijd toevoegen
-                    $item->add_meta_data( __( 'Shipmentmethod', TKEY ), $shipper, true );
+                    $item->add_meta_data( __( 'Shipmentmethod', TKEY ), $shipperCode, true );
                     $item->add_meta_data( __( 'Delivery date', TKEY ), $frame->date, true );
                     $item->add_meta_data( __( 'Delivery Timeframe', TKEY ), $method->from . ' ' . $method->to, true );
 
-                    ## Eventuele extra's bijvoeren
-                    if ( is_array( $extras ) ) {
+                    if(is_array($extras)){
 
-                        ## Extra's toeveogen
+                        if(!empty($method->optionCodes)){
+
+                            foreach ($method->optionCodes as $optionCode) {
+
+                                array_push($extras, $optionCode);
+
+                            }
+
+                        }
+
+                        $item->add_meta_data( __( 'Extras', TKEY ),$extras, true );
+
+                    }else if(!empty($method->optionCodes)){
+
+                        $extras = array();
+
+                        foreach($method->optionCodes as $optionCode) {
+
+                            array_push($extras, $optionCode);
+
+                        }
+
                         $item->add_meta_data( __( 'Extras', TKEY ),$extras, true );
 
                     }
@@ -663,7 +684,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                             ## Shipper optie toevoegen
                             $options[ $onr ] = (object) [
+                                'code' => $option->code,
                                 'codes' => $option->codes,
+                                'optionCodes' => $option->optioncodes,
                                 'name' => $option->description,
                                 'price' => $curr . ' ' . number_format( $option->price, 2, ',', '' ),
                                 'price_raw' => $option->price,

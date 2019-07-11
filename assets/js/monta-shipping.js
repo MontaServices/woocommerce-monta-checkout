@@ -346,7 +346,6 @@ jQuery( function( $ ) {
 
                                     // Show error message
                                     console.log(notifyText);
-                                    //alert(notifyText);
 
                                     $('body').removeClass('monta-cover-open');
 
@@ -370,7 +369,6 @@ jQuery( function( $ ) {
 
                         // Show error message
                         console.log(result.message);
-                        //alert(result.message);
 
                         $('body').removeClass('monta-cover-open');
 
@@ -457,6 +455,8 @@ jQuery( function( $ ) {
 
                     $.each(options, function (key, item) {
 
+                        var realCode = item.code;
+
                         var code = '';
                         $.each(item.codes, function (key, item) {
                             code += ((code !== '') ? ',' : '') + item;
@@ -469,7 +469,7 @@ jQuery( function( $ ) {
                         }
 
                         var html = $('.monta-shipper-template').html();
-                        html = html.replace(/{.code}/g, code);
+                        html = html.replace(/{.code}/g, realCode);
                         html = html.replace(/{.img}/g, '<img src="' + site_url + '/wp-content/plugins/montapacking-checkout/assets/img/' + code + '.png">');
                         html = html.replace(/{.name}/g, item.name);
                         html = html.replace(/{.time}/g, time);
@@ -505,12 +505,9 @@ jQuery( function( $ ) {
 
                 $.each(monta_shipping.frames[frame].options, function (key, item) {
 
-                    var code = '';
-                    $.each(item.codes, function (key, item) {
-                        code += ((code !== '') ? ',' : '') + item;
-                    });
+                    var realCode = item.code;
 
-                    if (code === shipper) {
+                    if (realCode === shipper) {
 
                         options = item.extras;
                         return false;

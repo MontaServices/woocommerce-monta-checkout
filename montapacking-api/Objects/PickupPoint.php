@@ -72,6 +72,7 @@ class PickupPoint {
             foreach ($options as $option){
 
                 $list[] = new ShippingOption(
+                    $option->Code,
                     $option->ShipperCodes,
                     $option->ShipperOptionCodes,
                     $option->ShipperOptionsWithValue,

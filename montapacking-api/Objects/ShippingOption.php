@@ -3,6 +3,7 @@ include("Option.php");
 
 class ShippingOption {
 
+    public $code;
     public $codes;
     public $optioncodes;
     public $optionsWithValue;
@@ -15,8 +16,9 @@ class ShippingOption {
     public $extras;
     public $date;
 
-    public function __construct($codes, $optioncodes, $optionsWithValue, $description, $mailbox, $price, $currency, $from, $to, $extras, $date){
+    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $mailbox, $price, $currency, $from, $to, $extras, $date){
 
+        $this->setCode($code);
         $this->setCodes($codes);
         $this->setOptionCodes($optioncodes);
         $this->setOptionsWithValue($optionsWithValue);
@@ -29,6 +31,11 @@ class ShippingOption {
         $this->setExtras($extras);
         $this->setDate($date);
 
+    }
+
+    public function setCode($code){
+        $this->code = $code;
+        return $this;
     }
 
     public function setCodes($codes){

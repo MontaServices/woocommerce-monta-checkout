@@ -48,6 +48,7 @@ class TimeFrame {
             foreach ($options as $onr => $option){
 
                 $list[$onr] = new ShippingOption(
+                    $option->Code,
                     $option->ShipperCodes,
                     $option->ShipperOptionCodes,
                     $option->ShipperOptionsWithValue,
