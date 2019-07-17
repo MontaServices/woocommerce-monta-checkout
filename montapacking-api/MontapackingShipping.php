@@ -34,7 +34,7 @@ class MontapackingShipping {
         $this->basic = [
             'Origin' => $origin,
             'Currency' => 'EUR',
-            'Language' => 'en',
+            'Language' => 'nl',
         ];
 
     }
@@ -122,7 +122,7 @@ class MontapackingShipping {
 
         $this->basic = array_merge($this->basic,[
             'OnlyPickupPoints' => 'true',
-            #'MaxNumberOfPickupPoints' => 50,
+            //'MaxNumberOfPickupPoints' => 3,
             'ProductsOnStock' => ($onstock) ? 'TRUE' : 'FALSE',
             'MaiboxShipperMandatory' => $mailbox,
             'TrackingMandatory' => $trackingonly,

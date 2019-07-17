@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapakcing Check-out extension
- * Version: 0.1.2
+ * Version: 0.1.3
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking

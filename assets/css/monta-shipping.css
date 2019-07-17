@@ -11,10 +11,9 @@ body.monta-cover-open{
 }
 
 .montapacking-shipping .monta-options{
+    width: 100%;
     text-align: center;
     font-size: 0;
-    margin-left: -15px;
-    margin-right: -15px;
     vertical-align: top;
     display: table;
 }
@@ -44,7 +43,6 @@ body.monta-cover-open{
     padding: 10px 15px;
     display: block;
     cursor: pointer;
-    height: 130px;
 }
 
 .montapacking-shipping .monta-options .monta-option label input:checked + span{
@@ -388,4 +386,8 @@ body.monta-cover-open{
 
 .monta-select-pickup.active{
     display: block;
+}
+
+.monta-more-pickup-points:hover{
+    cursor: pointer;
 }
