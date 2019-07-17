@@ -116,7 +116,6 @@ jQuery( function( $ ) {
 
             },
 
-
             movePrevious: function () {
 
                 var moving = $('.monta-times ul');
@@ -212,8 +211,6 @@ jQuery( function( $ ) {
 
                         if (checked === 'delivery') {
 
-                            monta_shipping.storeLocatorDestroy();
-
                             $('.monta-shipment-delivery').addClass('active');
 
                             var mover = $('.monta-times .mover');
@@ -252,6 +249,8 @@ jQuery( function( $ ) {
 
                             // Update slider for scrolling
                             monta_shipping.updateSlider();
+
+                            monta_shipping.storeLocatorDestroy();
 
                         } else {
 

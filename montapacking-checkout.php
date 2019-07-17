@@ -79,9 +79,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
         // Javascript
         wp_enqueue_script( 'montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . MONTA_GOOGLE_KEY, [ 'jquery' ] );
-        wp_enqueue_script( 'montapacking_checkout_plugin_handlebars', plugins_url( 'montapacking-checkout/assets/js/monta-handlebars.js' ), [ 'jquery' ] );
-        wp_enqueue_script( 'montapacking_checkout_plugin_storelocator_js', plugins_url( 'montapacking-checkout/assets/js/monta-storelocator.js' ), [ 'jquery' ]  );
-        wp_enqueue_script( 'montapacking_checkout_plugin_monta', plugins_url( 'montapacking-checkout/assets/js/monta-shipping.js' ), [ 'jquery' ] );
+        wp_enqueue_script( 'montapacking_checkout_plugin_handlebars', plugins_url( 'montapacking-checkout/assets/js/monta-handlebars.js' ), [ 'jquery' ], date("h:i:s") );
+        wp_enqueue_script( 'montapacking_checkout_plugin_storelocator_js', plugins_url( 'montapacking-checkout/assets/js/monta-storelocator.js' ), [ 'jquery' ], date("h:i:s")  );
+        wp_enqueue_script( 'montapacking_checkout_plugin_monta', plugins_url( 'montapacking-checkout/assets/js/monta-shipping.js' ), [ 'jquery' ], date("h:i:s") );
     }
     add_action('wp_enqueue_scripts', 'enqueue_scripts');
 
@@ -924,6 +924,27 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     <tr>
                         <th scope="row"><label for="monta_password">Password</label></th>
                         <td><input type="password" name="monta_password" value="<?php echo esc_attr( get_option( 'monta_password' ) ); ?>" size="50"/></td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row"><label for="monta_language_code">Language</label></th>
+                        <td>
+                            <select name="monta_language_code">
+
+                                <?php
+                                    if ( esc_attr(get_option('monta_language_code')) == "en" ) {
+
+                                        echo "<option value='nl'>Dutch</option> <option value='en' selected>English</option>";
+
+                                    } else {
+
+                                        echo "<option value='nl' selected>Dutch</option> <option value='en'>English</option>";
+
+                                    }
+                                ?>
+
+                            </select>
+                        </td>
                     </tr>
 
                 </table>
