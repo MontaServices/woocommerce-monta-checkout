@@ -77,8 +77,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     // CSS/JS scripts registreren
     function enqueue_scripts(){
         // CSS
-        wp_enqueue_style( 'montapacking_checkout_storelocator', plugins_url( 'montapacking-checkout/assets/css/monta-storelocator.css' ) );
-        wp_enqueue_style( 'montapacking_checkout_plugin', plugins_url( 'montapacking-checkout/assets/css/monta-shipping.css' ) );
+        wp_enqueue_style( 'montapacking_checkout_storelocator', plugins_url( 'montapacking-checkout/assets/css/monta-storelocator.css' ), date("h:i:s") );
+        wp_enqueue_style( 'montapacking_checkout_plugin', plugins_url( 'montapacking-checkout/assets/css/monta-shipping.css' ), date("h:i:s") );
 
         // Javascript
         wp_enqueue_script( 'montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . MONTA_GOOGLE_KEY, [ 'jquery' ] );
