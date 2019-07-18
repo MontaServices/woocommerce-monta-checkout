@@ -31,10 +31,13 @@ class MontapackingShipping {
 
         $this->url = $this->modus .  '.montapacking.nl/rest/v5/';
 
+        // Set language for the api call
+        $siteLocale = substr(get_locale(), 0, 2);
+
         $this->basic = [
             'Origin' => $origin,
             'Currency' => 'EUR',
-            'Language' => 'nl',
+            'Language' => $siteLocale,
         ];
 
     }
