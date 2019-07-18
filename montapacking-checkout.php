@@ -40,6 +40,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         return array_merge( $settings_link, $links );
     }
 
+    // Include installed Language packs
+    load_plugin_textdomain( TKEY, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
     $plugin = plugin_basename( __FILE__ );
     add_filter( "plugin_action_links_$plugin", 'plugin_add_settings_link' );
 
@@ -225,7 +228,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     break;
                 case 'pickup':
 
-                    $item->add_meta_data( __( 'Pickup Data', TKEY ), $pickup, true );
+                    $item->add_meta_data( 'Pickup Data', $pickup, true );
 
                     break;
             }
@@ -259,9 +262,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 if ( $method !== null ) {
 
                     ## Gekozen optie met datum en tijd toevoegen
-                    $item->add_meta_data( __( 'Shipmentmethod', TKEY ), $shipperCode, true );
-                    $item->add_meta_data( __( 'Delivery date', TKEY ), $frame->date, true );
-                    $item->add_meta_data( __( 'Delivery Timeframe', TKEY ), $method->from . ' ' . $method->to, true );
+                    $item->add_meta_data( 'Shipmentmethod', $shipperCode, true );
+                    $item->add_meta_data( 'Delivery date', $frame->date, true );
+                    $item->add_meta_data( 'Delivery Timeframe', $method->from . ' ' . $method->to, true );
 
                     if(is_array($extras)){
 
@@ -275,7 +278,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                         }
 
-                        $item->add_meta_data( __( 'Extras', TKEY ),$extras, true );
+                        $item->add_meta_data( 'Extras', $extras, true );
 
                     }else if(!empty($method->optionCodes)){
 
@@ -287,7 +290,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                         }
 
-                        $item->add_meta_data( __( 'Extras', TKEY ),$extras, true );
+                        $item->add_meta_data( 'Extras', $extras, true );
 
                     }
 
@@ -924,27 +927,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     <tr>
                         <th scope="row"><label for="monta_password">Password</label></th>
                         <td><input type="password" name="monta_password" value="<?php echo esc_attr( get_option( 'monta_password' ) ); ?>" size="50"/></td>
-                    </tr>
-
-                    <tr>
-                        <th scope="row"><label for="monta_language_code">Language</label></th>
-                        <td>
-                            <select name="monta_language_code">
-
-                                <?php
-                                    if ( esc_attr(get_option('monta_language_code')) == "en" ) {
-
-                                        echo "<option value='nl'>Dutch</option> <option value='en' selected>English</option>";
-
-                                    } else {
-
-                                        echo "<option value='nl' selected>Dutch</option> <option value='en'>English</option>";
-
-                                    }
-                                ?>
-
-                            </select>
-                        </td>
                     </tr>
 
                 </table>
