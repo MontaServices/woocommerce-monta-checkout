@@ -16,7 +16,22 @@ class Option {
     }
 
     public function setName($name){
-        $this->name = $name;
+
+        if ($this->code == "SignatureOnDelivery") {
+
+            $this->name = __( "The customer needs to sign upon delivery." , TKEY);
+
+        } else if ($this->code == "NoNeighbour") {
+
+            $this->name = __( "Do not deliver at the neighbours." , TKEY);
+
+        } else {
+
+            $this->name = $name;
+
+        }
+
+        //$this->name = $name;
         return $this;
     }
 
