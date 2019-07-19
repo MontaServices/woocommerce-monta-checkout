@@ -41,6 +41,7 @@ jQuery( function( $ ) {
                 this.$checkout_form.on('click', '.toggle-left', this.movePrevious);
                 this.$checkout_form.on('click', '.toggle-right', this.moveNext);
                 this.$checkout_form.on('click', '.monta-options input[type=radio]', this.setMethod);
+                this.$checkout_form.on('click', '.monta-options input[type=radio]', this.disableRadio);
                 this.$checkout_form.on('click', '.monta-more-pickup-points', this.showPickupMap);
 
                 this.$checkout_form.on('click', '.monta-times input[type=radio]', this.setTimeframe);
@@ -68,13 +69,11 @@ jQuery( function( $ ) {
 
                     if (ship_address !== '' && ship_zipcode !== '' && ship_place !== '' && ship_country !== '') {
 
-                        $('.monta-options .monta-option').removeClass('monta-disabled');
-                        $('.monta-options input[type="radio"]').prop('disabled', false);
+                        monta_shipping.enableRadio();
 
                     } else {
 
-                        $('.monta-options .monta-option').addClass('monta-disabled');
-                        $('.monta-options input[type="radio"]').prop('disabled', true);
+                        monta_shipping.disableRadio();
 
                     }
 
@@ -82,13 +81,11 @@ jQuery( function( $ ) {
 
                     if (address !== '' && zipcode !== '' && place !== '' && country !== '') {
 
-                        $('.monta-options .monta-option').removeClass('monta-disabled');
-                        $('.monta-options input[type="radio"]').prop('disabled', false);
+                        monta_shipping.enableRadio();
 
                     } else {
 
-                        $('.monta-options .monta-option').addClass('monta-disabled');
-                        $('.monta-options input[type="radio"]').prop('disabled', true);
+                        monta_shipping.disableRadio();
 
                     }
 
@@ -179,6 +176,8 @@ jQuery( function( $ ) {
                         }
 
                         $('.monta-loading').removeClass('active');
+
+                        monta_shipping.enableRadio();
 
                         if ($.isFunction(callback)) {
                             callback(result.success, result);
@@ -358,6 +357,8 @@ jQuery( function( $ ) {
                                         $('.monta-shipment-pickup').addClass('active');
 
                                         $(".monta-pickup-initial-points").removeClass("monta-hide");
+
+                                        monta_shipping.enableRadio();
 
                                         clearInterval(liExists);
 
@@ -572,6 +573,20 @@ jQuery( function( $ ) {
                 }
 
                 monta_shipping.updateWooCheckout();
+
+            },
+
+            disableRadio: function () {
+
+                $('.monta-options .monta-option').addClass('monta-disabled');
+                $('.monta-options input[type="radio"]').prop('disabled', true);
+
+            },
+
+            enableRadio: function () {
+
+                $('.monta-options .monta-option').removeClass('monta-disabled');
+                $('.monta-options input[type="radio"]').prop('disabled', false);
 
             },
 

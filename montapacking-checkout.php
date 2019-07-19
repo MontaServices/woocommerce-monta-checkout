@@ -709,11 +709,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         ## Check of er een prijs is
                         if ( $options !== null ) {
 
-                            ## Sorteer opties op laagste prijs
-                            #usort($options, function($a, $b) {
-                            #	return $a->from - $b->from;
-                            #});
-
                             $items[ $nr ] = (object) [
                                 'code' => $frame->code,
                                 'date' => date( 'd-m-Y', strtotime( $frame->from . ' +1 day' ) ),
@@ -804,14 +799,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             ## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
             if ( is_array( $frames ) || is_object( $frames ) ) {
 
-                #echo '<pre>';
-                #print_r($frames);
-                #echo '</pre>';
-
                 foreach ( $frames as $nr => $frame ) {
-
-                    ## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
-                    #if ($frame->from != '' && $frame->to != '') {
 
                     ## Loop trough options
                     $selected = null;

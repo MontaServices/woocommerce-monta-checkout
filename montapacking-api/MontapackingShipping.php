@@ -232,9 +232,6 @@ class MontapackingShipping {
 
         curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
 
-        #curl_setopt($ch, CURLOPT_POST, true);
-        #curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
-
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET' );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
