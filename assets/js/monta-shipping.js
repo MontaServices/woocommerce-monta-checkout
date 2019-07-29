@@ -70,10 +70,12 @@ jQuery( function( $ ) {
                     if (ship_address !== '' && ship_zipcode !== '' && ship_place !== '' && ship_country !== '') {
 
                         monta_shipping.enableRadio();
+                        monta_shipping.hideAddressMsg();
 
                     } else {
 
                         monta_shipping.disableRadio();
+                        monta_shipping.showAddressMsg();
 
                     }
 
@@ -82,10 +84,12 @@ jQuery( function( $ ) {
                     if (address !== '' && zipcode !== '' && place !== '' && country !== '') {
 
                         monta_shipping.enableRadio();
+                        monta_shipping.hideAddressMsg();
 
                     } else {
 
                         monta_shipping.disableRadio();
+                        monta_shipping.showAddressMsg();
 
                     }
 
@@ -195,9 +199,16 @@ jQuery( function( $ ) {
 
                 if (checked === "pickup") {
 
+                    // Hide alternate billing address option
+                    $("#ship-to-different-address").hide();
+                    $("#ship-to-different-address").next().hide();
+                    $("#ship-to-different-address input").prop("checked", false);
+
                     $('.monta-loading').addClass('active');
 
                 } else {
+
+                    $("#ship-to-different-address").show();
 
                     $('.monta-loading').addClass('active');
                     $(".monta-shipment-pickup").removeClass("active");
@@ -587,6 +598,18 @@ jQuery( function( $ ) {
 
                 $('.monta-options .monta-option').removeClass('monta-disabled');
                 $('.monta-options input[type="radio"]').prop('disabled', false);
+
+            },
+
+            hideAddressMsg: function () {
+
+                $("#monta-address-required").hide();
+
+            },
+
+            showAddressMsg: function () {
+
+                $("#monta-address-required").show();
 
             },
 

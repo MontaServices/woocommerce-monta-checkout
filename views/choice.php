@@ -4,6 +4,9 @@
 <div class="woocommerce-shipping-fields montapacking-shipping">
 
     <h3><?php _e( 'Shipping method', TKEY ); ?></h3>
+
+    <h5 id="monta-address-required"><?php _e("*Please fill in an address before selecting a shipping method", TKEY) ?></h5>
+
     <div class="monta-options">
 
         <div class="monta-option monta-disabled">

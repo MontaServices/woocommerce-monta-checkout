@@ -390,3 +390,8 @@ body.monta-cover-open{
 .monta-more-pickup-points:hover{
     cursor: pointer;
 }
+
+#monta-address-required {
+    font-style: italic;
+    padding: 0 15px;
+}
