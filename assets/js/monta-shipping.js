@@ -6,6 +6,7 @@ jQuery( function( $ ) {
 
         var monta_shipping = {
             $checkout_form: $('form.checkout'),
+            $monta_cover: $('div.monta-cover'),
             $body: $(' body '),
 
             timeSize: 0,
@@ -43,6 +44,8 @@ jQuery( function( $ ) {
                 this.$checkout_form.on('click', '.monta-options input[type=radio]', this.setMethod);
                 this.$checkout_form.on('click', '.monta-options input[type=radio]', this.disableRadio);
                 this.$checkout_form.on('click', '.monta-more-pickup-points', this.showPickupMap);
+
+                this.$monta_cover.on('click', '.bh-sl-filters input[type=checkbox]', this.sortInitialPickups);
 
                 this.$checkout_form.on('click', '.monta-times input[type=radio]', this.setTimeframe);
                 this.$checkout_form.on('click', '.monta-shipment-shipper input[type=radio]', this.setShipper);
@@ -297,7 +300,7 @@ jQuery( function( $ ) {
 
                                 if ($('.cat-' + item.code + '').length === 0) {
 
-                                    //$('#category-filters').append('<li class="cat-' + item.code + '"><label><input type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.description + '</label></li>');
+                                    $('#category-filters').append('<li class="cat-' + item.code + '"><label><input class="monta-shipper-filter" type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.description + '</label></li>');
 
                                 }
 
@@ -362,7 +365,6 @@ jQuery( function( $ ) {
                                     $("#initialPickupsList  > li").each(function () {
 
                                         $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
-                                        //$(this).addClass("monta-select-pickup");
 
                                     });
 
@@ -624,6 +626,43 @@ jQuery( function( $ ) {
             showAddressMsg: function () {
 
                 $("#monta-address-required").show();
+
+            },
+
+            sortInitialPickups: function () {
+
+                var liExists = setInterval(function () {
+
+                    if($("#initialPickupsList").length){
+
+                        $('#initialPickupsList li:gt(2)').remove();
+
+                        //Add radio buttons for initial pickups
+                        $("#initialPickupsList  > li").each(function () {
+
+                            $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
+
+                        });
+
+                        if ($("#initialPickupsList").children().length === 3) {
+
+                            $("#monta-pickups").show(100);
+
+                            $('.monta-loading').removeClass('active');
+
+                            $('.monta-shipment-pickup').addClass('active');
+
+                            $(".monta-pickup-initial-points").removeClass("monta-hide");
+
+                            monta_shipping.enableRadio();
+
+                            clearInterval(liExists);
+
+                        }
+
+                    }
+
+                }, 100);
 
             },
 
