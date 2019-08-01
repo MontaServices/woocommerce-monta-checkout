@@ -19,6 +19,7 @@
                     </form>
                 <?php } ?>
 
+                <!--Old shipper filter-->
                 <div class="bh-sl-filters-container">
 
                     <ul id="category-filters" class="bh-sl-filters">

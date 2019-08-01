@@ -2185,6 +2185,7 @@
                 // Focus on the list
                 $('.' + _this.settings.locationList + ' li').removeClass('list-focus');
                 $('.' + _this.settings.locationList + ' li[data-markerid=' + markerId + ']').addClass('list-focus');
+                $('.' + _this.settings.locationList + ' li[data-markerid=' + markerId + '] input').prop("checked", true);
             });
 
             // Prevent bubbling from list content links

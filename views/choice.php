@@ -72,12 +72,13 @@
 
                     <a class="monta-more-pickup-points"><?php _e( 'Show more options', TKEY ); ?></a>
 
-                    <div class="scroller bh-sl-loc-list">
-                        <ul id="initialPickupsList" class="list">
+                    <div class="bh-sl-loc-list">
+                        <ul id="initialPickupsList">
                             <!-- pick-up points -->
                         </ul>
+                        <input style="display: none;" type="radio" name="initialPickupPointRadio" id="initialPickupRadioDummy">
                     </div>
-                    <a class="monta-select-pickup"><?php _e( 'Use selection', TKEY ); ?></a>
+                    <!--<a class="monta-select-pickup"><?php /*_e( 'Use selection', TKEY ); */?></a>-->
 
                 </div>
 

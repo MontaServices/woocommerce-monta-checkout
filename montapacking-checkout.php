@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapakcing Check-out extension
- * Version: 0.2.1
+ * Version: 0.2.2
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -379,8 +379,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             ## Gekozen shipper ophalen
                             foreach ( $frame->options as $option ) {
 
-                                $code = implode( ',', $option->codes );
-                                if ( $code == $shipper ) {
+                                if ( $option->code == $shipper ) {
 
                                     $method = $option;
                                     break;

@@ -306,7 +306,7 @@ body.monta-cover-open{
     background: #f5f5f5;
 }
 
-.monta-locations ul li.list-focus{
+.monta-locations ul.list li.list-focus{
     background: #00b5e2;
     color: #fff;
 }
@@ -394,4 +394,38 @@ body.monta-cover-open{
 #monta-address-required {
     font-style: italic;
     padding: 0 15px;
+}
+
+/*Initial pickups stylign*/
+.monta-initial-pickup {
+    margin-top: 10px;
+    border: 2px solid #eee;
+    background: white !important;
+}
+
+.monta-initial-pickup>input {
+    position: absolute;
+    margin: 24px;
+    padding: 0;
+    vertical-align: top;
+}
+
+.monta-initial-pickup>span * {
+    padding-left: 70px;
+}
+
+#initialPickupsList li {
+    margin-top: 10px;
+    border: 2px solid #eee;
+    background: white;
+}
+
+#initialPickupsList li.list-focus{
+    background-color: #eee;
+    border: 2px solid #00b5e2;
+}
+
+.initialPickupRadio {
+    margin: 25px 25px 25px 15px;
+    float: left;
 }

@@ -297,7 +297,7 @@ jQuery( function( $ ) {
 
                                 if ($('.cat-' + item.code + '').length === 0) {
 
-                                    $('#category-filters').append('<li class="cat-' + item.code + '"><label><input type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.description + '</label></li>');
+                                    //$('#category-filters').append('<li class="cat-' + item.code + '"><label><input type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.description + '</label></li>');
 
                                 }
 
@@ -351,7 +351,6 @@ jQuery( function( $ ) {
                             };
 
                             monta_shipping.pickupLocator = $('#monta-stores').storeLocator(config);
-                            monta_shipping.pickupLocator = $('#monta-pickups').storeLocator(config);
 
                             var liExists = setInterval(function () {
 
@@ -359,7 +358,15 @@ jQuery( function( $ ) {
 
                                     $('#initialPickupsList li:gt(2)').remove();
 
-                                    if ( $("#initialPickupsList").children().length === 3 ) {
+                                    //Add radio buttons for initial pickups
+                                    $("#initialPickupsList  > li").each(function () {
+
+                                        $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
+                                        //$(this).addClass("monta-select-pickup");
+
+                                    });
+
+                                    if ($("#initialPickupsList").children().length === 3) {
 
                                         $("#monta-pickups").show(100);
 
@@ -418,6 +425,10 @@ jQuery( function( $ ) {
                     $('.monta-cover .monta-pickup-loading').addClass('monta-hide');
                     $('.monta-cover .monta-pickup-active').removeClass('monta-hide');
 
+                    // Remove list-focus class from the initial pickup locations
+                    $("#initialPickupsList li.list-focus").removeClass("list-focus");
+                    $("#initialPickupRadioDummy").prop("checked", true);
+
                 });
 
             },
@@ -427,7 +438,6 @@ jQuery( function( $ ) {
                 monta_shipping.pickup_selected = location;
 
                 $('.monta-select-pickup').addClass('active');
-                $('.monta-select-pickup').on('click', function () {
 
                     if (monta_shipping.pickup_selected !== null) {
 
@@ -454,20 +464,25 @@ jQuery( function( $ ) {
                         $('.monta-pickup-input-country').val(loc.country);
                         $('.monta-pickup-input-price').val(loc.price_raw);
 
-                        $('body').removeClass('monta-cover-open');
+                        $('.monta-select-pickup').on('click', function () {
 
-                        $('.monta-cover').addClass('monta-hide');
-                        $('.monta-cover .monta-pickup-loading').addClass('monta-hide');
-                        $('.monta-cover .monta-pickup-active').removeClass('monta-hide');
+                            $('body').removeClass('monta-cover-open');
 
-                        $(".monta-pickup-initial-points").addClass("monta-hide");
+                            $('.monta-cover').addClass('monta-hide');
+                            $('.monta-cover .monta-pickup-loading').addClass('monta-hide');
+                            $('.monta-cover .monta-pickup-active').removeClass('monta-hide');
 
-                        monta_shipping.storeLocatorDestroy();
+                            // Remove list-focus class from the initial pickup locations
+                            $("#initialPickupsList li.list-focus").removeClass("list-focus");
+                            $("#initialPickupRadioDummy").prop("checked", true);
+
+                        });
+
                         monta_shipping.updateWooCheckout();
 
                     }
 
-                });
+                //});
 
             },
 
@@ -527,7 +542,6 @@ jQuery( function( $ ) {
                     shippers.html('');
 
                 }
-
 
                 monta_shipping.updateWooCheckout();
 
