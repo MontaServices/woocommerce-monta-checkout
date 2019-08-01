@@ -209,6 +209,8 @@ jQuery( function( $ ) {
 
                     $('.monta-loading').addClass('active');
 
+                    $('.monta-shipment-extras').removeClass('active');
+
                 } else {
 
                     $("#ship-to-different-address").show();
@@ -607,6 +609,10 @@ jQuery( function( $ ) {
 
                 $('.monta-options .monta-option').addClass('monta-disabled');
                 $('.monta-options input[type="radio"]').prop('disabled', true);
+
+                $(".monta-shipment-delivery").removeClass("active");
+                $(".monta-shipment-extras").removeClass("active");
+                $(".monta-shipment-pickup").removeClass("active");
 
             },
 
