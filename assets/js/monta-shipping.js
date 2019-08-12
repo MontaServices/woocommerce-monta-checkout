@@ -366,7 +366,14 @@ jQuery( function( $ ) {
                                     //Add radio buttons for initial pickups
                                     $("#initialPickupsList  > li").each(function () {
 
-                                        $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
+                                        var element = $("input");
+                                        var radioButtons = $(this).find(element);
+
+                                        if (radioButtons.length < 1) {
+
+                                            $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
+
+                                        }
 
                                     });
 

@@ -78,7 +78,6 @@
                         </ul>
                         <input style="display: none;" type="radio" name="initialPickupPointRadio" id="initialPickupRadioDummy">
                     </div>
-                    <!--<a class="monta-select-pickup"><?php /*_e( 'Use selection', TKEY ); */?></a>-->
 
                 </div>
 

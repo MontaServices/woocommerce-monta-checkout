@@ -431,3 +431,29 @@ body.monta-cover-open{
     margin: 25px 25px 25px 15px;
     float: left;
 }
+
+/* Specific styling for firefox */
+@-moz-document url-prefix() {
+
+    .bh-sl-map{
+        position: fixed !important;
+        max-height: 80vh;
+        max-width: 52.5%;
+    }
+
+    .bh-sl-loc-list {
+        max-height: 75.1vh;
+    }
+
+    .monta-locations {
+        padding-bottom: unset !important;
+    }
+
+}
+
+/* Specific styling for IE */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .bh-sl-loc-list {
+        max-height: 80vh;
+    }
+}
