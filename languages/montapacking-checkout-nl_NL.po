@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: montapacking-checkout\n"
-"POT-Creation-Date: 2019-07-29 11:44+0200\n"
-"PO-Revision-Date: 2019-07-29 11:50+0200\n"
+"POT-Creation-Date: 2019-08-20 11:29+0200\n"
+"PO-Revision-Date: 2019-08-20 11:29+0200\n"
 "Last-Translator: \n"
 "Language-Team: lorenzo@montapacking.nl\n"
 "Language: nl\n"
@@ -14,14 +14,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-SearchPath-0: .\n"
-
-#: montapacking-api/Objects/Option.php:22
-msgid "The customer needs to sign upon delivery."
-msgstr "De klant moet tekenen bij aflevering."
-
-#: montapacking-api/Objects/Option.php:26
-msgid "Do not deliver at the neighbours."
-msgstr "Niet bij de buren afleveren."
 
 #: montapacking-checkout.php:37
 msgid "Settings"
@@ -47,6 +39,10 @@ msgstr ""
 msgid "Shipping"
 msgstr "Verzenden"
 
+#: montapacking-checkout.php:332
+msgid "Choose a shipping method"
+msgstr "Selecteer een verzend methode"
+
 #: views/choice.php:6
 msgid "Shipping method"
 msgstr "Verzend methode"
@@ -69,7 +65,7 @@ msgstr "Laden..."
 
 #: views/choice.php:42
 msgid "Select delivery time and date"
-msgstr "Selecteer aflever  datum en tijd"
+msgstr "Selecteer aflever datum en tijd"
 
 #: views/choice.php:45
 msgid "Earlier"
@@ -82,10 +78,6 @@ msgstr "Later"
 #: views/choice.php:73
 msgid "Show more options"
 msgstr "Bekijk meer opties"
-
-#: views/choice.php:80 views/pickup.php:40
-msgid "Use selection"
-msgstr "Gebruik selectie"
 
 #: views/choice.php:89
 msgid "Selected pickup point"
@@ -102,3 +94,16 @@ msgstr "Zoeken op lokale postcode"
 #: views/pickup.php:17
 msgid "Search"
 msgstr "Zoeken"
+
+#: views/pickup.php:41
+msgid "Use selection"
+msgstr "Gebruik selectie"
+
+#~ msgid "Choose a delivery method"
+#~ msgstr "Kies een verzendmethode"
+
+#~ msgid "The customer needs to sign upon delivery."
+#~ msgstr "De klant moet tekenen bij aflevering."
+
+#~ msgid "Do not deliver at the neighbours."
+#~ msgstr "Niet bij de buren afleveren."

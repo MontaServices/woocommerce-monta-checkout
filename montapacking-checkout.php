@@ -326,7 +326,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             ?>
             <tr>
                 <th><?php _e( 'Shipping', 'woocommerce' ); ?></th>
-                <td>&euro; <?php echo number_format( $price, 2, ',', '' ); ?></td>
+                <?php
+                    if($price == 0){
+                        ?>
+                            <td><?php _e( 'Choose a shipping method', TKEY ); ?></td>
+                        <?php
+                    }else{
+                        ?>
+                            <td>&euro; <?php echo number_format( $price, 2, ',', '' ); ?></td>
+                        <?php
+                    }
+                ?>
             </tr>
             <?php
 
@@ -710,7 +720,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                             $items[ $nr ] = (object) [
                                 'code' => $frame->code,
-                                'date' => date( 'd-m-Y', strtotime( $frame->from . ' +1 day' ) ),
+                                'date' => date( 'd-m-Y', strtotime( $frame->from ) ),
                                 'time' => ( date( 'H:i', strtotime( $frame->from ) ) != date( 'H:i', strtotime( $frame->to ) ) ) ? date( 'H:i', strtotime( $frame->from ) ) . '-' . date( 'H:i', strtotime( $frame->to ) ) : '',
                                 'description' => $frame->description,
                                 'price' => $curr . ' ' . number_format( $lowest, 2, ',', '' ),
