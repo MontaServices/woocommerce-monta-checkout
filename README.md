@@ -22,4 +22,4 @@ Webshop/origin:
 Name of your webshop as known by Montapacking. This determines which shippers are allowed, cutofftime etc.
 
 To enable shippers:
-Configure prices in Montaportal: https://www.montaportal.nl/Home/CheckOutSettings/32
+Configure prices in Montaportal: Blue menu bar > Settings > Checkout options > Edit for a webshop.
