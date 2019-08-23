@@ -24,6 +24,9 @@ jQuery( function( $ ) {
 
             init: function () {
 
+                // Hide option on start
+                $("#ship-to-different-address").hide();
+
                 this.$checkout_form.on('click', '#ship-to-different-address input', this.updateDeliveries);
                 this.$checkout_form.on('change', '.country_select', this.updateDeliveries);
 
@@ -70,7 +73,7 @@ jQuery( function( $ ) {
 
                 if (other) {
 
-                    if (ship_address !== '' && ship_zipcode !== '' && ship_place !== '' && ship_country !== '') {
+                    if (ship_zipcode !== '') {
 
                         monta_shipping.enableRadio();
                         monta_shipping.hideAddressMsg();
@@ -84,7 +87,7 @@ jQuery( function( $ ) {
 
                 } else {
 
-                    if (address !== '' && zipcode !== '' && place !== '' && country !== '') {
+                    if (zipcode !== '') {
 
                         monta_shipping.enableRadio();
                         monta_shipping.hideAddressMsg();
