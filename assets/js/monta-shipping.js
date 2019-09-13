@@ -78,10 +78,15 @@ jQuery( function( $ ) {
                         monta_shipping.enableRadio();
                         monta_shipping.hideAddressMsg();
 
+                        //Select first shipping option
+                        monta_shipping.selectDeliveryOption();
+
                     } else {
 
                         monta_shipping.disableRadio();
                         monta_shipping.showAddressMsg();
+
+                        monta_shipping.deSelectDeliveryOption();
 
                     }
 
@@ -92,10 +97,15 @@ jQuery( function( $ ) {
                         monta_shipping.enableRadio();
                         monta_shipping.hideAddressMsg();
 
+                        //Select first shipping option
+                        monta_shipping.selectDeliveryOption();
+
                     } else {
 
                         monta_shipping.disableRadio();
                         monta_shipping.showAddressMsg();
+
+                        monta_shipping.deSelectDeliveryOption();
 
                     }
 
@@ -679,6 +689,20 @@ jQuery( function( $ ) {
                     }
 
                 }, 100);
+
+            },
+
+            selectDeliveryOption: function () {
+
+                //Check and click delivery button
+                $('.monta-options input[value=delivery]').prop('checked', true).click();
+
+            },
+
+            deSelectDeliveryOption: function () {
+
+                //Un-check and click delivery button
+                $('.monta-options input[value=delivery]').prop('checked', false);
 
             },
 
