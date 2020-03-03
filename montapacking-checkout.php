@@ -287,7 +287,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                         }
 
-                        $item->add_meta_data( 'Extras', $extras, true );
+                        $item->add_meta_data( 'Extras', implode(", ", $extras), true );
 
                     }else if(!empty($method->optionCodes)){
 
@@ -299,7 +299,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                         }
 
-                        $item->add_meta_data( 'Extras', $extras, true );
+                        $item->add_meta_data( 'Extras', implode(", ", $extras), true );
 
                     }
 
