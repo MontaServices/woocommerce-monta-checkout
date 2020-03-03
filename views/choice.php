@@ -1,6 +1,7 @@
 <script>
     var site_url = '<?php echo site_url();?>';
 </script>
+
 <div class="woocommerce-shipping-fields montapacking-shipping">
 
     <h3><?php _e( 'Shipping method', TKEY ); ?></h3>
@@ -117,7 +118,7 @@
     <li>
 
         <label>
-            <input type="radio" name="montapacking[shipment][time]" value="{.id}">
+            <input type="radio" name="montapacking[shipment][time]" value="{.id}" class="{.sameday}">
             <span>
 				<span class="day">{.day}</span>
 				<span class="description">{.description}</span>

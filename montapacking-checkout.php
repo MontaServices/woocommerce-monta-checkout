@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
- * Description: Montapakcing Check-out extension
+ * Description: Montapacking Check-out extension
  * Version: 1.0.1
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
@@ -227,8 +227,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                     break;
                 case 'pickup':
+                    // setting up address in a nice array
+                    $arr = array();
+                    $arr[] = $pickup['shipper'];
+                    $arr[] = $pickup['code'];
+                    $arr[] = $pickup['company'];
+                    $arr[] = $pickup['street']." ".$pickup['houseNumber'];
+                    $arr[] = $pickup['postal']." ".$pickup['city']." (".$pickup['country'].")";
 
-                    $item->add_meta_data( 'Pickup Data', $pickup, true );
+                    $arr = implode("\n\r", $arr);
+
+                    $item->add_meta_data( 'Pickup Data', $arr, true );
 
                     break;
             }

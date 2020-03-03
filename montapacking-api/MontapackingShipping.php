@@ -174,6 +174,7 @@ class MontapackingShipping {
 
         ## Timeframes omzetten naar bruikbaar object
         $result = $this->call('ShippingOptions', ['basic','shippers','order','address','products']);
+
         if (isset($result->Timeframes)){
 
             ## Shippers omzetten naar shipper object
@@ -221,7 +222,8 @@ class MontapackingShipping {
         }
 
         $method = strtolower($method);
-        $url = $this->http . $this->user . ':' . $this->pass . '@' . $this->url . $method;
+        //$url = $this->http . $this->user . ':' . $this->pass . '@' . $this->url . $method;
+        $url = "https://api.montapacking.nl/rest/v5/".$method;
 
         if ($this->debug) {
             echo $url;
@@ -230,8 +232,10 @@ class MontapackingShipping {
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
+        $this->pass =  htmlspecialchars_decode($this->pass);
 
+        curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
+        curl_setopt($ch, CURLOPT_USERPWD,  $this->user.":".$this->pass);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET' );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);

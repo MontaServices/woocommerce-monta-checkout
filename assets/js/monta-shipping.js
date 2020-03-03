@@ -24,20 +24,25 @@ jQuery( function( $ ) {
 
             init: function () {
 
+                $(document).ready(function() {
+                    $("#billing_postcode").trigger("change");
+                });
+
                 // Hide option on start
                 $("#ship-to-different-address").hide();
 
                 this.$checkout_form.on('click', '#ship-to-different-address input', this.updateDeliveries);
                 this.$checkout_form.on('change', '.country_select', this.updateDeliveries);
 
-                var elms = '#billing_address_1,';
+                var elms = '';
+                elms += '#billing_address_1,';
                 elms += '#billing_postcode,';
                 elms += '#billing_city,';
-                elms += '#select2-billing_country-container,';
+                elms += '#shipping_country,';
+                elms += '#billing_country,';
                 elms += '#shipping_address_1,';
                 elms += '#shipping_postcode,';
                 elms += '#shipping_city,';
-                elms += '#select2-shipping_country-container,';
                 elms += '#ship-to-different-address-checkbox';
 
                 this.$body.on('change', elms, this.checkAddress);
@@ -246,13 +251,16 @@ jQuery( function( $ ) {
 
                             var times = mover.find('ul');
 
+                            // get the date of today , this is for validation if the checkbox needed to be checked (sameday or not sameday)
+                            var d = new Date();
+                            var date_today = d.toLocaleDateString('nl-NL', { month: '2-digit', day: '2-digit', year: 'numeric' });
+
                             // Frames tonen in lijst
+
                             $.each(monta_shipping.frames, function (key, item) {
 
                                 if (item.code === 'NOTIMES') {
-
                                     $('.monta-times').addClass('monta-hide');
-
                                 }
 
                                 var option = item.options[0];
@@ -266,6 +274,13 @@ jQuery( function( $ ) {
                                     html = html.replace(/{.description}/g, (item.description !== null) ? item.description : '');
                                     html = html.replace(/{.price}/g, item.price);
 
+                                    // exclude the checking of today delivery, this is not the most wanted option for clients
+                                    if (date_today == item.date) {
+                                        html = html.replace(/{.sameday}/g, 'sameday');
+                                    } else {
+                                        html = html.replace(/{.sameday}/g, 'otherday');
+                                    }
+
                                     times.append(html);
 
                                 }
@@ -273,7 +288,7 @@ jQuery( function( $ ) {
                             });
 
                             // Select first option
-                            mover.find('input[type=radio]:first').prop('checked', true).click();
+                            mover.find('input[type=radio]:not(.sameday):first').prop('checked', true).click();
 
                             // Update slider for scrolling
                             monta_shipping.updateSlider();
@@ -516,7 +531,9 @@ jQuery( function( $ ) {
                 $('#monta-stores .bh-sl-map').removeClass('bh-sl-map-open').html('');
                 $('#monta-stores .monta-select-pickup').removeClass('active');
 
-                monta_shipping.pickupLocator.storeLocator('destroy');
+                $('#monta-stores').storeLocator('destroy');
+                // fix 2020-03-02
+                //monta_shipping.pickupLocator.storeLocator('destroy');
 
             },
 
