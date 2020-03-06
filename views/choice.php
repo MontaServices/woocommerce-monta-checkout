@@ -41,7 +41,7 @@
         <style>
             .imglogo img {
                 width: 50px;
-                margin:right: 15px;
+                margin-right: 15px;
             }
         </style>
 
@@ -129,7 +129,7 @@
 
     <div class="monta-shipment-extras">
 
-  <!--      <br/>-->
+        <!--      <br/>-->
 
         <h3 style="padding-top:5px"><?php _e( 'Extra options:', TKEY ); ?></h3>
         <div class="monta-shipment-extra-options"></div>
