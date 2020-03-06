@@ -301,6 +301,28 @@ jQuery( function( $ ) {
 
                         }
 
+                        //jQuery(document).ready(function(){
+                        //setTimeout(function(){
+                        updateDeliveryTextBlock();
+                        //}, 3000);
+
+                        jQuery( "input.montapackingshipmentshipper, input.montapackingshipmenttime " ).live( "change", function() {
+                            updateDeliveryTextBlock();
+                        });
+
+                        jQuery( "#othersendmethod" ).live( "click", function() {
+
+                            if( jQuery(".monta-times-croppped").css('display') == 'block') {
+                                jQuery(".monta-times-croppped").css('display', "none");
+                                jQuery(".monta-times-extended").css('display', "block");
+                            } else {
+                                jQuery(".monta-times-croppped").css('display', "block");
+                                jQuery(".monta-times-extended").css('display', "none");
+                            }
+                        });
+
+                        //});
+
                         // Process pickups
                         if (checked === 'pickup') {
 
@@ -732,3 +754,23 @@ jQuery( function( $ ) {
     }
 
 });
+
+function updateDeliveryTextBlock()
+{
+    var day = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".day").text();
+    jQuery("strong.date").text(day);
+
+    var shipper = jQuery("input.montapackingshipmentshipper:checked").parent("label").find(".cropped_name").text();
+    jQuery("strong.shipper").text(shipper);
+
+    var datetime = jQuery("input.montapackingshipmentshipper:checked").parent("label").find(".cropped_time").text();
+    jQuery("strong.datetime").text(datetime);
+
+    var image = jQuery("input.montapackingshipmentshipper:checked").parent("label").find(".cropped_image").html();
+    jQuery("div.imglogo").html(image);
+
+    jQuery(".timeinformation").css("display", "none");
+    if (datetime.trim()) {
+        jQuery(".timeinformation").css("display", "");
+    }
+}

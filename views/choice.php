@@ -38,26 +38,50 @@
 
     <div class="monta-shipment-delivery">
 
-        <br/>
+        <style>
+            .imglogo img {
+                width: 50px;
+                margin:right: 15px;
+            }
+        </style>
 
-        <h3><?php _e( 'Select delivery time and date', TKEY ); ?></h3>
-        <div class="monta-times">
+        <div class="monta-times-croppped" style="display:block">
+            <h3><?php _e( 'Delivery time and date', TKEY ); ?></h3>
 
-            <a class="toggle-left"><?php _e( 'Earlier', TKEY ); ?></a>
-            <div class="scroller">
+            <label>
+                <div style="float : left;" class="imglogo"></div>
 
-                <div class="mover">
+                <?php _e( 'Your order will be delivered with', TKEY ); ?> <strong class="shipper"></strong> <?php _e( 'on', TKEY ); ?> <strong class="date"></strong> <span class="timeinformation"> <?php _e( 'between', TKEY ); ?> <strong class="datetime"></strong></span><br>
 
-                    <ul></ul>
+                <a href="javascript:;" id="othersendmethod"><?php _e( 'Click here to choose another delivery option', TKEY ); ?></a>
+            </label>
 
-                </div>
 
-            </div>
-            <a class="toggle-right"><?php _e( 'Later', TKEY ); ?></a>
+
 
         </div>
 
-        <div class="monta-shipment-shipper"></div>
+        <div class="monta-times-extended" style="display:none">
+
+            <h3><?php _e( 'Select delivery time and date', TKEY ); ?></h3>
+            <div class="monta-times">
+
+                <a class="toggle-left"><?php _e( 'Earlier', TKEY ); ?></a>
+                <div class="scroller">
+
+                    <div class="mover">
+
+                        <ul></ul>
+
+                    </div>
+
+                </div>
+                <a class="toggle-right"><?php _e( 'Later', TKEY ); ?></a>
+
+            </div>
+
+            <div class="monta-shipment-shipper"></div>
+        </div>
 
     </div>
 
@@ -105,9 +129,9 @@
 
     <div class="monta-shipment-extras">
 
-        <br/>
+  <!--      <br/>-->
 
-        <h3><?php _e( 'Extra options:', TKEY ); ?></h3>
+        <h3 style="padding-top:5px"><?php _e( 'Extra options:', TKEY ); ?></h3>
         <div class="monta-shipment-extra-options"></div>
 
     </div>
@@ -118,7 +142,7 @@
     <li>
 
         <label>
-            <input type="radio" name="montapacking[shipment][time]" value="{.id}" class="{.sameday}">
+            <input type="radio" name="montapacking[shipment][time]" value="{.id}" class="montapackingshipmenttime {.sameday}">
             <span>
 				<span class="day">{.day}</span>
 				<span class="description">{.description}</span>
@@ -131,9 +155,12 @@
 
 <div class="monta-shipper-template">
     <label>
-        <input type="radio" name="montapacking[shipment][shipper]" value="{.code}">
+        <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper">
+        <span style="display:none" class="cropped_name">{.name}</span>
+        <span style="display:none" class="cropped_time">{.time}</span>
+        <span style="display:none" class="cropped_image">{.img}</span>
         <span>
-			{.img}
+            {.img}
 			<div class="name">{.name} {.time}</div>
 			<span class="price">{.price}</span>
 		</span>
