@@ -39,6 +39,22 @@ class PickupPoint {
         $pickup = null;
         if (is_object($details)){
 
+            $today = date("l");
+            $times = $details->OpeningTimes;
+
+            $arr = array();
+            foreach ($times as $key => $values) {
+                if ($values->Day == $today) {
+                    foreach ($values->OpeningTimes as $timekey => $times) {
+
+                        $array = array();
+                        $array['from'] = $times->From;
+                        $array['to'] = $times->To;
+                        $arr[] = $array;
+                    }
+                }
+            }
+
             $pickup = (object)[
                 'code' => $details->Code,
                 'name' => $details->Company,
@@ -52,7 +68,7 @@ class PickupPoint {
                 'distance' => $details->DistanceMeters,
                 'lat' => $details->Latitude,
                 'lng' => $details->Longitude,
-
+                'openingtimes' => json_encode($arr),
                 'image' => $details->ImageUrl,
             ];
 

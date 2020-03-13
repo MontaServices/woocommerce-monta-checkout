@@ -1,12 +1,18 @@
 {{#location}}
 <li data-markerid="{{markerid}}">
+    <div style="width:40px; float:left; margin-top:16px">
+        <img src="{{image}}" style="width:30px;">
+    </div>
 
     <span class="price">&euro; {{price}}</span>
-    <strong class="loc-name">{{name}}</strong><br />
-    {{description}} - {{distance}} km<br />
-    <span class="loc-addr">{{street}} {{houseNumber}}</span><br />
-    <span class="loc-addr">{{postal}} {{city}} ({{country}})</span><br />
-
+    <div style="float:left;">
+        <strong class="loc-name">{{name}}</strong><br />
+        {{description}} - {{distance}} km<br />
+        {{openingtimes}}<br />
+        <span class="loc-addr">{{street}} {{houseNumber}}</span><br />
+        <span class="loc-addr">{{postal}} {{city}} ({{country}})</span><br />
+    </div>
+    <div style="clear:both"></div>
 
 </li>
 {{/location}}

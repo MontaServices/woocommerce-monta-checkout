@@ -4,7 +4,7 @@
 
 <div class="woocommerce-shipping-fields montapacking-shipping">
 
-    <h3><?php _e( 'Shipping method', TKEY ); ?></h3>
+    <!--SANDER <h3><?php _e( 'Shipping method', TKEY ); ?></h3> -->
 
     <h5 id="monta-address-required"><?php _e("*Please fill in an address before selecting a shipping method", TKEY) ?></h5>
 
@@ -46,8 +46,7 @@
         </style>
 
         <div class="monta-times-croppped" style="display:block">
-            <h3><?php _e( 'Delivery time and date', TKEY ); ?></h3>
-
+            <!-- SANDER <h3><?php _e( 'Delivery time and date', TKEY ); ?></h3> -->
             <label>
                 <div style="float : left;" class="imglogo"></div>
 
@@ -63,7 +62,7 @@
 
         <div class="monta-times-extended" style="display:none">
 
-            <h3><?php _e( 'Select delivery time and date', TKEY ); ?></h3>
+            <h6><?php _e( 'Select delivery time and date', TKEY ); ?></h6>
             <div class="monta-times">
 
                 <a class="toggle-left"><?php _e( 'Earlier', TKEY ); ?></a>
@@ -111,7 +110,7 @@
 
 
 
-        <h3><?php _e( 'Selected pickup point', TKEY ); ?></h3>
+        <h5><?php _e( 'Selected pickup point', TKEY ); ?></h5>
         <div style="display: none;" class="monta-pickup-selected"></div>
 
         <input type="hidden" name="montapacking[pickup][code]" class="monta-pickup-input-code">
@@ -129,9 +128,9 @@
 
     <div class="monta-shipment-extras">
 
-        <!--      <br/>-->
+  <!--      <br/>-->
 
-        <h3 style="padding-top:5px"><?php _e( 'Extra options:', TKEY ); ?></h3>
+        <h6 style="padding-top:10px"><?php _e( 'Extra options:', TKEY ); ?></h6>
         <div class="monta-shipment-extra-options"></div>
 
     </div>

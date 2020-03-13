@@ -227,17 +227,21 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                     break;
                 case 'pickup':
+
+                    $item->add_meta_data( 'Pickup Data', $pickup, true );
+
                     // setting up address in a nice array
                     $arr = array();
-                    $arr[] = $pickup['shipper'];
-                    $arr[] = $pickup['code'];
+                    //$arr[] = $pickup['shipper'];
+                    //$arr[] = $pickup['code'];
+                    $arr[] = "<b>Ophaalpunt</b>";
                     $arr[] = $pickup['company'];
                     $arr[] = $pickup['street']." ".$pickup['houseNumber'];
                     $arr[] = $pickup['postal']." ".$pickup['city']." (".$pickup['country'].")";
 
                     $arr = implode("\n\r", $arr);
 
-                    $item->add_meta_data( 'Pickup Data', $arr, true );
+                    $item->add_meta_data( 'Leveringsopties', $arr, true );
 
                     break;
             }

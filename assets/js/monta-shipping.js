@@ -300,10 +300,10 @@ jQuery( function( $ ) {
                             $('.monta-shipment-extras').removeClass('active');
 
                         }
-
+                        
                         updateDeliveryTextBlock();
 
-
+                       
 
                         //});
 
@@ -314,6 +314,18 @@ jQuery( function( $ ) {
 
                             $('#category-filters').html('');
                             $.each(monta_shipping.pickups, function (key, item) {
+
+                                var openingtimes = JSON.parse(item.details.openingtimes);
+                                var allopeningtimes = [];
+                                for(var k in openingtimes) {
+
+                                    var times = openingtimes[k];
+                                    var timeline = times.from+" - "+times.to+" uur";
+
+                                    allopeningtimes.push(timeline);
+                                }
+
+                                allopeningtimes.join(" / ");
 
                                 markers.push({
                                     'id': '1',
@@ -330,6 +342,8 @@ jQuery( function( $ ) {
                                     'country': item.details.country,
                                     'description': item.description,
                                     'price': item.price,
+                                    'openingtimes': allopeningtimes,
+                                    'image': site_url + '/wp-content/plugins/montapacking-checkout/assets/img/'+item.code+".png",
                                     'price_raw': item.price_raw,
                                     'raw': item
                                 });
@@ -484,48 +498,48 @@ jQuery( function( $ ) {
 
                 $('.monta-select-pickup').addClass('active');
 
-                if (monta_shipping.pickup_selected !== null) {
+                    if (monta_shipping.pickup_selected !== null) {
 
-                    var loc = monta_shipping.pickup_selected;
-                    var html = '<strong>' + loc.name + '</strong><br />';
-                    html += '' + loc.street + '<br />';
-                    html += '' + loc.postal + ' ' + loc.city + '<br />';
-                    html += '&euro; ' + loc.price + '<br />';
+                        var loc = monta_shipping.pickup_selected;
+                        var html = '<strong>' + loc.name + '</strong><br />';
+                        html += '' + loc.street + '<br />';
+                        html += '' + loc.postal + ' ' + loc.city + '<br />';
+                        html += '&euro; ' + loc.price + '<br />';
 
-                    $('.monta-pickup-selected').html(html);
+                        $('.monta-pickup-selected').html(html);
 
-                    $('.monta-pickup-selected').show();
+                        $('.monta-pickup-selected').show();
 
-                    $('.monta-shipment-pickup').addClass('active');
+                        $('.monta-shipment-pickup').addClass('active');
 
-                    $('.monta-pickup-input-code').val(loc.code);
-                    $('.monta-pickup-input-shipper').val(loc.category);
-                    $('.monta-pickup-input-shippingOptions').val(loc.shippingOptions);
-                    $('.monta-pickup-input-company').val(loc.name);
-                    $('.monta-pickup-input-street').val(loc.street);
-                    $('.monta-pickup-input-houseNumber').val(loc.houseNumber);
-                    $('.monta-pickup-input-postal').val(loc.postal);
-                    $('.monta-pickup-input-city').val(loc.city);
-                    $('.monta-pickup-input-country').val(loc.country);
-                    $('.monta-pickup-input-price').val(loc.price_raw);
+                        $('.monta-pickup-input-code').val(loc.code);
+                        $('.monta-pickup-input-shipper').val(loc.category);
+                        $('.monta-pickup-input-shippingOptions').val(loc.shippingOptions);
+                        $('.monta-pickup-input-company').val(loc.name);
+                        $('.monta-pickup-input-street').val(loc.street);
+                        $('.monta-pickup-input-houseNumber').val(loc.houseNumber);
+                        $('.monta-pickup-input-postal').val(loc.postal);
+                        $('.monta-pickup-input-city').val(loc.city);
+                        $('.monta-pickup-input-country').val(loc.country);
+                        $('.monta-pickup-input-price').val(loc.price_raw);
 
-                    $('.monta-select-pickup').on('click', function () {
+                        $('.monta-select-pickup').on('click', function () {
 
-                        $('body').removeClass('monta-cover-open');
+                            $('body').removeClass('monta-cover-open');
 
-                        $('.monta-cover').addClass('monta-hide');
-                        $('.monta-cover .monta-pickup-loading').addClass('monta-hide');
-                        $('.monta-cover .monta-pickup-active').removeClass('monta-hide');
+                            $('.monta-cover').addClass('monta-hide');
+                            $('.monta-cover .monta-pickup-loading').addClass('monta-hide');
+                            $('.monta-cover .monta-pickup-active').removeClass('monta-hide');
 
-                        // Remove list-focus class from the initial pickup locations
-                        $("#initialPickupsList li.list-focus").removeClass("list-focus");
-                        $("#initialPickupRadioDummy").prop("checked", true);
+                            // Remove list-focus class from the initial pickup locations
+                            $("#initialPickupsList li.list-focus").removeClass("list-focus");
+                            $("#initialPickupRadioDummy").prop("checked", true);
 
-                    });
+                        });
 
-                    monta_shipping.updateWooCheckout();
+                        monta_shipping.updateWooCheckout();
 
-                }
+                    }
 
                 //});
 
@@ -762,18 +776,18 @@ function updateDeliveryTextBlock()
 
 jQuery(document).ready(function(){
 
-    jQuery( "input.montapackingshipmentshipper, input.montapackingshipmenttime " ).live( "change", function() {
-        updateDeliveryTextBlock();
-    });
-
-    jQuery( "#othersendmethod" ).live( "click", function() {
-
-        if( jQuery(".monta-times-croppped").css('display') == 'block') {
-            jQuery(".monta-times-croppped").css('display', "none");
-            jQuery(".monta-times-extended").css('display', "block");
-        } else {
-            jQuery(".monta-times-croppped").css('display', "block");
-            jQuery(".monta-times-extended").css('display', "none");
-        }
-    });
+	jQuery( "input.montapackingshipmentshipper, input.montapackingshipmenttime " ).live( "change", function() {
+	    updateDeliveryTextBlock();
+	});
+	
+	jQuery( "#othersendmethod" ).live( "click", function() {
+	
+	    if( jQuery(".monta-times-croppped").css('display') == 'block') {
+	        jQuery(".monta-times-croppped").css('display', "none");
+	        jQuery(".monta-times-extended").css('display', "block");
+	    } else {
+	        jQuery(".monta-times-croppped").css('display', "block");
+	        jQuery(".monta-times-extended").css('display', "none");
+	    }
+	});
 });
