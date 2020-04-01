@@ -1,7 +1,7 @@
 <div class="monta-cover monta-hide">
     <div class="monta-window">
 
-        <div class="monta-pickup-loading"><?php _e( 'Loading...', TKEY ); ?></div>
+        <div class="monta-pickup-loading"><?php _e( 'Loading...', 'montapacking-checkout' ); ?></div>
 
         <div class="monta-pickup-active monta-hide bh-sl-container">
 
@@ -11,10 +11,10 @@
                 <?php if (false) { ?>
                     <form id="bh-sl-user-location" method="post" action="#">
 
-                        <label for="bh-sl-address"><?php _e( 'Search using local postal code', TKEY ); ?></label><br />
+                        <label for="bh-sl-address"><?php _e( 'Search using local postal code', 'montapacking-checkout' ); ?></label><br />
                         <input type="text" id="bh-sl-address" name="bh-sl-address">
 
-                        <button id="bh-sl-submit" type="submit"><?php _e( 'Search', TKEY ); ?></button>
+                        <button id="bh-sl-submit" type="submit"><?php _e( 'Search', 'montapacking-checkout' ); ?></button>
 
                     </form>
                 <?php } ?>
@@ -38,7 +38,7 @@
                             <!-- pick-up points -->
                         </ul>
                     </div>
-                    <a class="monta-select-pickup"><?php _e( 'Use selection', TKEY ); ?></a>
+                    <a class="monta-select-pickup"><?php _e( 'Use selection', 'montapacking-checkout' ); ?></a>
 
                 </div>
                 <div class="monta-map">

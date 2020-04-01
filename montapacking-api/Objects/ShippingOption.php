@@ -1,7 +1,8 @@
 <?php
 include("Option.php");
 
-class ShippingOption {
+class MontaCheckout_ShippingOption
+{
 
     public $code;
     public $codes;
@@ -16,7 +17,8 @@ class ShippingOption {
     public $extras;
     public $date;
 
-    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $mailbox, $price, $currency, $from, $to, $extras, $date){
+    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $mailbox, $price, $currency, $from, $to, $extras, $date)
+    {
 
         $this->setCode($code);
         $this->setCodes($codes);
@@ -33,65 +35,76 @@ class ShippingOption {
 
     }
 
-    public function setCode($code){
+    public function setCode($code)
+    {
         $this->code = $code;
         return $this;
     }
 
-    public function setCodes($codes){
+    public function setCodes($codes)
+    {
         $this->codes = $codes;
         return $this;
     }
 
-    public function setOptionCodes($optioncodes){
+    public function setOptionCodes($optioncodes)
+    {
         $this->optioncodes = $optioncodes;
         return $this;
     }
 
-    public function setOptionsWithValue($optionsWithValue){
+    public function setOptionsWithValue($optionsWithValue)
+    {
         $this->optionsWithValue = $optionsWithValue;
         return $this;
     }
 
-    public function setDescription($description){
+    public function setDescription($description)
+    {
         $this->description = $description;
         return $this;
     }
 
-    public function setMailbox($mailbox){
+    public function setMailbox($mailbox)
+    {
         $this->mailbox = $mailbox;
         return $this;
     }
 
-    public function setPrice($price){
+    public function setPrice($price)
+    {
         $this->price = $price;
         return $this;
     }
 
-    public function setCurrency($currency){
+    public function setCurrency($currency)
+    {
         $this->currency = $currency;
         return $this;
     }
 
-    public function setFrom($from){
+    public function setFrom($from)
+    {
         $this->from = $from;
         return $this;
     }
 
-    public function setTo($to){
+    public function setTo($to)
+    {
         $this->to = $to;
         return $this;
     }
 
-    public function setExtras($extras){
+    public function setExtras($extras)
+    {
 
         $list = null;
 
-        if (is_array($extras)){
+        if (is_array($extras)) {
 
-            foreach ($extras as $extra){
+            foreach ($extras as $extra) {
 
-                $list[] = new Option(
+                $list[] = new MontaCheckout_Option(
                     $extra->Code,
                     $extra->Description,
                     $extra->SellPrice,
@@ -106,14 +119,16 @@ class ShippingOption {
         return $this;
     }
 
-    public function setDate($date){
-        $this->date = date('Y-m-d H:i:s',strtotime($date));
+    public function setDate($date)
+    {
+        $this->date = date('Y-m-d H:i:s', strtotime($date));
     }
 
-    public function toArray(){
+    public function toArray()
+    {
 
         $option = null;
-        foreach ($this as $key => $value){
+        foreach ($this as $key => $value) {
             $option[$key] = $value;
         }
 

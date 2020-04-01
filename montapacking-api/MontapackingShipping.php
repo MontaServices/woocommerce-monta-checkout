@@ -6,7 +6,8 @@ require_once("Objects/Shipper.php");
 require_once("Objects/TimeFrame.php");
 require_once("Objects/PickupPoint.php");
 
-class MontapackingShipping {
+class MontapackingShipping
+{
 
     public $debug = false;
 
@@ -22,14 +23,15 @@ class MontapackingShipping {
     private $products = null;
     private $allowedshippers = null;
 
-    public function __construct($origin, $user, $pass, $test = false){
+    public function __construct($origin, $user, $pass, $test = false)
+    {
 
         $this->origin = $origin;
         $this->user = $user;
         $this->pass = $pass;
         $this->modus = ($test) ? 'api-test' : 'api';
 
-        $this->url = $this->modus .  '.montapacking.nl/rest/v5/';
+        $this->url = $this->modus . '.montapacking.nl/rest/v5/';
 
         // Set language for the api call
         $siteLocale = substr(get_locale(), 0, 2);
@@ -42,15 +44,28 @@ class MontapackingShipping {
 
     }
 
-    public function setOrder($total_incl, $total_excl){
+    public function checkConnection()
+    {
 
-        $this->order = new Order($total_incl, $total_excl);
+        $result = $this->call('info', ['basic']);
+
+        if (null === $result) {
+            return false;
+        }
+        return true;
+    }
+
+    public function setOrder($total_incl, $total_excl)
+    {
+
+        $this->order = new MontaCheckout_Order($total_incl, $total_excl);
 
     }
 
-    public function setAddress($street, $housenumber, $housenumberaddition, $postalcode, $city, $state, $countrycode){
+    public function setAddress($street, $housenumber, $housenumberaddition, $postalcode, $city, $state, $countrycode)
+    {
 
-        $this->address = new Address(
+        $this->address = new MontaCheckout_Address(
             $street,
             $housenumber,
             $housenumberaddition,
@@ -62,9 +77,10 @@ class MontapackingShipping {
 
     }
 
-    public function setShippers($shippers = null){
+    public function setShippers($shippers = null)
+    {
 
-        if (is_array($shippers)){
+        if (is_array($shippers)) {
             $this->shippers = $shippers;
         } else {
             $this->shippers[] = $shippers;
@@ -72,23 +88,25 @@ class MontapackingShipping {
 
     }
 
-    public function addProduct($sku, $quantity, $length = 0, $width = 0, $height = 0, $weight = 0){
+    public function addProduct($sku, $quantity, $length = 0, $width = 0, $height = 0, $weight = 0)
+    {
 
-        $this->products['products'][] = new Product($sku, $length, $width, $height, $weight, $quantity);
+        $this->products['products'][] = new MontaCheckout_Product($sku, $length, $width, $height, $weight, $quantity);
 
     }
 
-    public function getShippers(){
+    public function getShippers()
+    {
 
         $shippers = null;
 
-        $result = $this->call('info',['basic']);
-        if (isset($result->Origins)){
+        $result = $this->call('info', ['basic']);
+        if (isset($result->Origins)) {
 
             $origins = null;
 
             ## Array goedzetten
-            if (is_array($result->Origins)){
+            if (is_array($result->Origins)) {
                 $origins = $result->Origins;
             } else {
                 $origins[] = $result->Origins;
@@ -98,11 +116,11 @@ class MontapackingShipping {
             foreach ($origins as $origin) {
 
                 ## Check of shipper options object er is
-                if (isset($origin->ShipperOptions)){
+                if (isset($origin->ShipperOptions)) {
 
                     foreach ($origin->ShipperOptions as $shipper) {
 
-                        $shippers[] = new Shipper(
+                        $shippers[] = new MontaCheckout_Shipper(
                             $shipper->ShipperDescription,
                             $shipper->ShipperCode
                         );
@@ -121,9 +139,11 @@ class MontapackingShipping {
 
     }
 
-    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false) {
+    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false)
+    {
 
-        $this->basic = array_merge($this->basic,[
+
+        $this->basic = array_merge($this->basic, [
             'OnlyPickupPoints' => 'true',
             //'MaxNumberOfPickupPoints' => 3,
             'ProductsOnStock' => ($onstock) ? 'TRUE' : 'FALSE',
@@ -136,13 +156,13 @@ class MontapackingShipping {
         $this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore'];
 
         ## Timeframes omzetten naar bruikbaar object
-        $result = $this->call('ShippingOptions', ['basic','shippers','order','address','products', 'allowedshippers']);
-        if (isset($result->Timeframes)){
+        $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers']);
+        if (isset($result->Timeframes)) {
 
             ## Shippers omzetten naar shipper object
             foreach ($result->Timeframes as $timeframe) {
 
-                $pickups[] = new PickupPoint(
+                $pickups[] = new MontaCheckout_PickupPoint(
                     $timeframe->From,
                     $timeframe->To,
                     $timeframe->TypeCode,
@@ -158,10 +178,11 @@ class MontapackingShipping {
 
     }
 
-    public function getShippingOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false){
+    public function getShippingOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false)
+    {
 
         ## Basis gegevens uitbreiden met shipping option specifieke data
-        $this->basic = array_merge($this->basic,[
+        $this->basic = array_merge($this->basic, [
             'ProductsOnStock' => ($onstock) ? 'TRUE' : 'FALSE',
             'MaiboxShipperMandatory' => $mailbox,
             'TrackingMandatory' => $trackingonly,
@@ -173,40 +194,43 @@ class MontapackingShipping {
         $timeframes = null;
 
         ## Timeframes omzetten naar bruikbaar object
-        $result = $this->call('ShippingOptions', ['basic','shippers','order','address','products']);
+        $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products']);
 
-        if (isset($result->Timeframes)){
+        if (trim($this->address->postalcode) && (trim($this->address->housenumber) || trim($this->address->street))) {
+            if (isset($result->Timeframes)) {
 
-            ## Shippers omzetten naar shipper object
-            foreach ($result->Timeframes as $timeframe) {
+                ## Shippers omzetten naar shipper object
+                foreach ($result->Timeframes as $timeframe) {
 
-                $timeframes[] = new TimeFrame(
-                    $timeframe->From,
-                    $timeframe->To,
-                    $timeframe->TypeCode,
-                    $timeframe->TypeDescription,
-                    $timeframe->ShippingOptions
-                );
+                    $timeframes[] = new MontaCheckout_TimeFrame(
+                        $timeframe->From,
+                        $timeframe->To,
+                        $timeframe->TypeCode,
+                        $timeframe->TypeDescription,
+                        $timeframe->ShippingOptions
+                    );
+
+                }
 
             }
-
         }
 
         return $timeframes;
 
     }
 
-    public function call($method, $send = null){
+    public function call($method, $send = null)
+    {
 
         $request = '?';
-        if ($send != null){
+        if ($send != null) {
 
             ## Request neede data
-            foreach ($send as $data){
+            foreach ($send as $data) {
 
-                if (isset($this->{$data}) && $this->{$data} != null){
+                if (isset($this->{$data}) && $this->{$data} != null) {
 
-                    if (!is_array($this->{$data})){
+                    if (!is_array($this->{$data})) {
 
                         $request .= '&' . http_build_query($this->{$data}->toArray());
 
@@ -223,7 +247,7 @@ class MontapackingShipping {
 
         $method = strtolower($method);
         //$url = $this->http . $this->user . ':' . $this->pass . '@' . $this->url . $method;
-        $url = "https://api.montapacking.nl/rest/v5/".$method;
+        $url = "https://api.montapacking.nl/rest/v5/" . $method;
 
         if ($this->debug) {
             echo $url;
@@ -232,11 +256,11 @@ class MontapackingShipping {
 
         $ch = curl_init();
 
-        $this->pass =  htmlspecialchars_decode($this->pass);
+        $this->pass = htmlspecialchars_decode($this->pass);
 
         curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
-        curl_setopt($ch, CURLOPT_USERPWD,  $this->user.":".$this->pass);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+        curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -250,7 +274,7 @@ class MontapackingShipping {
             echo '<pre>';
         }
 
-        curl_close ($ch);
+        curl_close($ch);
 
         return json_decode($result);
 

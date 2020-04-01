@@ -1,7 +1,8 @@
 <?php
 include("ShippingOption.php");
 
-class TimeFrame {
+class MontaCheckout_TimeFrame
+{
 
     public $from;
     public $to;
@@ -9,7 +10,8 @@ class TimeFrame {
     public $description;
     public $options = [];
 
-    public function __construct($from, $to, $code, $description, $options){
+    public function __construct($from, $to, $code, $description, $options)
+    {
 
         $this->setFrom($from);
         $this->setTo($to);
@@ -19,35 +21,40 @@ class TimeFrame {
 
     }
 
-    public function setFrom($from){
+    public function setFrom($from)
+    {
         $this->from = $from;
         return $this;
     }
 
-    public function setTo($to){
+    public function setTo($to)
+    {
         $this->to = $to;
         return $this;
     }
 
-    public function setCode($code){
+    public function setCode($code)
+    {
         $this->code = $code;
         return $this;
     }
 
-    public function setDescription($description){
+    public function setDescription($description)
+    {
         $this->description = $description;
         return $this;
     }
 
-    public function setOptions($options){
+    public function setOptions($options)
+    {
 
         $list = null;
 
-        if (is_array($options)){
+        if (is_array($options)) {
 
-            foreach ($options as $onr => $option){
+            foreach ($options as $onr => $option) {
 
-                $list[$onr] = new ShippingOption(
+                $list[$onr] = new MontaCheckout_ShippingOption(
                     $option->Code,
                     $option->ShipperCodes,
                     $option->ShipperOptionCodes,
@@ -71,10 +78,11 @@ class TimeFrame {
 
     }
 
-    public function toArray(){
+    public function toArray()
+    {
 
         $option = null;
-        foreach ($this as $key => $value){
+        foreach ($this as $key => $value) {
             $option[$key] = $value;
         }
 

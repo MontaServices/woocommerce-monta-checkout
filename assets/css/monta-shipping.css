@@ -10,6 +10,11 @@ body.monta-cover-open{
     margin-bottom: 20px;
 }
 
+.monta-times-croppped {
+    margin-top:20px;
+}
+
+
 .montapacking-shipping .monta-options{
     width: 100%;
     text-align: center;
@@ -192,6 +197,8 @@ body.monta-cover-open{
 .monta-shipment-extras.active,
 .monta-shipment-pickup.active{
     display: block;
+    margin-top:10px;
+    margin-left:15px;
 }
 
 .monta-shipment-extras label,

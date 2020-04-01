@@ -1,7 +1,8 @@
 <?php
 require_once("ShippingOption.php");
 
-class PickupPoint {
+class MontaCheckout_PickupPoint
+{
 
     public $from;
     public $to;
@@ -9,7 +10,8 @@ class PickupPoint {
     public $details = [];
     public $options = [];
 
-    public function __construct($from, $to, $code, $details, $options){
+    public function __construct($from, $to, $code, $details, $options)
+    {
 
         $this->setFrom($from);
         $this->setTo($to);
@@ -19,25 +21,29 @@ class PickupPoint {
 
     }
 
-    public function setFrom($from){
+    public function setFrom($from)
+    {
         $this->from = $from;
         return $this;
     }
 
-    public function setTo($to){
+    public function setTo($to)
+    {
         $this->to = $to;
         return $this;
     }
 
-    public function setCode($code){
+    public function setCode($code)
+    {
         $this->code = $code;
         return $this;
     }
 
-    public function setDetails($details){
+    public function setDetails($details)
+    {
 
         $pickup = null;
-        if (is_object($details)){
+        if (is_object($details)) {
 
             $today = date("l");
             $times = $details->OpeningTimes;
@@ -79,15 +85,16 @@ class PickupPoint {
         return $this;
     }
 
-    public function setOptions($options){
+    public function setOptions($options)
+    {
 
         $list = null;
 
-        if (is_array($options)){
+        if (is_array($options)) {
 
-            foreach ($options as $option){
+            foreach ($options as $option) {
 
-                $list[] = new ShippingOption(
+                $list[] = new MontaCheckout_ShippingOption(
                     $option->Code,
                     $option->ShipperCodes,
                     $option->ShipperOptionCodes,
@@ -111,10 +118,11 @@ class PickupPoint {
 
     }
 
-    public function toArray(){
+    public function toArray()
+    {
 
         $option = null;
-        foreach ($this as $key => $value){
+        foreach ($this as $key => $value) {
             $option[$key] = $value;
         }
 

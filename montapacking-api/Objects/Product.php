@@ -1,5 +1,7 @@
 <?php
-class Product {
+
+class MontaCheckout_Product
+{
 
     public $sku;
     public $length;
@@ -8,7 +10,8 @@ class Product {
     public $weight;
     public $quantity;
 
-    public function __construct($sku, $length, $width, $height, $weight, $quantity){
+    public function __construct($sku, $length, $width, $height, $weight, $quantity)
+    {
 
         $this->setSku($sku);
         $this->setLength($length);
@@ -19,37 +22,44 @@ class Product {
 
     }
 
-    public function setSku($sku){
+    public function setSku($sku)
+    {
         $this->sku = $sku;
         return $this;
     }
 
-    public function setLength($length){
+    public function setLength($length)
+    {
         $this->length = $length;
         return $this;
     }
 
-    public function setWidth($width){
+    public function setWidth($width)
+    {
         $this->width = $width;
         return $this;
     }
 
-    public function setHeight($height){
+    public function setHeight($height)
+    {
         $this->height = $height;
         return $this;
     }
 
-    public function setWeight($weight){
+    public function setWeight($weight)
+    {
         $this->weight = $weight;
         return $this;
     }
 
-    public function setQuantity($quantity){
+    public function setQuantity($quantity)
+    {
         $this->quantity = $quantity;
         return $this;
     }
 
-    public function toArray(){
+    public function toArray()
+    {
 
         $product = [
             'SKU' => $this->sku,

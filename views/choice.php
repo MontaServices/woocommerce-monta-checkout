@@ -4,9 +4,9 @@
 
 <div class="woocommerce-shipping-fields montapacking-shipping">
 
-    <!--SANDER <h3><?php _e( 'Shipping method', TKEY ); ?></h3> -->
+    <!--<h3><?php _e( 'Shipping method', 'montapacking-checkout' ); ?></h3> -->
 
-    <h5 id="monta-address-required"><?php _e("*Please fill in an address before selecting a shipping method", TKEY) ?></h5>
+    <h5 id="monta-address-required"><?php _e("*Please fill in an address before selecting a shipping method", 'montapacking-checkout') ?></h5>
 
     <div class="monta-options">
 
@@ -15,7 +15,7 @@
             <label>
                 <input type="radio" name="montapacking[shipment][type]" value="delivery" disabled/>
                 <span class="block">
-					<strong><?php _e( 'Delivery', TKEY ); ?></strong>
+					<strong><?php _e( 'Delivery', 'montapacking-checkout' ); ?></strong>
 				</span>
             </label>
 
@@ -25,7 +25,7 @@
             <label>
                 <input type="radio" name="montapacking[shipment][type]" value="pickup" disabled/>
                 <span class="block">
-					<strong><?php _e( 'Pickup', TKEY ); ?></strong>
+					<strong><?php _e( 'Pickup', 'montapacking-checkout' ); ?></strong>
 				</span>
             </label>
 
@@ -33,7 +33,7 @@
     </div>
 
     <div class="monta-loading">
-        <?php _e( 'Loading...', TKEY ); ?>
+        <?php _e( 'Loading...', 'montapacking-checkout' ); ?>
     </div>
 
     <div class="monta-shipment-delivery">
@@ -46,13 +46,13 @@
         </style>
 
         <div class="monta-times-croppped" style="display:block">
-            <!-- SANDER <h3><?php _e( 'Delivery time and date', TKEY ); ?></h3> -->
+            <!-- SANDER <h3><?php _e( 'Delivery time and date', 'montapacking-checkout' ); ?></h3> -->
             <label>
                 <div style="float : left;" class="imglogo"></div>
 
-                <?php _e( 'Your order will be delivered with', TKEY ); ?> <strong class="shipper"></strong> <?php _e( 'on', TKEY ); ?> <strong class="date"></strong> <span class="timeinformation"> <?php _e( 'between', TKEY ); ?> <strong class="datetime"></strong></span><br>
+                <?php _e( 'Your order will be delivered with', 'montapacking-checkout' ); ?> <strong class="shipper"></strong> <?php _e( 'on', 'montapacking-checkout' ); ?> <strong class="date"></strong> <span class="timeinformation"> <?php _e( 'between', 'montapacking-checkout' ); ?> <strong class="datetime"></strong></span><br>
 
-                <a href="javascript:;" id="othersendmethod"><?php _e( 'Click here to choose another delivery option', TKEY ); ?></a>
+                <a href="javascript:;" id="othersendmethod"><?php _e( 'Click here to choose another delivery option', 'montapacking-checkout' ); ?></a>
             </label>
 
 
@@ -62,10 +62,10 @@
 
         <div class="monta-times-extended" style="display:none">
 
-            <h6><?php _e( 'Select delivery time and date', TKEY ); ?></h6>
+            <h6><?php _e( 'Select delivery time and date', 'montapacking-checkout' ); ?></h6>
             <div class="monta-times">
 
-                <a class="toggle-left"><?php _e( 'Earlier', TKEY ); ?></a>
+                <a class="toggle-left"><?php _e( 'Earlier', 'montapacking-checkout' ); ?></a>
                 <div class="scroller">
 
                     <div class="mover">
@@ -75,7 +75,7 @@
                     </div>
 
                 </div>
-                <a class="toggle-right"><?php _e( 'Later', TKEY ); ?></a>
+                <a class="toggle-right"><?php _e( 'Later', 'montapacking-checkout' ); ?></a>
 
             </div>
 
@@ -94,7 +94,7 @@
 
                 <div class="monta-locations" style="width: 100% !important;">
 
-                    <a class="monta-more-pickup-points"><?php _e( 'Show more options', TKEY ); ?></a>
+                    <a class="monta-more-pickup-points"><?php _e( 'Show more options', 'montapacking-checkout' ); ?></a>
 
                     <div class="bh-sl-loc-list">
                         <ul id="initialPickupsList">
@@ -110,7 +110,7 @@
 
 
 
-        <h5><?php _e( 'Selected pickup point', TKEY ); ?></h5>
+        <h5><?php _e( 'Selected pickup point', 'montapacking-checkout' ); ?></h5>
         <div style="display: none;" class="monta-pickup-selected"></div>
 
         <input type="hidden" name="montapacking[pickup][code]" class="monta-pickup-input-code">
@@ -130,7 +130,7 @@
 
   <!--      <br/>-->
 
-        <h6 style="padding-top:10px"><?php _e( 'Extra options:', TKEY ); ?></h6>
+        <h6 style="padding-top:10px"><?php _e( 'Extra options:', 'montapacking-checkout' ); ?></h6>
         <div class="monta-shipment-extra-options"></div>
 
     </div>
