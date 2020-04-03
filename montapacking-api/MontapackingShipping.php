@@ -14,6 +14,7 @@ class MontapackingShipping
     private $user = '';
     private $pass = '';
     private $url = '';
+    private $googlekey = '';
     private $http = 'https://';
 
     private $basic = null;
@@ -23,12 +24,13 @@ class MontapackingShipping
     private $products = null;
     private $allowedshippers = null;
 
-    public function __construct($origin, $user, $pass, $test = false)
+    public function __construct($origin, $user, $pass, $googlekey, $test = false)
     {
 
         $this->origin = $origin;
         $this->user = $user;
         $this->pass = $pass;
+        $this->googlekey = $googlekey;
         $this->modus = ($test) ? 'api-test' : 'api';
 
         $this->url = $this->modus . '.montapacking.nl/rest/v5/';

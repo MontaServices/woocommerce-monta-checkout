@@ -459,7 +459,7 @@ class Montapacking
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
 
-                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . MONTA_GOOGLE_KEY);
+                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr( get_option('monta_google_key')));
                         if (isset($geocode['body'])) {
                             $geocode = $geocode['body'];
                         }
@@ -533,7 +533,7 @@ class Montapacking
         }
 
         ## Monta packing API aanroepen
-        $api = new MontapackingShipping(MONTA_SHOP, MONTA_USER, MONTA_PASS, false);
+        $api = new MontapackingShipping(esc_attr( get_option('monta_shop')), esc_attr( get_option('monta_username')), esc_attr( get_option('monta_password')), false);
         #$api->debug = true;
 
         if (!isset($data->ship_to_different_address)) {

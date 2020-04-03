@@ -22,7 +22,7 @@
 include('montapacking-config.php');
 include('montapacking-class.php');
 
-$api = new MontapackingShipping(MONTA_SHOP, MONTA_USER, MONTA_PASS, false);
+$api = new MontapackingShipping(esc_attr( get_option('monta_shop')), esc_attr( get_option('monta_username')), esc_attr( get_option('monta_password')), false);
 
 ## Add config actions
 add_action('admin_menu', 'montacheckout_init_menu');
@@ -104,7 +104,7 @@ function montacheckout_enqueue_scripts()
     wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout/assets/css/monta-shipping.css'), date("h:i:s"));
 
     // Javascript
-    wp_enqueue_script('montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . MONTA_GOOGLE_KEY, ['jquery']);
+    wp_enqueue_script('montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . esc_attr( get_option('monta_google_key')), ['jquery']);
     wp_enqueue_script('montapacking_checkout_plugin_handlebars', plugins_url('montapacking-checkout/assets/js/monta-handlebars.js'), ['jquery'], date("h:i:s"));
     wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', plugins_url('montapacking-checkout/assets/js/monta-storelocator.js'), ['jquery'], date("h:i:s"));
     wp_enqueue_script('montapacking_checkout_plugin_monta', plugins_url('montapacking-checkout/assets/js/monta-shipping.js'), ['jquery'], date("h:i:s"));
