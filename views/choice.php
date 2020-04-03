@@ -50,7 +50,9 @@
             <label>
                 <div style="float : left;" class="imglogo"></div>
 
-                <?php _e( 'Your order will be delivered with', 'montapacking-checkout' ); ?> <strong class="shipper"></strong> <span class="dateinformation"><?php _e( 'on', 'montapacking-checkout' ); ?> <strong class="date"></strong></span> <span class="timeinformation"> <?php _e( 'between', 'montapacking-checkout' ); ?> <strong class="datetime"></strong></span><br>
+                <em style="float:left; margin-right: 3px;" class="deliveryinformation"><?php _e( 'Your order will be delivered with', 'montapacking-checkout' ); ?> <strong class="shipper"></strong></em>
+                <em style="float:left; margin-right: 3px;" class="dateinformation"><?php _e( 'on', 'montapacking-checkout' ); ?> <strong class="date"></strong></em>
+                <em style="float:left; margin-right: 3px;" class="timeinformation"> <?php _e( 'between', 'montapacking-checkout' ); ?> <strong class="datetime"></strong></em><br>
 
                 <a href="javascript:;" id="othersendmethod"><?php _e( 'Click here to choose another delivery option', 'montapacking-checkout' ); ?></a>
             </label>
