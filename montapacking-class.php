@@ -567,6 +567,8 @@ class Montapacking
 
         ## Fill products
         $items = $woocommerce->cart->get_cart();
+
+        $bAllProductsAvailableAtMontapacking = true;
         foreach ($items as $item => $values) {
 
             $sku = get_post_meta($values['product_id'], '_sku', true);
@@ -578,6 +580,11 @@ class Montapacking
             ## Add product
             if ($sku != '') {
                 $api->addProduct($sku, $values['quantity'], $length, $width, $weight);
+
+                if (false === $api->checkStock($sku)) {
+                    $bAllProductsAvailableAtMontapacking = false;
+                }
+
             }
 
         }
@@ -585,11 +592,11 @@ class Montapacking
         ## Type timeframes ophalen
         if ($type == 'delivery') {
 
-            return $api->getShippingOptions();
+            return $api->getShippingOptions($bAllProductsAvailableAtMontapacking);
 
         } else if ($type == 'pickup') {
 
-            return $api->getPickupOptions();
+            return $api->getPickupOptions($bAllProductsAvailableAtMontapacking);
 
         }
 

@@ -276,6 +276,8 @@ jQuery(document).ready(function () {
                                     }
 
                                     var option = item.options[0];
+
+
                                     if (option !== null && option !== undefined) {
 
                                         var html = $('.monta-choice-template').html();
@@ -576,6 +578,7 @@ jQuery(document).ready(function () {
                     var shippers = $('.monta-shipment-shipper');
                     var options = monta_shipping.frames[value].options;
 
+
                     // Empty shippers
                     shippers.html('');
 
@@ -602,8 +605,9 @@ jQuery(document).ready(function () {
                             html = html.replace(/{.name}/g, item.name);
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
-
-                            shippers.append(html);
+                            if (code != 'TBQ') {
+                                shippers.append(html);
+                            }
 
                         });
 
@@ -779,9 +783,15 @@ jQuery(document).ready(function () {
         var image = jQuery("input.montapackingshipmentshipper:checked").parent("label").find(".cropped_image").html();
         jQuery("div.imglogo").html(image);
 
+
+        jQuery(".dateinformation").css("display", "none");
+        if (day != 'null') {
+            jQuery(".dateinformation").css("display", "block");
+        }
+
         jQuery(".timeinformation").css("display", "none");
         if (datetime.trim()) {
-            jQuery(".timeinformation").css("display", "");
+            jQuery(".timeinformation").css("display", "block");
         }
     }
 

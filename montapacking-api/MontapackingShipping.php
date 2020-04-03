@@ -141,6 +141,37 @@ class MontapackingShipping
 
     }
 
+
+    public function checkStock($sku)
+    {
+        $url = "https://api.montapacking.nl/rest/v5/product/".$sku."/stock";
+
+        $this->pass = htmlspecialchars_decode($this->pass);
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($result);
+
+
+        if ($result->Message == 'Zero products found with sku '.$sku) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+
+
     public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false)
     {
 
