@@ -121,6 +121,7 @@
         <input type="hidden" name="montapacking[pickup][houseNumber]" class="monta-pickup-input-houseNumber">
         <input type="hidden" name="montapacking[pickup][postal]" class="monta-pickup-input-postal">
         <input type="hidden" name="montapacking[pickup][city]" class="monta-pickup-input-city">
+        <input type="hidden" name="montapacking[pickup][description]" class="monta-pickup-input-description">
         <input type="hidden" name="montapacking[pickup][country]" class="monta-pickup-input-country">
         <input type="hidden" name="montapacking[pickup][price]" class="monta-pickup-input-price">
 

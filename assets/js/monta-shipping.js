@@ -513,6 +513,7 @@ jQuery(document).ready(function () {
 
                         var loc = monta_shipping.pickup_selected;
                         var html = '<strong>' + loc.name + '</strong><br />';
+                        html += '<span style="font-style: italic"!important;">' + loc.description + '</span><br />';
                         html += '' + loc.street + '<br />';
                         html += '' + loc.postal + ' ' + loc.city + '<br />';
                         html += '&euro; ' + loc.price + '<br />';
@@ -529,6 +530,7 @@ jQuery(document).ready(function () {
                         $('.monta-pickup-input-company').val(loc.name);
                         $('.monta-pickup-input-street').val(loc.street);
                         $('.monta-pickup-input-houseNumber').val(loc.houseNumber);
+                        $('.monta-pickup-input-description').val(loc.description);
                         $('.monta-pickup-input-postal').val(loc.postal);
                         $('.monta-pickup-input-city').val(loc.city);
                         $('.monta-pickup-input-country').val(loc.country);

@@ -133,7 +133,7 @@ class Montapacking
 
                 break;
             case 'pickup':
-                $order->set_shipping_first_name('');
+                $order->set_shipping_first_name($pickup['description']);
                 $order->set_shipping_last_name('');
                 $order->set_shipping_company($pickup['company']);
                 $order->set_shipping_address_1($pickup['street'] . " " . $pickup['houseNumber']);
@@ -149,6 +149,7 @@ class Montapacking
                 //$arr[] = $pickup['code'];
                 $arr[] = "<b>Ophaalpunt</b>";
                 $arr[] = $pickup['company'];
+                $arr[] = $pickup['description'];
                 $arr[] = $pickup['street'] . " " . $pickup['houseNumber'];
                 $arr[] = $pickup['postal'] . " " . $pickup['city'] . " (" . $pickup['country'] . ")";
 
