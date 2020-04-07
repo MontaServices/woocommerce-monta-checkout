@@ -356,7 +356,7 @@ jQuery(document).ready(function () {
                                         'description': item.description,
                                         'price': item.price,
                                         'openingtimes': allopeningtimes,
-                                        'image': site_url + '/wp-content/plugins/montapacking-checkout/assets/img/' + item.code + ".png",
+                                        'image': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.code + ".png",
                                         'price_raw': item.price_raw,
                                         'raw': item
                                     });
@@ -374,8 +374,8 @@ jQuery(document).ready(function () {
                                 var config = {
                                     //'debug': true,
                                     'pagination': false,
-                                    'infowindowTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout/assets/js/templates/infowindow-description.html',
-                                    'listTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout/assets/js/templates/list-location.html',
+                                    'infowindowTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/infowindow-description.html',
+                                    'listTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/list-location.html',
                                     'distanceAlert': -1,
                                     'dataType': "json",
                                     'dataRaw': JSON.stringify(markers, null, 2),
@@ -392,9 +392,9 @@ jQuery(document).ready(function () {
                                         'category': 'category-filters',
                                     },
                                     catMarkers: {
-                                        'PAK': [site_url + '/wp-content/plugins/montapacking-checkout/assets/img/PostNL.png', 32, 32],
-                                        'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout/assets/img/dhl.svg', 32, 32],
-                                        'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout/assets/img/DPD.png', 32, 32]
+                                        'PAK': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/PostNL.png', 32, 32],
+                                        'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/dhl.svg', 32, 32],
+                                        'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32]
                                     },
                                     callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
 
@@ -601,7 +601,7 @@ jQuery(document).ready(function () {
 
                             var html = $('.monta-shipper-template').html();
                             html = html.replace(/{.code}/g, realCode);
-                            html = html.replace(/{.img}/g, '<img src="' + site_url + '/wp-content/plugins/montapacking-checkout/assets/img/' + code + '.png">');
+                            html = html.replace(/{.img}/g, '<img src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + code + '.png">');
                             html = html.replace(/{.name}/g, item.name);
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);

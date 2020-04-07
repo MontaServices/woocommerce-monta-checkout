@@ -20,7 +20,7 @@ WooCommerce plugin to integrate the Montapacking shipping options
 # Installation procedure
 
 * Upload files in wp-content/plugins folder
-* Make sure plugin folder is called 'montapacking-checkout'
+* Make sure plugin folder is called 'montapacking-checkout-woocommerce-extension'
 * Make sure that 'WordPress Address (URL)' & 'Site Address (URL)' fields in the Settings>General tab are identical
 * Enable plugin in WordPress settings
 * Configure plugin Settings
