@@ -13,7 +13,7 @@
         <div class="monta-option monta-disabled">
 
             <label>
-                <input type="radio" name="montapacking[shipment][type]" value="delivery" disabled/>
+                <input type="radio" name="montapacking[shipment][type]" value="delivery" disabled class="selectshipment"/>
                 <span class="block">
 					<strong><?php _e( 'Delivery', 'montapacking-checkout' ); ?></strong>
 				</span>
@@ -23,7 +23,7 @@
         <div class="monta-option monta-disabled">
 
             <label>
-                <input type="radio" name="montapacking[shipment][type]" value="pickup" disabled/>
+                <input type="radio" name="montapacking[shipment][type]" value="pickup" disabled class="selectshipment"/>
                 <span class="block">
 					<strong><?php _e( 'Pickup', 'montapacking-checkout' ); ?></strong>
 				</span>
@@ -48,23 +48,31 @@
         <div class="monta-times-croppped" style="display:block">
             <!-- SANDER <h3><?php _e( 'Delivery time and date', 'montapacking-checkout' ); ?></h3> -->
             <label>
-                <div style="float : left;" class="imglogo"></div>
+                <div style="float:left;" class="imglogo"></div>
+                
+                <div style="float:left;  width: calc(100% - 65px)">
 
-                <em style="float:left; margin-right: 3px;" class="deliveryinformation"><?php _e( 'Your order will be delivered with', 'montapacking-checkout' ); ?> <strong class="shipper"></strong></em>
-                <em style="float:left; margin-right: 3px;" class="dateinformation"><?php _e( 'on', 'montapacking-checkout' ); ?> <strong class="date"></strong></em>
-                <em style="float:left; margin-right: 3px;" class="timeinformation"> <?php _e( 'between', 'montapacking-checkout' ); ?> <strong class="datetime"></strong></em><br>
-
-                <a href="javascript:;" id="othersendmethod"><?php _e( 'Click here to choose another delivery option', 'montapacking-checkout' ); ?></a>
+                    <em style="float:left; margin-right: 3px;" class="deliveryinformation"><?php _e( 'Your order will be delivered with', 'montapacking-checkout' ); ?> <strong class="shipper"></strong></em>
+                    <em style="float:left; margin-right: 3px;" class="dateinformation"><?php _e( 'on', 'montapacking-checkout' ); ?> <strong class="date"></strong></em>
+                    <em style="float:left; margin-right: 3px;" class="timeinformation"> <?php _e( 'between', 'montapacking-checkout' ); ?> <strong class="datetime"></strong></em>
+    				  	<div style="clear:both"></div>            
+    				<a href="javascript:;" id="othersendmethod"><?php _e( 'Click here to choose another delivery option', 'montapacking-checkout' ); ?></a>	
+                </div>
+               	<div style="clear:both"></div>              
+                
+               
+               
+			  
             </label>
 
 
-
-
+			
+			<div class="clear:both"></div>
         </div>
 
         <div class="monta-times-extended" style="display:none">
 
-            <h6><?php _e( 'Select delivery time and date', 'montapacking-checkout' ); ?></h6>
+            <span><?php _e( 'Select delivery time and date', 'montapacking-checkout' ); ?></span><br>
             <div class="monta-times">
 
                 <a class="toggle-left"><?php _e( 'Earlier', 'montapacking-checkout' ); ?></a>
@@ -88,8 +96,6 @@
 
     <div class="monta-shipment-pickup">
 
-        <br/>
-
         <!-- First 3 pickup point options -->
         <div class="monta-pickup-initial-points">
             <div id="monta-pickups" class="bh-sl-map-container">
@@ -112,7 +118,7 @@
 
 
 
-        <h5><?php _e( 'Selected pickup point', 'montapacking-checkout' ); ?></h5>
+        <span class="monta-pickup-selected-title" style="display:none"><?php _e( 'Selected pickup point', 'montapacking-checkout' ); ?></span><br>
         <div style="display: none;" class="monta-pickup-selected"></div>
 
         <input type="hidden" name="montapacking[pickup][code]" class="monta-pickup-input-code">
@@ -133,8 +139,9 @@
 
   <!--      <br/>-->
 
-        <h6 style="padding-top:10px"><?php _e( 'Extra options:', 'montapacking-checkout' ); ?></h6>
+        <span><?php _e( 'Extra options:', 'montapacking-checkout' ); ?></span><br>
         <div class="monta-shipment-extra-options"></div>
+
 
     </div>
 

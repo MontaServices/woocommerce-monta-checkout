@@ -53,7 +53,7 @@ msgstr "*Vul eerst een adres in voordat je een verzendmethode kiest"
 
 #: views/choice.php:17
 msgid "Delivery"
-msgstr "Bezorg opties"
+msgstr "Bezorgopties"
 
 #: views/choice.php:27
 msgid "Pickup"

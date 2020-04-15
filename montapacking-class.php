@@ -578,6 +578,7 @@ class Montapacking
             $width = get_post_meta($values['product_id'], '_width', true);
 
             ## Add product
+
             if ($sku != '') {
                 $api->addProduct($sku, $values['quantity'], $length, $width, $weight);
 
@@ -591,7 +592,7 @@ class Montapacking
 
         ## Type timeframes ophalen
         if ($type == 'delivery') {
-
+            //$bAllProductsAvailableAtMontapacking = true;
             return $api->getShippingOptions($bAllProductsAvailableAtMontapacking);
 
         } else if ($type == 'pickup') {
@@ -726,6 +727,7 @@ class Montapacking
 
                         $options[] = (object)[
                             'codes' => $option->codes,
+                            'code' => $option->code,
                             'name' => $option->description,
                             'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,

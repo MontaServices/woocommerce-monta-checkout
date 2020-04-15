@@ -523,6 +523,7 @@ jQuery(document).ready(function () {
                         $('.monta-pickup-selected').html(html);
 
                         $('.monta-pickup-selected').show();
+                        $('.monta-pickup-selected-title').show();
 
                         $('.monta-shipment-pickup').addClass('active');
 
