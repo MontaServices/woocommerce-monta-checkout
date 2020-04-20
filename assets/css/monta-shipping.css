@@ -7,11 +7,14 @@ body.monta-cover-open{
 }
 
 .montapacking-shipping{
-    margin-bottom: 20px;
+    padding: 10px 0 20px!important;
 }
 
 .monta-times-croppped {
-    margin-top:20px;
+    margin-top:10px;
+    border:1px solid #eee;
+    padding: 8px 12px;
+    margin-bottom:30px;
 }
 
 .monta-times-extended {
@@ -22,28 +25,41 @@ body.monta-cover-open{
     margin-top:10px;
 }
 
-.montapacking-shipping .monta-options{
-    width: 100%;
-    text-align: center;
-    font-size: 0;
-    vertical-align: top;
-    display: table;
-    margin-bottom: 10px;
-}
+@media only screen and (min-width: 691px){
+    .montapacking-shipping .monta-options{
+        width: 50%;
+        text-align: center;
+        font-size: 0;
+        vertical-align: middle;
+        display: table-cell;
+        padding-bottom:10px;
+    }}
+
+@media only screen and (max-width: 690px){
+    .montapacking-shipping .monta-options{
+        width: 100%;
+        text-align: center;
+        font-size: 0;
+        vertical-align: middle;
+        display: table;
+    }}
 
 .montapacking-shipping .monta-options .monta-option{
-    width: 50%;
     display: table-cell;
-    padding: 0 15px;
+    padding-left: 8px;
     text-align: left;
-    vertical-align: top;
+    vertical-align: middle;
     position: relative;
+}
+
+.montapacking-shipping .monta-options .monta-option:nth-child(1){
+    padding: 0 8px 0 0!important;
 }
 
 .montapacking-shipping .monta-options .monta-option.monta-disabled{
     font-style: italic;
-    color: #aaa;
-    cursor: default;
+    color: #aaa!important;
+    cursor: default!important;
 }
 
 .montapacking-shipping .monta-options .monta-option label{
@@ -52,15 +68,15 @@ body.monta-cover-open{
 }
 
 .montapacking-shipping .monta-option label span.block{
-    border: 2px solid #eee;
+    border: 1px solid #eee;
     padding: 10px 15px;
     display: block;
     cursor: pointer;
 }
 
 .montapacking-shipping .monta-options .monta-option label input:checked + span{
-    background: #f5f5f5;
-    border-color: #00b5e2;
+    background: #fff;
+    border-color: #e27333;
 }
 .montapacking-shipping .monta-options .monta-option label input{
     margin-right: 8px;
@@ -69,10 +85,8 @@ body.monta-cover-open{
     left: 30px;
 }
 
-.montapacking-shipping .monta-options .monta-option label strong{
-    margin-left: 20px;
-    display: inline-block;
-    font-size: 18px;
+.montapacking-shipping .monta-options .monta-option label {
+    font-size: 16px;
 }
 
 .montapacking-shipping .monta-options .monta-option label .text{
@@ -83,7 +97,7 @@ body.monta-cover-open{
 .monta-times{
     display: table;
     width: 100%;
-	margin-bottom:25px;
+    margin-bottom:25px;
 }
 .monta-times .toggle-left,
 .monta-times .toggle-right,
@@ -107,7 +121,7 @@ body.monta-cover-open{
 .monta-times .toggle-right:hover{
     cursor: pointer;
     color: #fff;
-    background: #00b5e2;
+    background: #e27333;
 }
 
 .monta-times .error{
@@ -144,7 +158,7 @@ body.monta-cover-open{
 
 .monta-times ul li label > span{
     position: absolute;
-    border: 2px solid #eee;
+    border: 1px solid #eee;
     left: 0;
     right: 0;
     bottom: 0;
@@ -162,7 +176,7 @@ body.monta-cover-open{
     left: 0;
     right: 0;
     bottom: 0;
-	color:#333;
+    color:#333;
 }
 
 .monta-times ul li label input[type=radio]{
@@ -176,21 +190,20 @@ body.monta-cover-open{
 .monta-times ul li label span.day{
     font-weight: bold;
     display: block;
-    padding-left: 20px;
-	color:#333;
+    color:#333;
 }
 
 .monta-times ul li label span.description{
-	color:#333;
-	font-style:italic;
+    color:#333;
+    font-style:italic;
 }
 
 
 
 .monta-times label input:checked + span{
     background: #f5f5f5;
-    border-color: #00b5e2;
-	color:#333;
+    border-color: #e27333;
+    color:#333;
 }
 
 .monta-loading,
@@ -205,7 +218,11 @@ body.monta-cover-open{
 .monta-shipment-extras.active,
 .monta-shipment-pickup.active{
     display: block;
-    margin-left:15px;
+}
+@media only screen and (min-width: 800px){
+    .monta-shipment-delivery.active{
+        padding-right:45px;
+    }
 }
 
 .monta-shipment-extras label,
@@ -215,7 +232,7 @@ body.monta-cover-open{
     margin-top: 10px;
     height: 45px;
     line-height: 40px;
-		color:#333;
+    color:#333;
 }
 
 .monta-shipment-shipper img {
@@ -227,7 +244,7 @@ body.monta-cover-open{
 .monta-shipment-shipper .name {
     display: inline-block;
     vertical-align: text-bottom;
-	color:#333;
+    color:#333;
 }
 
 .monta-shipment-extras label input[type=checkbox],
@@ -242,7 +259,7 @@ body.monta-cover-open{
 .monta-shipment-extras label > span,
 .monta-shipment-shipper label > span{
     position: absolute;
-    border: 2px solid #eee;
+    border: 1px solid #eee;
     left: 0;
     right: 0;
     bottom: 0;
@@ -251,7 +268,7 @@ body.monta-cover-open{
     line-height: 40px;
     cursor: pointer;
     font-size: 14px;
-	color:black;
+    color:black;
 }
 
 .monta-shipment-extras label > span span.price,
@@ -259,13 +276,13 @@ body.monta-cover-open{
     font-weight: bold;
     float: right;
     padding: 0 10px;
-	color:black;
+    color:black;
 }
 
 .monta-shipment-extras label input:checked + span,
 .monta-shipment-shipper label input:checked + span{
     background: #f5f5f5;
-    border-color: #00b5e2;
+    border-color: #e27333;
 }
 
 .monta-shipper-template,
@@ -289,7 +306,7 @@ body.monta-cover-open{
     background: #fff;
     padding: 0;
     margin: 50px auto;
-    width: 70%;
+    width: 85%;
     height: 100%;
     max-height: 80%;
 }
@@ -335,7 +352,7 @@ body.monta-cover-open{
 }
 
 .monta-locations ul.list li.list-focus{
-    background: #00b5e2;
+    background: #e27333;
     color: #fff;
 }
 
@@ -427,8 +444,8 @@ body.monta-cover-open{
 
 /*Initial pickups stylign*/
 .monta-initial-pickup {
-    margin-top: 10px;
-    border: 2px solid #eee;
+    margin-top: 20px;
+    border: 1px solid #eee;
     background: white !important;
 }
 
@@ -445,14 +462,14 @@ body.monta-cover-open{
 
 #initialPickupsList li {
     margin-bottom: 10px;
-    border: 2px solid #eee;
+    border: 1px solid #eee;
     background: white;
     list-style-type: none;
 }
 
 #initialPickupsList li.list-focus{
     background-color: #eee;
-    border: 2px solid #00b5e2;
+    border: 1px solid #e27333;
 }
 
 .initialPickupRadio {
@@ -502,27 +519,25 @@ input[name=initialPickupPointRadio]{
 }
 
 .block {
-    padding: 0px 0px 0px 0px !important;
+    padding: 10px 10px!important;
     text-align:center;
     list-style: none;
-}
-
-.block strong {
     margin: 0 !important;
     padding: 0;
+    color:#474747!important;
 }
 
-@media screen and (max-width: 400px) {
+.montapackingshipmenttime   {
+    display: none !important;
+}
 
 
-
-
+@media screen and (max-width: 600px) {
     .monta-more-pickup-points {
         display:none !important;
     }
-
     .monta-shipment-pickup.active {
-       margin-top: 0px; !important;
+        margin-top: 0px; !important;
     }
+}}
 
-}

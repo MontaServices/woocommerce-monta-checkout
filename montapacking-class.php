@@ -251,6 +251,7 @@ class Montapacking
 
         $price = self::get_shipping_total($data);
 
+
         return $wc_price + $price;
     }
 
@@ -263,11 +264,33 @@ class Montapacking
         }
 
         $price = self::get_shipping_total($data);
+
+
+        parse_str(sanitize_post($_POST['post_data']), $datapost);
+
+        $selectedoption = false;
+
+
+        if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'delivery') {
+
+            if (isset($datapost['montapacking']['shipment']['shipper'])) {
+                $selectedoption = true;
+            }
+
+        }
+
+        if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'pickup') {
+            if (isset($datapost['montapacking']['pickup']['code']) && trim($datapost['montapacking']['pickup']['code'])) {
+                $selectedoption = true;
+            }
+        }
+
+
         ?>
         <tr>
-            <th><?php _e('Shipping', 'woocommerce'); ?></th>
+            <th><?php _e('Shipping', 'woocommerce'); ?> </th>
             <?php
-            if ($price == 0) {
+            if ($price == 0 && false == $selectedoption) {
                 ?>
                 <td><?php _e('Choose a shipping method', 'montapacking-checkout'); ?></td>
                 <?php
@@ -460,7 +483,7 @@ class Montapacking
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
 
-                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr( get_option('monta_google_key')));
+                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr(get_option('monta_google_key')));
                         if (isset($geocode['body'])) {
                             $geocode = $geocode['body'];
                         }
@@ -534,7 +557,7 @@ class Montapacking
         }
 
         ## Monta packing API aanroepen
-        $api = new MontapackingShipping(esc_attr( get_option('monta_shop')), esc_attr( get_option('monta_username')), esc_attr( get_option('monta_password')), false);
+        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
         #$api->debug = true;
 
         if (!isset($data->ship_to_different_address)) {
@@ -589,6 +612,10 @@ class Montapacking
             }
 
         }
+
+        $subtotal = floatval(preg_replace('#[^\d.]#', '', WC()->cart->get_cart_total()));
+        $subtotal_ex = round($subtotal / 1.21, 2);
+        $api->setOrder($subtotal, $subtotal_ex);
 
         ## Type timeframes ophalen
         if ($type == 'delivery') {

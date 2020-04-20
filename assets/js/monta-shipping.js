@@ -37,6 +37,7 @@ jQuery(document).ready(function () {
 
                     var elms = '';
                     elms += '#billing_address_1,';
+                    elms += '#billing_house_number,';
                     elms += '#billing_street_name,';
                     elms += '#billing_postcode,';
                     elms += '#billing_city,';
@@ -45,6 +46,7 @@ jQuery(document).ready(function () {
                     elms += '#shipping_address_1,';
                     elms += '#shipping_postcode,';
                     elms += '#shipping_city,';
+                    elms += '#shipping_house_number,';
                     elms += '#ship-to-different-address-checkbox';
 
                     this.$body.on('change', elms, this.checkAddress);
@@ -67,11 +69,19 @@ jQuery(document).ready(function () {
 
                 checkAddress: function () {
 
-                    if ($('#billing_street_name').length) {
+                    if ($('#billing_street_name:visible').length) {
                         var address = $('#billing_street_name').val();
                     } else {
                         var address = $('#billing_address_1').val();
                     }
+
+                    if ($('#billing_street_name:visible').length) {
+                        var housenumber = $('#billing_house_number').val();
+                    } else {
+                        var housenumber = $('#billing_address_1').val();
+                    }
+
+
 
                     var zipcode = $('#billing_postcode').val();
                     var place = $('#billing_city').val();
@@ -79,13 +89,20 @@ jQuery(document).ready(function () {
                     var other = $('#ship-to-different-address-checkbox').prop('checked');
 
                     var ship_address = $('#shipping_address_1').val();
+
+                    if ($('#shipping_house_number:visible').length) {
+                        var ship_housenumber = $('#shipping_house_number').val();
+                    } else {
+                        var ship_housenumber = $('#shipping_address_1').val();
+                    }
+
                     var ship_zipcode = $('#shipping_postcode').val();
                     var ship_place = $('#shipping_city').val();
                     var ship_country = $('#shipping_country').val();
 
                     if (other) {
 
-                        if (ship_zipcode !== '') {
+                        if (ship_zipcode !== '' && ship_housenumber !== '') {
 
                             monta_shipping.enableRadio();
                             monta_shipping.hideAddressMsg();
@@ -104,7 +121,7 @@ jQuery(document).ready(function () {
 
                     } else {
 
-                        if (zipcode !== '') {
+                        if (zipcode !== '' && housenumber !== '') {
 
                             monta_shipping.enableRadio();
                             monta_shipping.hideAddressMsg();
@@ -251,6 +268,9 @@ jQuery(document).ready(function () {
                         if (success) {
 
                             if (checked === 'delivery') {
+                                // empty fields when pickup was already choosen
+                                $(".monta-pickup-fields").val("");
+                                //$("#initialPickupRadioDummy").removeAttribute("checked");
 
                                 $('.monta-shipment-delivery').addClass('active');
 
@@ -398,12 +418,12 @@ jQuery(document).ready(function () {
                                     },
                                     callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
 
-                                        monta_shipping.selectPickup(location);
+                                        monta_shipping.selectPickup(location, markerId);
 
                                     },
                                     callbackListClick: function (markerId, selectedMarker, location) {
 
-                                        monta_shipping.selectPickup(location);
+                                        monta_shipping.selectPickup(location, markerId);
 
                                     },
                                     callbackNotify: function (notifyText) {
@@ -505,7 +525,7 @@ jQuery(document).ready(function () {
 
                 },
 
-                selectPickup: function (location) {
+                selectPickup: function (location, markerId) {
 
                     monta_shipping.pickup_selected = location;
 
@@ -516,14 +536,24 @@ jQuery(document).ready(function () {
                         var loc = monta_shipping.pickup_selected;
                         var html = '<strong>' + loc.name + '</strong><br />';
                         html += '<span style="font-style: italic"!important;">' + loc.description + '</span><br />';
-                        html += '' + loc.street + '<br />';
+                        html += '' + loc.street + ' ' + loc.houseNumber + '<br />';
                         html += '' + loc.postal + ' ' + loc.city + '<br />';
                         html += '&euro; ' + loc.price + '<br />';
-
+                        
+                        console.log(markerId);
+                        
+                        
+                        
                         $('.monta-pickup-selected').html(html);
-
-                        $('.monta-pickup-selected').show();
-                        $('.monta-pickup-selected-title').show();
+                        
+                        if (markerId > 2) {
+                    	 $('.monta-pickup-selected').show();
+                         $('.monta-pickup-selected-title').show();
+                        } else {
+                    	 $('.monta-pickup-selected').hide();
+                         $('.monta-pickup-selected-title').hide();
+                        }
+                       
 
                         $('.monta-shipment-pickup').addClass('active');
 

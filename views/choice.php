@@ -15,7 +15,7 @@
             <label>
                 <input type="radio" name="montapacking[shipment][type]" value="delivery" disabled class="selectshipment"/>
                 <span class="block">
-					<strong><?php _e( 'Delivery', 'montapacking-checkout' ); ?></strong>
+					<?php _e( 'Delivery', 'montapacking-checkout' ); ?>
 				</span>
             </label>
 
@@ -25,7 +25,7 @@
             <label>
                 <input type="radio" name="montapacking[shipment][type]" value="pickup" disabled class="selectshipment"/>
                 <span class="block">
-					<strong><?php _e( 'Pickup', 'montapacking-checkout' ); ?></strong>
+					<?php _e( 'Pickup', 'montapacking-checkout' ); ?>
 				</span>
             </label>
 
@@ -102,7 +102,7 @@
 
                 <div class="monta-locations" style="width: 100% !important;">
 
-                    <a class="monta-more-pickup-points"><?php _e( 'Show more options', 'montapacking-checkout' ); ?></a>
+
 
                     <div class="bh-sl-loc-list">
                         <ul id="initialPickupsList">
@@ -111,6 +111,7 @@
                         <input style="display: none;" type="radio" name="initialPickupPointRadio" id="initialPickupRadioDummy">
                     </div>
 
+                    <a class="monta-more-pickup-points"><?php _e( 'Show more options', 'montapacking-checkout' ); ?></a>
                 </div>
 
             </div>
@@ -121,17 +122,17 @@
         <span class="monta-pickup-selected-title" style="display:none"><?php _e( 'Selected pickup point', 'montapacking-checkout' ); ?></span><br>
         <div style="display: none;" class="monta-pickup-selected"></div>
 
-        <input type="hidden" name="montapacking[pickup][code]" class="monta-pickup-input-code">
-        <input type="hidden" name="montapacking[pickup][shipper]" class="monta-pickup-input-shipper">
-        <input type="hidden" name="montapacking[pickup][shippingOptions]" class="monta-pickup-input-shippingOptions">
-        <input type="hidden" name="montapacking[pickup][company]" class="monta-pickup-input-company">
-        <input type="hidden" name="montapacking[pickup][street]" class="monta-pickup-input-street">
-        <input type="hidden" name="montapacking[pickup][houseNumber]" class="monta-pickup-input-houseNumber">
-        <input type="hidden" name="montapacking[pickup][postal]" class="monta-pickup-input-postal">
-        <input type="hidden" name="montapacking[pickup][city]" class="monta-pickup-input-city">
-        <input type="hidden" name="montapacking[pickup][description]" class="monta-pickup-input-description">
-        <input type="hidden" name="montapacking[pickup][country]" class="monta-pickup-input-country">
-        <input type="hidden" name="montapacking[pickup][price]" class="monta-pickup-input-price">
+        <input type="hidden" name="montapacking[pickup][code]" class="monta-pickup-input-code monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][shipper]" class="monta-pickup-input-shipper monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][shippingOptions]" class="monta-pickup-input-shippingOptions monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][company]" class="monta-pickup-input-company monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][street]" class="monta-pickup-input-street monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][houseNumber]" class="monta-pickup-input-houseNumber monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][postal]" class="monta-pickup-input-postal monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][city]" class="monta-pickup-input-city monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][description]" class="monta-pickup-input-description monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][country]" class="monta-pickup-input-country monta-pickup-fields">
+        <input type="hidden" name="montapacking[pickup][price]" class="monta-pickup-input-price monta-pickup-fields">
 
     </div>
 
