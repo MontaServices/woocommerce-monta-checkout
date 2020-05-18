@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapacking Check-out extension
- * Version: 1.0.4
+ * Version: 1.1
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -19,10 +19,13 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
+
 include('montapacking-config.php');
 include('montapacking-class.php');
 
-$api = new MontapackingShipping(esc_attr( get_option('monta_shop')), esc_attr( get_option('monta_username')), esc_attr( get_option('monta_password')), false);
+if (esc_attr(get_option('monta_logerrors'))) {
+    define('WC_LOG_HANDLER', 'WC_Log_Handler_DB');
+}
 
 ## Add config actions
 add_action('admin_menu', 'montacheckout_init_menu');
@@ -32,6 +35,9 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_username');
     register_setting('montapacking-plugin-settings', 'monta_password');
     register_setting('montapacking-plugin-settings', 'monta_google_key');
+    register_setting('montapacking-plugin-settings', 'monta_logerrors');
+    register_setting('montapacking-plugin-settings', 'monta_shippingcosts');
+
 });
 
 // Include installed Language packs
@@ -42,7 +48,7 @@ add_filter("plugin_action_links_$plugin", 'montacheckout_plugin_add_settings_lin
 
 
 ## Check of we in woocommerce zijn
-if (true === $api->checkConnection() && in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 
     ## Standaard woocommerce verzending uitschakelen
     add_filter('woocommerce_shipping_calculator_enable_postcode', false);
@@ -79,14 +85,16 @@ if (true === $api->checkConnection() && in_array('woocommerce/woocommerce.php', 
     add_action('wp_ajax_monta_shipping_options', array('montapacking', 'shipping_options'));
     add_action('wp_ajax_nopriv_monta_shipping_options', array('montapacking', 'shipping_options'));
 
-    ## Init session usage
+    ## Init session usage#
     add_action('init', 'montacheckout_register_session');
 
-    add_action('wp_footer', 'montacheckout_footer');
+    add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
 
 
 } else {
-    add_action('woocommerce_checkout_create_order', 'before_checkout_create_order', 20, 2);
+    add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
+    add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);
+    add_action('woocommerce_package_rates', 'overrule_package_rates', 20, 2);
 }
 
 function montacheckout_plugin_add_settings_link($links)
@@ -110,11 +118,6 @@ function montacheckout_enqueue_scripts()
         wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-storelocator.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_monta', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-shipping.js'), ['jquery'], date("h:i:s"));
     }
-}
-
-function montacheckout_footer()
-{
-    require_once 'views/pickup.php';
 }
 
 function montacheckout_register_session()
@@ -144,24 +147,48 @@ function montacheckout_render_settings()
             settings_fields('montapacking-plugin-settings');
             do_settings_sections('montapacking-plugin-settings');
             ?>
-            <h1>Montapacking API Settings</h1>
+            <h1>Montapacking Checkout WooCommerce Extension Settings</h1>
             <table class="form-table">
                 <tr>
                     <th scope="row"><label for="monta_shop">Shop</label></th>
-                    <td><input type="text" name="monta_shop"
-                               value="<?php echo esc_attr(get_option('monta_shop')); ?>" size="50"/></td>
+                    <td><input required type="text" name="monta_shop"
+                               value="<?php echo esc_attr(get_option('monta_shop')); ?>" size="50"/>
+                        <br><i style="font-size:12px">The name of the webshop in Monta Portal. Name can be found <a
+                                    target="_new" href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a></i>
+                    </td>
                 </tr>
 
                 <tr>
                     <th scope="row"><label for="monta_username">Username</label></th>
-                    <td><input type="text" name="monta_username"
-                               value="<?php echo esc_attr(get_option('monta_username')); ?>" size="50"/></td>
+                    <td><input required type="text" name="monta_username"
+                               value="<?php echo esc_attr(get_option('monta_username')); ?>" size="50"/>
+                        <br><i style="font-size:12px">The username of Monta REST API provided by Montapacking .</i>
+                    </td>
                 </tr>
 
                 <tr>
                     <th scope="row"><label for="monta_password">Password</label></th>
-                    <td><input type="password" name="monta_password"
-                               value="<?php echo esc_attr(get_option('monta_password')); ?>" size="50"/></td>
+                    <td><input required type="password" name="monta_password"
+                               value="<?php echo esc_attr(get_option('monta_password')); ?>" size="50"/>
+                        <br><i style="font-size:12px">The password of Monta REST API provided by Montapacking .</i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_shippingcosts">Shipping Costs</label></th>
+                    <td>
+                        <input required type="number" name="monta_shippingcosts" step="0.01"
+                               value="<?php echo esc_attr(get_option('monta_shippingcosts')); ?>" size="5"/>
+                        <br><i style="font-size:12px">The base shipping costs used when there is no API connection
+                            available.</i>
+                    </td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_shop">Log errors</label></th>
+                    <td><input type="checkbox" name="monta_logerrors"
+                               value="1" <?php checked('1', get_option('monta_logerrors')); ?>/></td>
                 </tr>
 
             </table>
@@ -170,8 +197,11 @@ function montacheckout_render_settings()
             <table class="form-table">
                 <tr>
                     <th scope="row"><label for="monta_google_key">API Key</label></th>
-                    <td><input type="text" name="monta_google_key"
-                               value="<?php echo esc_attr(get_option('monta_google_key')); ?>" size="50"/></td>
+                    <td><input required type="text" name="monta_google_key"
+                               value="<?php echo esc_attr(get_option('monta_google_key')); ?>" size="50"/>
+                        <br><i style="font-size:12px">A Google API key is required for this plug-in. Key can be created
+                            <a target="_new" href="https://console.cloud.google.com/">here</a></i>
+                    </td>
                 </tr>
             </table>
 
@@ -182,13 +212,42 @@ function montacheckout_render_settings()
     <?php
 }
 
-function before_checkout_create_order($order, $data)
+function filter_woocommerce_order_shipping_to_display_shipped_via($html, $instance)
 {
 
-    $arr = array();
-    $arr[] = "Webshop was unable to connect to Montapacking. Please contact Montapacking";
-    $arr = implode("\n\r", $arr);
+    $json = json_decode($instance);
 
-    $order->add_meta_data('No Connection with Montapacking', $arr, true);
+    $order = wc_get_order($json->id);
 
+    $line_items_shipping = $order->get_items('shipping');
+
+    $method = (string)$order->get_shipping_method();
+
+    // Loop through order items
+    foreach ($line_items_shipping as $item_id => $item) {
+
+        $meta_data = $item->get_meta_data();
+
+        foreach ($meta_data as $value) {
+
+            if ($value->key == 'Shipmentmethod') {
+
+                $method = strip_tags($value->value);
+
+                if ($value->value == 'SEL,SELBuspakje') {
+                    $method = strip_tags('DHL Parcel');
+                }
+            }
+
+            if ($value->key == 'Pickup Data') {
+                $method = strip_tags($value->value['description']);
+            }
+        }
+    }
+
+    return "&nbsp;<small class='shipped_via'>" . sprintf(__('via %s', 'woocommerce'), esc_attr($method)) . "</small>";
 }
+
+;
+
+

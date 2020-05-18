@@ -82,7 +82,6 @@ jQuery(document).ready(function () {
                     }
 
 
-
                     var zipcode = $('#billing_postcode').val();
                     var place = $('#billing_city').val();
                     var country = $('#billing_country').val();
@@ -119,6 +118,14 @@ jQuery(document).ready(function () {
 
                         }
 
+                        /*
+                        if (country != 'NL') {
+                            $(".monta-option-pickup").addClass("monta-hide");
+                        } else {
+                            $(".monta-option-pickup").removeClass("monta-hide")
+                        }
+                        */
+
                     } else {
 
                         if (zipcode !== '' && housenumber !== '') {
@@ -137,7 +144,13 @@ jQuery(document).ready(function () {
                             monta_shipping.deSelectDeliveryOption();
 
                         }
-
+                        /*
+                        if (country != 'NL') {
+                            $(".monta-option-pickup").addClass("monta-hide");
+                        } else {
+                            $(".monta-option-pickup").removeClass("monta-hide")
+                        }
+                        */
                     }
 
                     $('#monta-stores').storeLocator('destroy');
@@ -264,6 +277,8 @@ jQuery(document).ready(function () {
                     }
 
                     monta_shipping.updateDeliveries(function (success, result) {
+
+                        $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
 
@@ -429,7 +444,7 @@ jQuery(document).ready(function () {
                                     callbackNotify: function (notifyText) {
 
                                         // Show error message
-                                        console.log(notifyText);
+                                        //console.log(notifyText);
 
                                         monta_shipping.storeLocatorDestroy();
 
@@ -485,6 +500,14 @@ jQuery(document).ready(function () {
                             // Show error message
                             console.log(result.message);
 
+
+                            if (checked == 'pickup') {
+                                $(".monta-times-croppped-error-pickup").css("display", "block")
+                            } else {
+                                $(".monta-times-croppped-error-deliveries").css("display", "block")
+                            }
+
+
                             monta_shipping.storeLocatorDestroy();
 
                         }
@@ -537,23 +560,24 @@ jQuery(document).ready(function () {
                         var html = '<strong>' + loc.name + '</strong><br />';
                         html += '<span style="font-style: italic"!important;">' + loc.description + '</span><br />';
                         html += '' + loc.street + ' ' + loc.houseNumber + '<br />';
-                        html += '' + loc.postal + ' ' + loc.city + '<br />';
-                        html += '&euro; ' + loc.price + '<br />';
-                        
-                        console.log(markerId);
-                        
-                        
-                        
+                        html += '' + loc.postal + ' ' + loc.city;
+                        html += '<span class="pricemonta">&euro; ' + loc.price + '</span>';
+
+
                         $('.monta-pickup-selected').html(html);
-                        
+
                         if (markerId > 2) {
-                    	 $('.monta-pickup-selected').show();
-                         $('.monta-pickup-selected-title').show();
+                            $('.monta-pickup-selected').show();
+                            $('.monta-pickup-selected-title').show();
+                            $('.monta-selected-pickup').show();
+
+
                         } else {
-                    	 $('.monta-pickup-selected').hide();
-                         $('.monta-pickup-selected-title').hide();
+                            $('.monta-pickup-selected').hide();
+                            $('.monta-pickup-selected-title').hide();
+                            $('.monta-selected-pickup').hide();
                         }
-                       
+
 
                         $('.monta-shipment-pickup').addClass('active');
 

@@ -1,31 +1,62 @@
 <script>
     var site_url = '<?php echo site_url();?>';
+
+    jQuery(document).ready(function () {
+        setTimeout(function () {
+            var radios = document.getElementsByName("montapacking[shipment][type]");
+
+            radios[1].click();
+
+            var val = localStorage.getItem('montapacking[shipment][type]');
+            for (var i = 0; i < radios.length; i++) {
+
+                if (radios[i].value == val) {
+                    radios[i].click();
+                    //radios[i].checked = true;
+                }
+            }
+
+        }, 1000);
+
+        jQuery('.selectshipment').on('click', function () {
+            localStorage.setItem('montapacking[shipment][type]', jQuery(this).val());
+        });
+
+
+    });
+
+
 </script>
+
+
+
 
 <div class="woocommerce-shipping-fields montapacking-shipping">
 
-    <!--<h3><?php _e( 'Shipping method', 'montapacking-checkout' ); ?></h3> -->
+    <!--<h3><?php _e('Shipping method', 'montapacking-checkout'); ?></h3> -->
 
     <h5 id="monta-address-required"><?php _e("*Please fill in an address before selecting a shipping method", 'montapacking-checkout') ?></h5>
 
     <div class="monta-options">
 
-        <div class="monta-option monta-disabled">
+        <div class="monta-option monta-disabled monta-option-delivery">
 
             <label>
-                <input type="radio" name="montapacking[shipment][type]" value="delivery" disabled class="selectshipment"/>
+                <input type="radio" name="montapacking[shipment][type]" value="delivery" class="selectshipment"
+                       autocomplete="on"/>
                 <span class="block">
-					<?php _e( 'Delivery', 'montapacking-checkout' ); ?>
+					<?php _e('Delivery', 'montapacking-checkout'); ?>
 				</span>
             </label>
 
         </div>
-        <div class="monta-option monta-disabled">
+        <div class="monta-option monta-disabled monta-option-pickup">
 
             <label>
-                <input type="radio" name="montapacking[shipment][type]" value="pickup" disabled class="selectshipment"/>
+                <input type="radio" name="montapacking[shipment][type]" value="pickup" class="selectshipment"
+                       autocomplete="on"/>
                 <span class="block">
-					<?php _e( 'Pickup', 'montapacking-checkout' ); ?>
+					<?php _e('Pickup', 'montapacking-checkout'); ?>
 				</span>
             </label>
 
@@ -33,49 +64,46 @@
     </div>
 
     <div class="monta-loading">
-        <?php _e( 'Loading...', 'montapacking-checkout' ); ?>
+
     </div>
 
     <div class="monta-shipment-delivery">
 
-        <style>
-            .imglogo img {
-                width: 50px;
-                margin-right: 15px;
-            }
-        </style>
 
         <div class="monta-times-croppped" style="display:block">
-            <!-- SANDER <h3><?php _e( 'Delivery time and date', 'montapacking-checkout' ); ?></h3> -->
+            <span class="delivery-time"><?php _e('Delivery time and date', 'montapacking-checkout'); ?></span>
             <label>
                 <div style="float:left;" class="imglogo"></div>
-                
+
                 <div style="float:left;  width: calc(100% - 65px)">
 
-                    <em style="float:left; margin-right: 3px;" class="deliveryinformation"><?php _e( 'Your order will be delivered with', 'montapacking-checkout' ); ?> <strong class="shipper"></strong></em>
-                    <em style="float:left; margin-right: 3px;" class="dateinformation"><?php _e( 'on', 'montapacking-checkout' ); ?> <strong class="date"></strong></em>
-                    <em style="float:left; margin-right: 3px;" class="timeinformation"> <?php _e( 'between', 'montapacking-checkout' ); ?> <strong class="datetime"></strong></em>
-    				  	<div style="clear:both"></div>            
-    				<a href="javascript:;" id="othersendmethod"><?php _e( 'Click here to choose another delivery option', 'montapacking-checkout' ); ?></a>	
+                    <span class="deliveryinfo deliveryinformation"><?php _e('Your order will be delivered with', 'montapacking-checkout'); ?> <strong
+                                class="shipper"></strong></span>
+                    <span class="deliveryinfo dateinformation"><?php _e('on', 'montapacking-checkout'); ?> <strong
+                                class="date"></strong></span>
+                    <span class="deliveryinfo timeinformation"> <?php _e('between', 'montapacking-checkout'); ?> <strong
+                                class="datetime"></strong></span>
+
+                    <div style="clear:both"></div>
+
+                    <a href="javascript:;"
+                       id="othersendmethod"><?php _e('Click here to choose another delivery option', 'montapacking-checkout'); ?></a>
+
                 </div>
-               	<div style="clear:both"></div>              
-                
-               
-               
-			  
+
+                <div style="clear:both"></div>
             </label>
 
-
-			
-			<div class="clear:both"></div>
+            <div class="clear:both"></div>
         </div>
+
 
         <div class="monta-times-extended" style="display:none">
 
-            <span><?php _e( 'Select delivery time and date', 'montapacking-checkout' ); ?></span><br>
+            <span><?php _e('Select delivery time and date', 'montapacking-checkout'); ?></span><br>
             <div class="monta-times">
 
-                <a class="toggle-left"><?php _e( 'Earlier', 'montapacking-checkout' ); ?></a>
+                <a class="toggle-left"><</a>
                 <div class="scroller">
 
                     <div class="mover">
@@ -85,7 +113,7 @@
                     </div>
 
                 </div>
-                <a class="toggle-right"><?php _e( 'Later', 'montapacking-checkout' ); ?></a>
+                <a class="toggle-right">></a>
 
             </div>
 
@@ -103,47 +131,62 @@
                 <div class="monta-locations" style="width: 100% !important;">
 
 
-
                     <div class="bh-sl-loc-list">
                         <ul id="initialPickupsList">
                             <!-- pick-up points -->
                         </ul>
-                        <input style="display: none;" type="radio" name="initialPickupPointRadio" id="initialPickupRadioDummy">
+                        <input style="display: none;" type="radio" name="initialPickupPointRadio"
+                               id="initialPickupRadioDummy">
                     </div>
 
-                    <a class="monta-more-pickup-points"><?php _e( 'Show more options', 'montapacking-checkout' ); ?></a>
+                    <a class="monta-more-pickup-points"><?php _e('Show more options', 'montapacking-checkout'); ?></a>
                 </div>
 
             </div>
         </div>
 
 
+        <span class="monta-pickup-selected-title"
+              style="display:none"><?php _e('Selected pickup point', 'montapacking-checkout'); ?></span><br>
 
-        <span class="monta-pickup-selected-title" style="display:none"><?php _e( 'Selected pickup point', 'montapacking-checkout' ); ?></span><br>
         <div style="display: none;" class="monta-pickup-selected"></div>
 
-        <input type="hidden" name="montapacking[pickup][code]" class="monta-pickup-input-code monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][shipper]" class="monta-pickup-input-shipper monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][shippingOptions]" class="monta-pickup-input-shippingOptions monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][company]" class="monta-pickup-input-company monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][street]" class="monta-pickup-input-street monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][houseNumber]" class="monta-pickup-input-houseNumber monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][postal]" class="monta-pickup-input-postal monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][city]" class="monta-pickup-input-city monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][description]" class="monta-pickup-input-description monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][country]" class="monta-pickup-input-country monta-pickup-fields">
-        <input type="hidden" name="montapacking[pickup][price]" class="monta-pickup-input-price monta-pickup-fields">
+        <input id="montapackingpickupcode" type="hidden" name="montapacking[pickup][code]" class="monta-pickup-input-code monta-pickup-fields">
+        <input id="montapackingpickupshipper"type="hidden" name="montapacking[pickup][shipper]" class="monta-pickup-input-shipper monta-pickup-fields">
+        <input id="montapackingpickupshippingoptions" type="hidden" name="montapacking[pickup][shippingOptions]" class="monta-pickup-input-shippingOptions monta-pickup-fields">
+        <input id="montapackingpickupcompany"type="hidden" name="montapacking[pickup][company]" class="monta-pickup-input-company monta-pickup-fields">
+        <input id="montapackingpickupstreet"type="hidden" name="montapacking[pickup][street]" class="monta-pickup-input-street monta-pickup-fields">
+        <input id="montapackingpickuphousenumber"type="hidden" name="montapacking[pickup][houseNumber]" class="monta-pickup-input-houseNumber monta-pickup-fields">
+        <input id="montapackingpickuppostal"type="hidden" name="montapacking[pickup][postal]" class="monta-pickup-input-postal monta-pickup-fields">
+        <input id="montapackingpickupcity"type="hidden" name="montapacking[pickup][city]" class="monta-pickup-input-city monta-pickup-fields">
+        <input id="montapackingpickupdescription"type="hidden" name="montapacking[pickup][description]" class="monta-pickup-input-description monta-pickup-fields">
+        <input id="montapackingpickupcountry" type="hidden" name="montapacking[pickup][country]" class="monta-pickup-input-country monta-pickup-fields">
+        <input id="montapackingpickupprice" type="hidden" name="montapacking[pickup][price]" class="monta-pickup-input-price monta-pickup-fields">
 
     </div>
 
     <div class="monta-shipment-extras">
 
-  <!--      <br/>-->
+        <!--      <br/>-->
 
-        <span><?php _e( 'Extra options:', 'montapacking-checkout' ); ?></span><br>
+        <span><?php _e('Extra options:', 'montapacking-checkout'); ?></span><br>
         <div class="monta-shipment-extra-options"></div>
 
 
+    </div>
+
+    <div class="monta-times-croppped-error-deliveries monta-times-cropped-error" style="display:none">
+
+        <?php _e(' No deliveries available for the chosen delivery address.', 'montapacking-checkout'); ?>
+
+        <div class="clear:both"></div>
+
+    </div>
+
+    <div class="monta-times-croppped-error-pickup monta-times-cropped-error" style="display:none">
+        <?php _e(' No pickups available for the chosen delivery address', 'montapacking-checkout'); ?>
+
+        <div class="clear:both"></div>
     </div>
 
 </div>
@@ -152,11 +195,12 @@
     <li>
 
         <label>
-            <input type="radio" name="montapacking[shipment][time]" value="{.id}" class="montapackingshipmenttime {.sameday}">
+            <input type="radio" name="montapacking[shipment][time]" value="{.id}"
+                   class="montapackingshipmenttime {.sameday}">
             <span>
 				<span class="day">{.day}</span>
-				<span class="description">{.description}</span>
-				<span class="price">{.price}</span>
+                <!--<span class="pricemonta">{.price}</span>-->
+                <span class="description">{.description}</span>
 			</span>
         </label>
 
@@ -166,13 +210,14 @@
 <div class="monta-shipper-template">
     <label>
         <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper">
+        <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}">
         <span style="display:none" class="cropped_name">{.name}</span>
         <span style="display:none" class="cropped_time">{.time}</span>
         <span style="display:none" class="cropped_image">{.img}</span>
         <span>
             {.img}
 			<div class="name">{.name} {.time}</div>
-			<span class="price">{.price}</span>
+			<span class="pricemonta">{.price}</span>
 		</span>
     </label>
 </div>
@@ -182,7 +227,52 @@
         <input type="checkbox" name="montapacking[shipment][extras][]" value="{.code}">
         <span>
 			{.name}
-			<span class="price">{.price}</span>
+			<span class="pricemonta">{.price}</span>
 		</span>
     </label>
 </div>
+
+<div class="monta-cover monta-hide">
+    <div class="monta-window">
+
+        <div class="monta-pickup-loading"><?php _e('Loading...', 'montapacking-checkout'); ?></div>
+
+        <div class="monta-pickup-active monta-hide bh-sl-container">
+
+            <a class="monta-close-pickup">x</a>
+
+            <div class="monta-options bh-sl-form-container">
+
+                <!--Old shipper filter-->
+                <div class="bh-sl-filters-container">
+
+                    <ul id="category-filters" class="bh-sl-filters">
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <div id="monta-stores" class="bh-sl-map-container">
+
+                <div class="monta-locations">
+
+                    <div class="scroller bh-sl-loc-list">
+                        <ul class="list">
+                            <!-- pick-up points -->
+                        </ul>
+                    </div>
+                    <a class="monta-select-pickup"><?php _e('Use selection', 'montapacking-checkout'); ?></a>
+
+                </div>
+                <div class="monta-map">
+                    <div id="bh-sl-map" class="bh-sl-map"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+

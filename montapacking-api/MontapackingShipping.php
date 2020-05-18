@@ -23,6 +23,7 @@ class MontapackingShipping
     private $shippers = null;
     private $products = null;
     private $allowedshippers = null;
+    private $logger = null;
 
     public function __construct($origin, $user, $pass, $googlekey, $test = false)
     {
@@ -55,6 +56,11 @@ class MontapackingShipping
             return false;
         }
         return true;
+    }
+
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
     }
 
     public function setOrder($total_incl, $total_excl)
@@ -144,7 +150,7 @@ class MontapackingShipping
 
     public function checkStock($sku)
     {
-        $url = "https://api.montapacking.nl/rest/v5/product/".$sku."/stock";
+        $url = "https://api.montapacking.nl/rest/v5/product/" . $sku . "/stock";
 
         $this->pass = htmlspecialchars_decode($this->pass);
         $ch = curl_init();
@@ -162,14 +168,13 @@ class MontapackingShipping
         $result = json_decode($result);
 
 
-        if ($result->Message == 'Zero products found with sku '.$sku) {
+        if (property_exists($result, 'Message') && $result->Message == 'Zero products found with sku ' . $sku) {
             return false;
         } else {
             return true;
         }
 
     }
-
 
 
     public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false)
@@ -230,6 +235,7 @@ class MontapackingShipping
         $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products']);
 
         if (trim($this->address->postalcode) && (trim($this->address->housenumber) || trim($this->address->street))) {
+
             if (isset($result->Timeframes)) {
 
                 ## Shippers omzetten naar shipper object
@@ -282,6 +288,7 @@ class MontapackingShipping
         //$url = $this->http . $this->user . ':' . $this->pass . '@' . $this->url . $method;
         $url = "https://api.montapacking.nl/rest/v5/" . $method;
 
+
         if ($this->debug) {
             echo $url;
             echo str_replace('&', "$\n", $request);
@@ -309,7 +316,64 @@ class MontapackingShipping
 
         curl_close($ch);
 
-        return json_decode($result);
+        $result = json_decode($result);
+
+
+
+        if (null !== $this->logger && null === $result) {
+            $logger = $this->logger;
+            $context = array('source' => 'Montapacking Checkout');
+            $logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context);
+        }
+
+
+        if (null !== $this->logger && $result->Warnings) {
+
+            foreach ($result->Warnings as $warning) {
+
+                $logger = $this->logger;
+                $context = array('source' => 'Montapacking Checkout');
+
+                if (null !== $warning->ShipperCode) {
+                    $logger->warning($warning->ShipperCode . " - " . $warning->Message, $context);
+                } else {
+                    $logger->warning($warning->Message, $context);
+                }
+
+
+            }
+        }
+
+        if (null !== $this->logger && $result->Notices) {
+
+            foreach ($result->Notices as $notice) {
+                $logger = $this->logger;
+                $context = array('source' => 'Montapacking Checkout');
+
+                if (null !== $notice->ShipperCode) {
+                    $logger->notice($notice->ShipperCode . " - " . $notice->Message, $context);
+                } else {
+                    $logger->notice($notice->Message, $context);
+                }
+
+
+            }
+        }
+
+        if (null !== $this->logger && $result->ImpossibleShipperOptions) {
+
+            foreach ($result->ImpossibleShipperOptions as $impossibleoption) {
+                foreach ($impossibleoption->Reasons as $reason) {
+
+                    $logger = $this->logger;
+                    $context = array('source' => 'Montapacking Checkout');
+                    $logger->warning($impossibleoption->ShipperCode . " - " . $reason->Code . " | " . $reason->Reason, $context);
+                }
+            }
+
+        }
+
+        return $result;
 
     }
 

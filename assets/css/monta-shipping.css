@@ -1,50 +1,53 @@
-.monta-hide{
+.monta-hide {
     display: none !important;
 }
 
-body.monta-cover-open{
+body.monta-cover-open {
     overflow: hidden !important;
 }
 
-.montapacking-shipping{
-    padding: 10px 0 20px!important;
+.montapacking-shipping {
+    padding: 10px 0 20px !important;
 }
 
-.monta-times-croppped {
-    margin-top:10px;
-    border:1px solid #eee;
+.monta-times-croppped, .monta-times-cropped-error, .monta-pickup-selected {
+    margin-top: 10px;
+    border: 1px solid #eee;
     padding: 8px 12px;
-    margin-bottom:30px;
+    margin-bottom: 30px;
+    font-size: 14px;
 }
 
 .monta-times-extended {
-    margin-bottom:10px;
+    margin: 10px 0;
 }
 
 .monta-times {
-    margin-top:10px;
+    margin-top: 10px;
 }
 
-@media only screen and (min-width: 691px){
-    .montapacking-shipping .monta-options{
+@media only screen and (min-width: 691px) {
+    .montapacking-shipping .monta-options {
         width: 50%;
         text-align: center;
         font-size: 0;
         vertical-align: middle;
         display: table-cell;
-        padding-bottom:10px;
-    }}
+        padding-bottom: 10px;
+    }
+}
 
-@media only screen and (max-width: 690px){
-    .montapacking-shipping .monta-options{
+@media only screen and (max-width: 690px) {
+    .montapacking-shipping .monta-options {
         width: 100%;
         text-align: center;
         font-size: 0;
         vertical-align: middle;
         display: table;
-    }}
+    }
+}
 
-.montapacking-shipping .monta-options .monta-option{
+.montapacking-shipping .monta-options .monta-option {
     display: table-cell;
     padding-left: 8px;
     text-align: left;
@@ -52,33 +55,34 @@ body.monta-cover-open{
     position: relative;
 }
 
-.montapacking-shipping .monta-options .monta-option:nth-child(1){
-    padding: 0 8px 0 0!important;
+.montapacking-shipping .monta-options .monta-option:nth-child(1) {
+    padding: 0 8px 0 0 !important;
 }
 
-.montapacking-shipping .monta-options .monta-option.monta-disabled{
-    font-style: italic;
-    color: #aaa!important;
-    cursor: default!important;
+.montapacking-shipping .monta-options .monta-option.monta-disabled {
+
+    color: #aaa !important;
+    cursor: default !important;
 }
 
-.montapacking-shipping .monta-options .monta-option label{
+.montapacking-shipping .monta-options .monta-option label {
     display: block;
     height: 100%;
 }
 
-.montapacking-shipping .monta-option label span.block{
+.montapacking-shipping .monta-option label span.block {
     border: 1px solid #eee;
     padding: 10px 15px;
     display: block;
     cursor: pointer;
 }
 
-.montapacking-shipping .monta-options .monta-option label input:checked + span{
+.montapacking-shipping .monta-options .monta-option label input:checked + span {
     background: #fff;
-    border-color: #e27333;
+    border-color: #79898C;
 }
-.montapacking-shipping .monta-options .monta-option label input{
+
+.montapacking-shipping .monta-options .monta-option label input {
     margin-right: 8px;
     position: absolute;
     top: 18px;
@@ -89,74 +93,77 @@ body.monta-cover-open{
     font-size: 16px;
 }
 
-.montapacking-shipping .monta-options .monta-option label .text{
+.montapacking-shipping .monta-options .monta-option label .text {
     display: block;
     font-size: 12px;
 }
 
-.monta-times{
+.monta-times {
     display: table;
     width: 100%;
-    margin-bottom:25px;
-}
-.monta-times .toggle-left,
-.monta-times .toggle-right,
-.monta-times .scroller
-{
-    vertical-align: top;
-    display: table-cell;
-    height: 70px;
+    margin-bottom: 15px;
 }
 
 .monta-times .toggle-left,
-.monta-times .toggle-right{
-    width: 50px;
-    background: #eee;
-    font-size: 11px;
+.monta-times .toggle-right,
+.monta-times .scroller {
+    vertical-align: top;
+    display: table-cell;
+    height: 60px;
+}
+
+.monta-times .toggle-left,
+.monta-times .toggle-right {
+    width: 30px;
+    font-size: 24px;
     vertical-align: middle;
     text-align: center;
+    text-decoration: none !important;
+    border: 1px solid #eee;
 }
 
 .monta-times .toggle-left:hover,
-.monta-times .toggle-right:hover{
+.monta-times .toggle-right:hover {
     cursor: pointer;
     color: #fff;
-    background: #e27333;
+    background: #79898C;
 }
 
-.monta-times .error{
+
+.monta-times .error {
     padding: 20px;
     text-align: center;
 }
 
-.monta-times .scroller .mover{
+.monta-times .scroller .mover {
     overflow: hidden;
     position: relative;
-    height: 70px;
+    height: 60px;
     width: 100%;
+
 }
 
-.monta-times ul{
+.monta-times ul {
     position: absolute;
     width: 10000px;
-    height: 70px;
+    height: 60px;
     list-style: none;
     padding: 0;
     margin: 0;
     font-size: 0;
 }
 
-.monta-times ul li{
-    width: 125px;
-    height: 70px;
+.monta-times ul li {
+    width: 110px;
+    height: 60px;
     position: relative;
     display: inline-block;
     padding: 10px 15px;
-    font-size: 12px;
+
     margin: 0 5px;
 }
 
-.monta-times ul li label > span{
+.monta-times ul li label > span {
     position: absolute;
     border: 1px solid #eee;
     left: 0;
@@ -166,20 +173,14 @@ body.monta-cover-open{
     cursor: pointer;
 }
 
-.monta-times ul li label > span span{
+.monta-times ul li label > span span {
     display: block;
     padding: 0 5px;
+    text-align: center;
+    font-size: 14px;
 }
 
-.monta-times span.price{
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    color:#333;
-}
-
-.monta-times ul li label input[type=radio]{
+.monta-times ul li label input[type=radio] {
     z-index: 5;
     position: absolute;
     margin: -4px 0 0 -10px;
@@ -187,68 +188,96 @@ body.monta-cover-open{
     vertical-align: top;
 }
 
-.monta-times ul li label span.day{
+.monta-times ul li label span.day {
     font-weight: bold;
     display: block;
-    color:#333;
+    padding-top: 8px;
 }
 
-.monta-times ul li label span.description{
-    color:#333;
-    font-style:italic;
+.monta-times ul li label span.description {
+    font-style: italic;
+    margin-top: -2px;
+    font-size: 12px;
+}
+
+span.pricemonta {
+
 }
 
 
-
-.monta-times label input:checked + span{
+.monta-times label input:checked + span {
     background: #f5f5f5;
-    border-color: #e27333;
-    color:#333;
+    border-color: #79898C;
+
 }
 
 .monta-loading,
 .monta-shipment-delivery,
 .monta-shipment-extras,
-.monta-shipment-pickup{
+.monta-shipment-pickup {
     display: none;
 }
 
 .monta-loading.active,
 .monta-shipment-delivery.active,
 .monta-shipment-extras.active,
-.monta-shipment-pickup.active{
+.monta-shipment-pickup.active {
     display: block;
 }
-@media only screen and (min-width: 800px){
-    .monta-shipment-delivery.active{
-        padding-right:45px;
+
+.monta-loading {
+    width: 75px;
+    height: 50px;
+    overflow: hidden;
+    background-image: url('/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/loading.gif');
+    background-size: cover;
+    background-position: center;
+}
+
+@media only screen and (min-width: 800px) {
+    .monta-shipment-delivery.active, .monta-shipment-extra-options {
+        padding-right: 45px;
     }
 }
 
+.deliveryinfo {
+    float: left;
+    margin-right: 3px;
+}
+
+.delivery-time {
+    font-weight: 700;
+}
+
+.imglogo img {
+    width: 50px;
+    margin-right: 15px;
+}
+
 .monta-shipment-extras label,
-.monta-shipment-shipper label{
+.monta-shipment-shipper label {
     position: relative;
-    display: block;
+    display: block !important;
     margin-top: 10px;
     height: 45px;
     line-height: 40px;
-    color:#333;
 }
 
 .monta-shipment-shipper img {
     display: inline-block;
     width: 30px;
     margin-right: 5px;
+    vertical-align: baseline !important;
 }
 
 .monta-shipment-shipper .name {
     display: inline-block;
     vertical-align: text-bottom;
-    color:#333;
+
 }
 
 .monta-shipment-extras label input[type=checkbox],
-.monta-shipment-shipper label input[type=radio]{
+.monta-shipment-shipper label input[type=radio] {
     z-index: 5;
     position: absolute;
     margin: 16px;
@@ -257,7 +286,7 @@ body.monta-cover-open{
 }
 
 .monta-shipment-extras label > span,
-.monta-shipment-shipper label > span{
+.monta-shipment-shipper label > span {
     position: absolute;
     border: 1px solid #eee;
     left: 0;
@@ -268,32 +297,42 @@ body.monta-cover-open{
     line-height: 40px;
     cursor: pointer;
     font-size: 14px;
-    color:black;
 }
 
-.monta-shipment-extras label > span span.price,
-.monta-shipment-shipper label > span span.price{
-    font-weight: bold;
+.monta-shipment-extras label > span span.pricemonta,
+.monta-shipment-shipper label > span span.pricemonta {
     float: right;
     padding: 0 10px;
-    color:black;
 }
 
+.monta-pickup-selected {
+    position:relative;
+}
+.monta-pickup-selected > span.pricemonta,
+.monta-pickup-selected > span.pricemonta {
+    position: absolute;
+    float: right;
+    padding: 0 10px;
+    top:10px;
+    right: 0px;
+}
+
+
+
 .monta-shipment-extras label input:checked + span,
-.monta-shipment-shipper label input:checked + span{
+.monta-shipment-shipper label input:checked + span {
     background: #f5f5f5;
-    border-color: #e27333;
+    border-color: #79898C;
 }
 
 .monta-shipper-template,
 .monta-extra-template,
-.monta-choice-template
-{
+.monta-choice-template {
     display: none !important;
 }
 
-.monta-cover{
-    background: rgba(0,0,0,0.4);
+.monta-cover {
+    background: rgba(0, 0, 0, 0.4);
     position: fixed;
     top: 0;
     left: 0;
@@ -302,7 +341,7 @@ body.monta-cover-open{
     z-index: 99999;
 }
 
-.monta-cover .monta-window{
+.monta-cover .monta-window {
     background: #fff;
     padding: 0;
     margin: 50px auto;
@@ -311,35 +350,35 @@ body.monta-cover-open{
     max-height: 80%;
 }
 
-.monta-pickup-active{
+.monta-pickup-active {
     position: relative;
     height: 100%;
     width: 100%;
 }
 
-.monta-pickup-loading{
+.monta-pickup-loading {
     padding: 25px;
 }
 
-.monta-locations{
+.monta-locations {
     width: 30%;
     /*padding-bottom: 50px;*/
 }
 
-.monta-locations .scroller{
+.monta-locations .scroller {
     height: 100%;
     width: 100%;
     overflow: auto;
     position: relative;
 }
 
-.monta-locations ul{
+.monta-locations ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.monta-locations ul li{
+.monta-locations ul li {
     cursor: pointer;
     padding: 8px 12px;
     line-height: 20px;
@@ -347,29 +386,27 @@ body.monta-cover-open{
     background: #fff;
 }
 
-.monta-locations ul li:nth-child(odd){
+.monta-locations ul li:nth-child(odd) {
     background: #f5f5f5;
 }
 
-.monta-locations ul.list li.list-focus{
-    background: #e27333;
+.monta-locations ul.list li.list-focus {
+    background: #79898C;
     color: #fff;
 }
 
-.monta-locations ul li .price{
+.monta-locations ul li .pricemonta {
     float: right;
-    font-weight: bold;
-    font-size: 16px;
 }
 
-#monta-stores{
+#monta-stores {
     display: table !important;
     height: 100%;
     width: 100%;
 }
 
 #monta-stores .monta-locations,
-#monta-stores .monta-map{
+#monta-stores .monta-map {
     display: table-cell;
     vertical-align: top;
     position: relative;
@@ -377,23 +414,23 @@ body.monta-cover-open{
 }
 
 
-.bh-sl-map{
+.bh-sl-map {
     height: 100%;
     width: 100%;
 }
 
-.bh-sl-filters{
+.bh-sl-filters {
     list-style: none;
     margin: 0;
     padding: 15px;
 }
 
-.bh-sl-filters li{
+.bh-sl-filters li {
     display: inline-block;
     padding-right: 20px;
 }
 
-.monta-close-pickup{
+.monta-close-pickup {
     position: absolute;
     top: 0;
     right: 0;
@@ -407,17 +444,17 @@ body.monta-cover-open{
     font-size: 30px;
 }
 
-.monta-close-pickup:hover{
+.monta-close-pickup:hover {
     background: #b00;
     color: #fff;
 }
 
-.monta-select-pickup{
+.monta-select-pickup {
     bottom: 0;
     left: 0;
     right: 0;
     height: 50px;
-    background: #007a99;
+    background: #79898C;
     color: #fff;
     text-align: center;
     line-height: 50px;
@@ -425,15 +462,15 @@ body.monta-cover-open{
     cursor: pointer;
 }
 
-.monta-select-pickup:hover{
-    background: #0b0;
+.monta-select-pickup:hover {
+    background: #657578;
 }
 
-.monta-select-pickup.active{
+.monta-select-pickup.active {
     display: block;
 }
 
-.monta-more-pickup-points:hover{
+.monta-more-pickup-points:hover {
     cursor: pointer;
 }
 
@@ -449,14 +486,14 @@ body.monta-cover-open{
     background: white !important;
 }
 
-.monta-initial-pickup>input {
+.monta-initial-pickup > input {
     position: absolute;
     margin: 24px;
     padding: 0;
     vertical-align: top;
 }
 
-.monta-initial-pickup>span * {
+.monta-initial-pickup > span * {
     padding-left: 70px;
 }
 
@@ -467,9 +504,9 @@ body.monta-cover-open{
     list-style-type: none;
 }
 
-#initialPickupsList li.list-focus{
+#initialPickupsList li.list-focus {
     background-color: #eee;
-    border: 1px solid #e27333;
+    border: 1px solid #79898C;
 }
 
 .initialPickupRadio {
@@ -478,7 +515,7 @@ body.monta-cover-open{
     list-style: none;
 }
 
-input[name=initialPickupPointRadio]{
+input[name=initialPickupPointRadio] {
     display: none;
 }
 
@@ -490,19 +527,17 @@ input[name=initialPickupPointRadio]{
 /* Specific styling for firefox */
 @-moz-document url-prefix() {
 
-    .bh-sl-map{
+    .bh-sl-map {
         position: fixed !important;
         max-height: 80vh;
-        max-width: 47.5%;
+        max-width: 59.5%;
     }
 
     .bh-sl-loc-list {
-        max-height: 75.1vh;
+        max-height: 74.5vh;
     }
 
-    .monta-locations {
-        padding-bottom: unset !important;
-    }
+
 
 }
 
@@ -519,25 +554,29 @@ input[name=initialPickupPointRadio]{
 }
 
 .block {
-    padding: 10px 10px!important;
-    text-align:center;
+    padding: 10px 10px !important;
+    text-align: center;
     list-style: none;
     margin: 0 !important;
     padding: 0;
-    color:#474747!important;
+    color: #474747 !important;
 }
 
-.montapackingshipmenttime   {
+.montapackingshipmenttime {
     display: none !important;
 }
 
 
 @media screen and (max-width: 600px) {
     .monta-more-pickup-points {
-        display:none !important;
+        display: none !important;
     }
+
     .monta-shipment-pickup.active {
-        margin-top: 0px; !important;
+        margin-top: 0px;
+    !important;
     }
-}}
+}
+
+}
 
