@@ -307,11 +307,10 @@ jQuery(document).ready(function () {
                                 $.each(monta_shipping.frames, function (key, item) {
 
                                     if (item.code === 'NOTIMES') {
-                                        $('.monta-times').addClass('monta-hide');
+                                       // $('.monta-times').addClass('monta-hide');
                                     }
 
                                     var option = item.options[0];
-
 
                                     if (option !== null && option !== undefined) {
 
@@ -319,6 +318,7 @@ jQuery(document).ready(function () {
                                         html = html.replace(/{.id}/g, key);
                                         html = html.replace(/{.code}/g, (item.code !== null) ? item.code : '');
                                         html = html.replace(/{.day}/g, item.date);
+                                        html = html.replace(/{.dayname}/g, item.datename);
                                         html = html.replace(/{.time}/g, item.time);
                                         html = html.replace(/{.description}/g, (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
@@ -497,10 +497,6 @@ jQuery(document).ready(function () {
 
                         } else {
 
-                            // Show error message
-                            console.log(result.message);
-
-
                             if (checked == 'pickup') {
                                 $(".monta-times-croppped-error-pickup").css("display", "block")
                             } else {
@@ -566,7 +562,7 @@ jQuery(document).ready(function () {
 
                         $('.monta-pickup-selected').html(html);
 
-                        if (markerId > 2) {
+                        if (markerId > 4) {
                             $('.monta-pickup-selected').show();
                             $('.monta-pickup-selected-title').show();
                             $('.monta-selected-pickup').show();
@@ -577,7 +573,6 @@ jQuery(document).ready(function () {
                             $('.monta-pickup-selected-title').hide();
                             $('.monta-selected-pickup').hide();
                         }
-
 
                         $('.monta-shipment-pickup').addClass('active');
 
@@ -827,15 +822,16 @@ jQuery(document).ready(function () {
 
     function updateDeliveryTextBlock() {
         var day = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".day").text();
-        jQuery("strong.date").text(day);
+        var dayname = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".dayname").text();
+        jQuery("strong.date").text(dayname + " " + day);
 
-        var shipper = jQuery("input.montapackingshipmentshipper:checked").parent("label").find(".cropped_name").text();
+        var shipper = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_name").text();
         jQuery("strong.shipper").text(shipper);
 
-        var datetime = jQuery("input.montapackingshipmentshipper:checked").parent("label").find(".cropped_time").text();
+        var datetime = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_time").text();
         jQuery("strong.datetime").text(datetime);
 
-        var image = jQuery("input.montapackingshipmentshipper:checked").parent("label").find(".cropped_image").html();
+        var image = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_image").html();
         jQuery("div.imglogo").html(image);
 
 
@@ -853,6 +849,13 @@ jQuery(document).ready(function () {
 
     jQuery("input.montapackingshipmentshipper, input.montapackingshipmenttime ").live("change", function () {
         updateDeliveryTextBlock();
+    });
+
+    jQuery("input.montapackingshipmentshipper ").live("click", function () {
+
+        jQuery('.montapackingshipmentshipper').parents('label').removeClass("checked");
+        jQuery(this).parents('label').addClass("checked");
+
     });
 
     jQuery("#othersendmethod").live("click", function () {

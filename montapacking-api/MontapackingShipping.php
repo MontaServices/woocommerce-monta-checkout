@@ -14,6 +14,7 @@ class MontapackingShipping
     private $user = '';
     private $pass = '';
     private $url = '';
+    private $requesturl = '';
     private $googlekey = '';
     private $http = 'https://';
 
@@ -205,7 +206,8 @@ class MontapackingShipping
                     $timeframe->To,
                     $timeframe->TypeCode,
                     $timeframe->PickupPointDetails,
-                    $timeframe->ShippingOptions
+                    $timeframe->ShippingOptions,
+                    $this->requesturl
                 );
 
             }
@@ -246,7 +248,9 @@ class MontapackingShipping
                         $timeframe->To,
                         $timeframe->TypeCode,
                         $timeframe->TypeDescription,
-                        $timeframe->ShippingOptions
+                        $timeframe->ShippingOptions,
+                        $timeframe->FromToTypeCode,
+                        $this->requesturl
                     );
 
                 }
@@ -288,11 +292,13 @@ class MontapackingShipping
         //$url = $this->http . $this->user . ':' . $this->pass . '@' . $this->url . $method;
         $url = "https://api.montapacking.nl/rest/v5/" . $method;
 
-
+        //$this->debug = true;
         if ($this->debug) {
             echo $url;
             echo str_replace('&', "$\n", $request);
         }
+
+        $this->requesturl = $url.$request;
 
         $ch = curl_init();
 
@@ -335,9 +341,9 @@ class MontapackingShipping
                 $context = array('source' => 'Montapacking Checkout');
 
                 if (null !== $warning->ShipperCode) {
-                    $logger->warning($warning->ShipperCode . " - " . $warning->Message, $context);
+                    $logger->notice($warning->ShipperCode . " - " . $warning->Message, $context);
                 } else {
-                    $logger->warning($warning->Message, $context);
+                    $logger->notice($warning->Message, $context);
                 }
 
 
@@ -367,7 +373,7 @@ class MontapackingShipping
 
                     $logger = $this->logger;
                     $context = array('source' => 'Montapacking Checkout');
-                    $logger->warning($impossibleoption->ShipperCode . " - " . $reason->Code . " | " . $reason->Reason, $context);
+                    $logger->notice($impossibleoption->ShipperCode . " - " . $reason->Code . " | " . $reason->Reason, $context);
                 }
             }
 

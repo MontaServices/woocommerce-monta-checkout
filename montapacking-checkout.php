@@ -37,6 +37,8 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_google_key');
     register_setting('montapacking-plugin-settings', 'monta_logerrors');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts');
+    register_setting('montapacking-plugin-settings', 'monta_leadingstock');
+    register_setting('montapacking-plugin-settings', 'monta_disablepickup');
 
 });
 
@@ -88,10 +90,12 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     ## Init session usage#
     add_action('init', 'montacheckout_register_session');
 
-    add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
+    //add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
+    add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
 
 } else {
+
     add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
     add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);
     add_action('woocommerce_package_rates', 'overrule_package_rates', 20, 2);
@@ -186,9 +190,40 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_shop">Log errors</label></th>
+                    <th scope="row"><label for="monta_logerrors">Log errors</label></th>
                     <td><input type="checkbox" name="monta_logerrors"
-                               value="1" <?php checked('1', get_option('monta_logerrors')); ?>/></td>
+                               value="1" <?php checked('1', get_option('monta_logerrors')); ?>/>
+                        <br><i style="font-size:12px">Turn on logs which are shown <a href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a></i>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row"><label for="monta_disablepickup">Disable pickup points</label></th>
+                    <td><input type="checkbox" name="monta_disablepickup"
+                               value="1" <?php checked('1', get_option('monta_disablepickup')); ?>/>
+                        <br><i style="font-size:12px">When disabled no pickup points are shown</i>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row"><label for="monta_leadingstock">Leading stock</label></th>
+                    <td>
+
+                        <input id="monta_leadingstock_montapacking" type="radio" name="monta_leadingstock"
+                               value="montapacking" <?php checked('montapacking', get_option('monta_leadingstock')); ?>/>
+                        <label for="monta_leadingstock_montapacking">Montapacking</label>
+
+
+                        <input id="monta_leadingstock_woocommerce" type="radio" name="monta_leadingstock"
+                               value="woocommerce" <?php checked('woocommerce', get_option('monta_leadingstock')); ?>/>
+                        <label for="monta_leadingstock_woocommerce">WooCommerce</label>
+
+
+
+                        <br><i style="font-size:12px">Which stock is leading for the delivery days calculation</i>
+                    </td>
                 </tr>
 
             </table>
@@ -212,10 +247,12 @@ function montacheckout_render_settings()
     <?php
 }
 
+/*
 function filter_woocommerce_order_shipping_to_display_shipped_via($html, $instance)
 {
 
     $json = json_decode($instance);
+
 
     $order = wc_get_order($json->id);
 
@@ -247,7 +284,44 @@ function filter_woocommerce_order_shipping_to_display_shipped_via($html, $instan
 
     return "&nbsp;<small class='shipped_via'>" . sprintf(__('via %s', 'woocommerce'), esc_attr($method)) . "</small>";
 }
+*/
+function filter_woocommerce_order_shipping_method($html, $instance) {
+    $json = json_decode($instance);
+    $order = wc_get_order($json->id);
 
-;
+    $line_items_shipping = $order->get_items('shipping');
+
+    foreach ($line_items_shipping as $item_id => $item) {
+        $meta_data = $item->get_meta_data();
+
+        foreach ($meta_data as $value) {
+
+
+            if ($value->key == 'Shipmentmethod') {
+
+                $method = strip_tags($value->value);
+
+                if ($value->value == 'SEL,SELBuspakje') {
+                    $method = strip_tags('DHL Parcel');
+                }
+                return $method;
+            }
+
+            if ($value->key == 'Pickup Data') {
+                $method = strip_tags($value->value['description']);
+                return $method;
+            }
+        }
+    }
+
+    $names = array();
+    foreach ( $order->get_shipping_methods() as $shipping_method ) {
+        $names[] = $shipping_method->get_name();
+    }
+
+    return implode( ', ', $names );
+}
+
+
 
 

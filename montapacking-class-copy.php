@@ -316,13 +316,9 @@ class Montapacking
                 ?>
                 <td><?php _e('Choose a shipping method', 'montapacking-checkout'); ?></td>
                 <?php
-            } else if($price > 0){
+            } else {
                 ?>
                 <td>&euro; <?php echo number_format($price, 2, ',', ''); ?></td>
-                <?php
-            } else if($price == 0){
-                ?>
-                <td><?php echo translate('Free shipping', 'montapacking-checkout')?></td>
                 <?php
             }
             ?>
@@ -657,19 +653,12 @@ class Montapacking
         $items = $woocommerce->cart->get_cart();
 
         $bAllProductsAvailableAtMontapacking = true;
-        $bAllProductsAvailableAtWooCommerce = true;
-
         foreach ($items as $item => $values) {
 
             $sku = get_post_meta($values['product_id'], '_sku', true);
             $weight = get_post_meta($values['product_id'], '_weight', true);
             $length = get_post_meta($values['product_id'], '_length', true);
             $width = get_post_meta($values['product_id'], '_width', true);
-            $stockstatus = get_post_meta($values['product_id'], '_stock_status', true);
-
-            if ($stockstatus != 'instock') {
-                $bAllProductsAvailableAtWooCommerce = false;
-            }
 
             ## Add product
 
@@ -698,272 +687,177 @@ class Montapacking
         }
 
         ## Type timeframes ophalen
-
-
-        if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
-            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
-        } else {
-            $bStockStatus = $bAllProductsAvailableAtMontapacking;
-        }
-        //$bStockStatus = true;
         if ($type == 'delivery') {
-
-            return $api->getShippingOptions($bStockStatus);
+            //$bAllProductsAvailableAtMontapacking = true;
+            return $api->getShippingOptions($bAllProductsAvailableAtMontapacking);
 
         } else if ($type == 'pickup') {
 
-            return $api->getPickupOptions($bStockStatus);
+            return $api->getPickupOptions($bAllProductsAvailableAtMontapacking);
 
         }
 
-    }
-
-    public static function calculateExtras($extra_values = null, $curr = '&euro;')
-    {
-        $extras = null;
-        if (count($extra_values) > 0) {
-            foreach ($extra_values as $extra) {
-                ## Extra optie toevoegen
-                $extras[$extra->code] = (object)[
-                    'code' => $extra->code,
-                    'name' => $extra->name,
-                    'price' => $curr . ' ' . number_format($extra->price, 2, ',', ''),
-                    'price_raw' => $extra->price,
-                ];
-            }
-        }
-
-        return $extras;
     }
 
     public static function format_frames($frames)
     {
-        $items = array();
 
-        $curr = '&euro;';
+        $items = null;
 
-        //create days
+        ## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
         if (is_array($frames) || is_object($frames)) {
 
             foreach ($frames as $nr => $frame) {
 
-                if ($frame->type == 'ShippingDay') {
-
-                    foreach ($frame->options as $onr => $option) {
-                        $key = strtotime(date("Y-m-d", strtotime($option->date)));
-                        $from = date('d-m-Y', strtotime($option->date));
-
-                        if (!isset($items[$key] )) {
-                            $items[$key] = (object)[
-                                'code' => $frame->code,
-                                'date' => $from,
-                                'datename' => translate(date("l", $key)),
-                                'description' => '',
-                                'options' => array(),
-                            ];
-                        }
-
-                    }
-                }
-
-                if ($frame->type == 'DeliveryDay') {
-
-                    $key = strtotime(date("Y-m-d", strtotime($frame->from)));
-                    $from = date('d-m-Y', strtotime($frame->from));
-
-                    if (!isset($items[$key] )) {
-                        $items[$key] = (object)[
-                            'code' => $frame->code,
-                            'date' => $from,
-                            'datename' => translate(date("l", $key)),
-                            'description' => $frame->description,
-                            'options' => array(),
-                        ];
-                    }
-
-                }
-
-                if ($frame->type == 'Unknown') {
-
-                    foreach ($frame->options as $onr => $option) {
-
-                        $key = "NOTIMES";
-                        $from = '';
-
-                        if (strtotime($option->date) > 0) {
-                            $key = strtotime(date("Y-m-d", strtotime($option->date)));
-                            $from = date('d-m-Y', strtotime($option->date));
-
-                        } elseif ($option->code == 'RED_ShippingDayUnknown') {
-                            $key = strtotime(date("Y-m-d"));
-                            $from = date('d-m-Y', time());
-                        }
-
-                        if (!isset($items[$key])) {
-                            $items[$key] = (object)[
-                                'code' => $frame->code,
-                                'date' => $from,
-                                'datename' => translate(date("l", $key)),
-                                'description' => $frame->description,
-                                'options' => array(),
-                            ];
-                        }
-                    }
-                }
-            }
-        }
-        ksort($items);
-
-
-
-        // sort options to days
-
-        $notimes_counter = 0;
-        $shippingdaycounter = 999;
-
-        if (is_array($frames) || is_object($frames)) {
-
-            foreach ($frames as $nr => $frame) {
-
+                ## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
                 if ($frame->from != '' && $frame->to != '') {
 
-                    $key = strtotime(date("Y-m-d", strtotime($frame->from)));
+                    ## Loop trough options
+                    $selected = null;
 
+                    ## Lowest price
+                    $lowest = 9999999;
+
+                    ## Currency symbol
+                    $curr = '&euro;';
+
+                    ## Shipper opties ophalen
+                    $options = null;
                     foreach ($frame->options as $onr => $option) {
                         $from = $option->from;
                         $to = $option->to;
 
-                        $extras = null;
-                        if (isset($option->extras)) {
-                            $extras = self::calculateExtras($option->extras, $curr);
+                        ## Check of maximale besteltijd voorbij is
+                        if (time() < strtotime($option->date) && $selected == null) {
+
+                            $selected = $option;
+
                         }
 
-                        $evening = '';
-                        if (count($option->optioncodes)) {
-                            foreach ($option->optioncodes as $optioncode) {
+                        $extras = null;
+                        if (isset($option->extras) && count($option->extras) > 0) {
 
-                                if ($optioncode == 'EveningDelivery') {
-                                    $evening = " (" . translate('evening delivery', 'montapacking-checkout').") ";
-                                }
+                            foreach ($option->extras as $extra) {
+
+                                ## Currency symbol
+                                $curr = '&euro;';
+
+                                ## Extra optie toevoegen
+                                $extras[$extra->code] = (object)[
+                                    'code' => $extra->code,
+                                    'name' => $extra->name,
+                                    'price' => $curr . ' ' . number_format($extra->price, 2, ',', ''),
+                                    'price_raw' => $extra->price,
+                                ];
+
                             }
+
                         }
 
-                        $options_object = (object)[
+                        ## Shipper optie toevoegen
+                        $options[$onr] = (object)[
                             'code' => $option->code,
                             'codes' => $option->codes,
                             'optionCodes' => $option->optioncodes,
-                            'name' => $option->description.$evening,
+                            'name' => $option->description,
                             'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
                             'from' => date('H:i', strtotime($from . ' +1 hour')),
                             'to' => date('H:i', strtotime($to . ' +1 hour')),
                             'extras' => $extras,
-                            'request_url' => $frame->requesturl,
                         ];
 
-                        if ((time()+3600) <= strtotime($option->date)) {
-                            $items[$key]->options[] = $options_object;
-                        }
-                    }
-
-                }
-            }
-
-            foreach ($frames as $nr => $frame) {
-                if ($frame->type == 'ShippingDay') {
-
-                    foreach ($frame->options as $onr => $option) {
-
-                        $key = strtotime(date("Y-m-d", strtotime($option->date)));
-
-                        $from = $option->date;
-                        $to = $option->date;
-
-                        $extras = null;
-                        if (isset($option->extras)) {
-                            $extras = self::calculateExtras($option->extras, $curr);
-                        }
-
-                        $options_object = (object)[
-                            'code' => $option->code,
-                            'codes' => $option->codes,
-                            'optionCodes' => $option->optioncodes,
-                            'name' => $option->description . " (".translate('ships on', 'montapacking-checkout')." " . date("d-m-Y", strtotime($option->date)) ." ".translate('from the Netherlands', 'montapacking-checkout').")",
-                            'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
-                            'price_raw' => $option->price,
-                            'from' => date('H:i', strtotime($from . ' +1 hour')),
-                            'to' => date('H:i', strtotime($to . ' +1 hour')),
-                            'extras' => $extras,
-                            'request_url' => $frame->requesturl,
-                        ];
-
-                        if ((time()+3600) <= strtotime($option->date)) {
-                            $items[$key]->options[] = $options_object;
+                        ## Check if we have a lower price
+                        if ($option->price < $lowest) {
+                            $lowest = $option->price;
                         }
 
                     }
-                }
-            }
-            foreach ($frames as $nr => $frame) {
 
 
-                if ($frame->type == 'Unknown') {
+                    ## Check of er een prijs is
+                    if ($options !== null) {
 
-                    foreach ($frame->options as $onr => $option) {
+                        $items[$nr] = (object)[
+                            'code' => $frame->code,
+                            'date' => date('d-m-Y', strtotime($frame->from)),
+                            'time' => (date('H:i', strtotime($frame->from)) != date('H:i', strtotime($frame->to))) ? date('H:i', strtotime($frame->from)) . '-' . date('H:i', strtotime($frame->to)) : '',
+                            'description' => $frame->description,
+                            'price' => $curr . ' ' . number_format($lowest, 2, ',', ''),
+                            'options' => $options
+                        ];
 
-                        $key = "NOTIMES";
+                    }
 
-                        if (strtotime($option->date) > 0) {
+                } else {
 
-                            $key = strtotime(date("Y-m-d", strtotime($option->date)));
-                            $desc = $option->description . " (".translate('ships on', 'montapacking-checkout')." " . date("d-m-Y", strtotime($option->date)) ." ".translate('from the Netherlands', 'montapacking-checkout').")";
-                        }elseif ($option->code == 'RED_ShippingDayUnknown') {
-                            $key = strtotime(date("Y-m-d"));
-                            $desc = '';
-                        }
+                    ## Lowest price
+                    $lowest = 9999999;
+
+                    ## Currency symbol
+                    $curr = '&euro;';
+
+                    ## Geen begin en eindtijd bekend, dan alleen verzender keuze
+                    $options = null;
+                    foreach ($frame->options as $nr => $option) {
 
                         $extras = null;
-                        if (isset($option->extras)) {
-                            $extras = self::calculateExtras($option->extras, $curr);
+                        if (isset($option->extras) && count($option->extras) > 0) {
+
+                            foreach ($option->extras as $extra) {
+
+                                ## Currency symbol
+                                $curr = '&euro;';
+
+                                ## Extra optie toevoegen
+                                $extras[$extra->code] = (object)[
+                                    'code' => $extra->code,
+                                    'name' => $extra->name,
+                                    'price' => $curr . ' ' . number_format($extra->price, 2, ',', ''),
+                                    'price_raw' => $extra->price,
+                                ];
+
+                            }
+
                         }
 
-
-                        $options_object = (object)[
+                        $options[] = (object)[
                             'codes' => $option->codes,
                             'code' => $option->code,
-                            'name' => $desc,
+                            'name' => $option->description,
                             'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
                             'from' => null,
                             'to' => null,
                             'extras' => $extras,
-                            'request_url' => $frame->requesturl,
                         ];
 
-
-                        if ((time()+3600) <= strtotime($option->date)) {
-                            $items[$key]->options[] = $options_object;
+                        ## Check if we have a lower price
+                        if ($option->price < $lowest) {
+                            $lowest = $option->price;
                         }
 
-
                     }
+
+                    ## Create item
+                    $items[1] = (object)[
+                        'code' => 'NOTIMES',
+                        'date' => null,
+                        'time' => null,
+                        'description' => '',
+                        'price' => $lowest,
+                        'options' => $options
+                    ];
+
                 }
-            }
-        }
 
-
-        $cleared_items = array();
-        foreach ($items as $key => $item) {
-            if (count($item->options) > 0) {
-                $cleared_items[$key] = $item;
             }
 
         }
-        $items = $cleared_items;
+
         ## Frames opslaan in sessie voor bepalen kosten
         $_SESSION['montapacking-frames'] = $items;
 
-        $_SESSION['montapacking-frames-test'] = $items;
         return $items;
 
     }

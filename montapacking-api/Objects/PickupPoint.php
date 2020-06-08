@@ -9,8 +9,10 @@ class MontaCheckout_PickupPoint
     public $code;
     public $details = [];
     public $options = [];
+    public $requesturl;
 
-    public function __construct($from, $to, $code, $details, $options)
+
+    public function __construct($from, $to, $code, $details, $options, $requesturl = null)
     {
 
         $this->setFrom($from);
@@ -18,7 +20,14 @@ class MontaCheckout_PickupPoint
         $this->setCode($code);
         $this->setDetails($details);
         $this->setOptions($options);
+        $this->setRequestUrl($requesturl);
 
+    }
+
+    public function setRequestUrl($requesturl)
+    {
+        $this->requesturl = $requesturl;
+        return $this;
     }
 
     public function setFrom($from)

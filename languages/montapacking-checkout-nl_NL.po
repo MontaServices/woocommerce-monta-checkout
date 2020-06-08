@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: montapacking-checkout-woocommerce-extension\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-20 11:29+0200\n"
-"PO-Revision-Date: 2020-05-14 07:50+0000\n"
+"PO-Revision-Date: 2020-06-08 15:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: Dutch; Flemish\n"
 "Language: nl\n"
@@ -12,26 +12,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Loco-Source-Locale: nl_NL\n"
-"X-Generator: Loco https://localise.biz/\n"
+"X-Generator: Poedit 2.3.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _e;__\n"
+"X-Loco-Parser: loco_parse_po\n"
 "X-Poedit-SearchPath-0: .\n"
-"\n"
-"X-Loco-Parser: loco_parse_po"
 
-#: montapacking-checkout.php:37
 msgid "Settings"
 msgstr "Instellingen"
 
-#: montapacking-checkout.php:124
 msgid "Select a shipping method."
 msgstr "Selecteer een verzendmethode."
 
-#: montapacking-checkout.php:142
 msgid "Select a pickup location."
 msgstr "Selecteer een ophaalpunt."
 
-#: montapacking-checkout.php:189
 msgid ""
 "The shipment option(s) you choose are not available at this time, please "
 "select an other option."
@@ -39,39 +34,30 @@ msgstr ""
 "De verzendoptie(s) die je probeert te kiezen zijn op dit moment niet "
 "toegankelijk, selecteer een andere optie."
 
-#: montapacking-checkout.php:328
 msgid "Shipping"
 msgstr "Verzenden"
 
-#: montapacking-checkout.php:332
 msgid "Choose a shipping method"
 msgstr "Selecteer een verzendmethode"
 
-#: views/choice.php:6
 msgid "Shipping method"
 msgstr "Verzendmethode"
 
-#: views/choice.php:8
-msgid "*Please fill in an address before selecting a shipping method"
-msgstr "*Vul eerst een adres in voordat je een verzendmethode kiest"
+msgid "Please fill in an address before selecting a shipping method"
+msgstr "Vul eerst een adres in voordat je een verzendmethode kiest"
 
-#: views/choice.php:17
 msgid "Delivery"
 msgstr "Bezorgopties"
 
-#: views/choice.php:27
 msgid "Pickup"
 msgstr "Ophaalpunt"
 
-#: views/choice.php:35 views/pickup.php:4
 msgid "Loading..."
 msgstr "Laden..."
 
-#: views/choice.php:42
 msgid "Select delivery time and date"
 msgstr "Selecteer afleverdatum en tijd"
 
-#: CHECKOUT VIEW
 msgid "Your order will be delivered with"
 msgstr "Je order wordt bezorgd met"
 
@@ -84,41 +70,48 @@ msgstr "tussen"
 msgid "Click here to choose another delivery option"
 msgstr "Klik hier om een andere bezorgoptie te kiezen"
 
-#: views/choice.php:42
 msgid "Delivery time and date"
 msgstr "Afleverdatum en tijd"
 
-#: views/choice.php:45
 msgid "Earlier"
 msgstr "Eerder"
 
-#: views/choice.php:55
 msgid "Later"
 msgstr "Later"
 
-#: views/choice.php:73
 msgid "Show more options"
 msgstr "Bekijk meer opties"
 
-#: views/choice.php:89
 msgid "Selected pickup point"
 msgstr "Geselecteerd ophaalpunt"
 
-#: views/choice.php:109
 msgid "Extra options:"
 msgstr "Extra opties:"
 
-#: views/pickup.php:14
 msgid "Search using postal code"
 msgstr "Zoeken op postcode"
 
-#: views/pickup.php:17
 msgid "Search"
 msgstr "Zoeken"
 
-#: views/pickup.php:41
 msgid "Use selection"
 msgstr "Gebruik selectie"
 
 msgid "Free shipping"
 msgstr "Gratis verzending"
+
+msgid "evening delivery"
+msgstr "avondlevering"
+
+msgid "No deliveries available for the chosen delivery address"
+msgstr "Geen bezorgopties beschikbaar voor het gekozen adres"
+
+
+msgid "No pickups available for the chosen delivery address"
+msgstr "Geen ophaalpunten beschikbaar voor het gekozen adres"
+
+msgid "ships on"
+msgstr "wordt verstuurd op"
+
+msgid "from the Netherlands"
+msgstr "vanuit Nederland"

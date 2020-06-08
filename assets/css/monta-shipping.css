@@ -1,3 +1,5 @@
+/******************** GENERAL CSS */
+
 .monta-hide {
     display: none !important;
 }
@@ -6,35 +8,83 @@ body.monta-cover-open {
     overflow: hidden !important;
 }
 
-.montapacking-shipping {
-    padding: 10px 0 20px !important;
+.clearboth {
+    clear: both;
+}
+
+.monta-loading,
+.monta-shipment-delivery,
+.monta-shipment-extras,
+.monta-shipment-pickup {
+    display: none;
+}
+
+.monta-loading.active,
+.monta-shipment-delivery.active,
+.monta-shipment-extras.active,
+.monta-shipment-pickup.active {
+    display: block;
 }
 
 .monta-times-croppped, .monta-times-cropped-error, .monta-pickup-selected {
     margin-top: 10px;
     border: 1px solid #eee;
     padding: 8px 12px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     font-size: 14px;
 }
 
 .monta-times-extended {
-    margin: 10px 0;
+    margin-bottom: 10px;
 }
 
-.monta-times {
-    margin-top: 10px;
+.monta-loading {
+    width: 75px;
+    height: 50px;
+    overflow: hidden;
+    background-image: url('/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/loading.gif');
+    background-size: cover;
+    background-position: center;
 }
 
-@media only screen and (min-width: 691px) {
-    .montapacking-shipping .monta-options {
-        width: 50%;
-        text-align: center;
-        font-size: 0;
-        vertical-align: middle;
-        display: table-cell;
-        padding-bottom: 10px;
-    }
+.monta-shipper-template,
+.monta-extra-template,
+.monta-choice-template {
+    display: none !important;
+}
+
+.montapackingshipmenttime {
+    display: none !important;
+}
+
+
+/******************** DELIVERY OPTIONS CSS */
+
+.selectshipment {
+    display: none;
+}
+
+#monta-address-required {
+    font-style: italic;
+    font-size: 14px;
+}
+
+.montapacking-shipping .monta-options {
+    width: 50%;
+    text-align: center;
+    font-size: 0;
+    vertical-align: middle;
+    display: table-cell;
+    padding-bottom: 10px;
+}
+
+.montapacking-shipping .monta-options .block {
+    padding: 10px 10px !important;
+    text-align: center;
+    list-style: none;
+    margin: 0 !important;
+    padding: 0;
+    color: #474747 !important;
 }
 
 @media only screen and (max-width: 690px) {
@@ -57,12 +107,6 @@ body.monta-cover-open {
 
 .montapacking-shipping .monta-options .monta-option:nth-child(1) {
     padding: 0 8px 0 0 !important;
-}
-
-.montapacking-shipping .monta-options .monta-option.monta-disabled {
-
-    color: #aaa !important;
-    cursor: default !important;
 }
 
 .montapacking-shipping .monta-options .monta-option label {
@@ -98,10 +142,14 @@ body.monta-cover-open {
     font-size: 12px;
 }
 
+
+/******************** MONTA TIMES CSS */
+
 .monta-times {
     display: table;
     width: 100%;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .monta-times .toggle-left,
@@ -188,148 +236,248 @@ body.monta-cover-open {
     vertical-align: top;
 }
 
-.monta-times ul li label span.day {
-    font-weight: bold;
-    display: block;
-    padding-top: 8px;
-}
-
-.monta-times ul li label span.description {
-    font-style: italic;
-    margin-top: -2px;
-    font-size: 12px;
-}
-
-span.pricemonta {
-
-}
-
-
 .monta-times label input:checked + span {
     background: #f5f5f5;
     border-color: #79898C;
 
 }
 
-.monta-loading,
-.monta-shipment-delivery,
-.monta-shipment-extras,
-.monta-shipment-pickup {
-    display: none;
+.monta-times ul li label span.dayname {
+    font-weight: bold;
+    display: block;
+    padding-top: 6px;
 }
 
-.monta-loading.active,
-.monta-shipment-delivery.active,
-.monta-shipment-extras.active,
-.monta-shipment-pickup.active {
+
+.monta-times ul li label span.day {
     display: block;
 }
 
-.monta-loading {
-    width: 75px;
-    height: 50px;
-    overflow: hidden;
-    background-image: url('/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/loading.gif');
-    background-size: cover;
-    background-position: center;
+.monta-times ul li label span.description {
+    font-style: italic;
+    font-size: 12px;
 }
 
-@media only screen and (min-width: 800px) {
-    .monta-shipment-delivery.active, .monta-shipment-extra-options {
-        padding-right: 45px;
-    }
+/******************** MONTA TIMES CROPPED CSS */
+
+.monta-times-croppped {
+    display: block;
 }
 
-.deliveryinfo {
-    float: left;
-    margin-right: 3px;
-}
-
-.delivery-time {
+.monta-times-croppped .delivery-time {
     font-weight: 700;
 }
 
-.imglogo img {
+.monta-times-croppped .imglogo {
+    float: left;
+}
+
+.monta-times-croppped .imglogo img {
     width: 50px;
     margin-right: 15px;
 }
 
-.monta-shipment-extras label,
+.monta-times-croppped .information {
+    float: left;
+    width: calc(100% - 65px)
+}
+
+.monta-times-croppped .information .deliveryinfo {
+    float: left;
+    margin-right: 3px;
+}
+
+
+/******************** SHIPPER OPTIONS CSS */
+
+.monta-shipment-shipper input {
+    display: none;
+}
+
+.monta-shipment-shipper label.checked {
+    background: #f5f5f5;
+    border-color: #79898C;
+}
+
+
 .monta-shipment-shipper label {
     position: relative;
     display: block !important;
     margin-top: 10px;
-    height: 45px;
-    line-height: 40px;
-}
-
-.monta-shipment-shipper img {
-    display: inline-block;
-    width: 30px;
-    margin-right: 5px;
-    vertical-align: baseline !important;
-}
-
-.monta-shipment-shipper .name {
-    display: inline-block;
-    vertical-align: text-bottom;
-
-}
-
-.monta-shipment-extras label input[type=checkbox],
-.monta-shipment-shipper label input[type=radio] {
-    z-index: 5;
-    position: absolute;
-    margin: 16px;
-    padding: 0;
-    vertical-align: top;
-}
-
-.monta-shipment-extras label > span,
-.monta-shipment-shipper label > span {
-    position: absolute;
     border: 1px solid #eee;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    padding-left: 40px;
-    line-height: 40px;
-    cursor: pointer;
+    padding: 10px 0px;
     font-size: 14px;
 }
 
-.monta-shipment-extras label > span span.pricemonta,
-.monta-shipment-shipper label > span span.pricemonta {
+.monta-shipment-shipper label div.image {
+    width: 50px;
+    float: left;
+}
+
+.monta-shipment-shipper label div.image img {
+    width: 30px;
+    margin-left: 10px;
+    max-height: 30px;
+}
+
+.monta-shipment-shipper label div.information {
+    width: calc(100% - 110px);
+    float: left;
+    font-size: 14px;
+}
+
+.monta-shipment-shipper label div.pricemonta {
+    width: 50px;
     float: right;
-    padding: 0 10px;
+    text-align: right;
+    margin-right: 10px;
 }
 
-.monta-pickup-selected {
-    position:relative;
-}
-.monta-pickup-selected > span.pricemonta,
-.monta-pickup-selected > span.pricemonta {
-    position: absolute;
-    float: right;
-    padding: 0 10px;
-    top:10px;
-    right: 0px;
-}
-
-
-
-.monta-shipment-extras label input:checked + span,
 .monta-shipment-shipper label input:checked + span {
     background: #f5f5f5;
     border-color: #79898C;
 }
 
-.monta-shipper-template,
-.monta-extra-template,
-.monta-choice-template {
-    display: none !important;
+
+/******************** EXTRAS OPTIONS CSS */
+
+.monta-shipment-extras  {
+    margin-bottom: 10px;
 }
+
+.monta-shipment-extras label {
+    position: relative;
+    display: block !important;
+    margin-top: 10px;
+
+    border: 1px solid #eee;
+    padding: 10px 0px;
+    font-size: 14px;
+}
+
+.monta-shipment-extras label div.checkbox {
+    width: 40px;
+    float: left;
+    text-align: center;
+}
+
+.monta-shipment-extras label div.information {
+    width: calc(100% - 100px);
+    float: left;
+    font-size: 14px;
+}
+
+.monta-shipment-extras label div.pricemonta {
+    width: 50px;
+    float: right;
+    text-align: right;
+    margin-right: 10px;
+}
+
+
+/******************** PICK UP OPTIONS CSS */
+
+.monta-pickup-selected-title {
+    display: none;
+}
+
+.monta-pickup-selected {
+    position: relative;
+    display: none;
+}
+
+.monta-locations {
+    width: 30%;
+}
+
+.monta-locations .scroller {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    position: relative;
+}
+
+.monta-locations ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.monta-locations ul li {
+    cursor: pointer;
+    padding: 8px 12px;
+    line-height: 20px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.monta-locations ul li div.image {
+    width: 50px;
+    float: left;
+}
+
+.monta-locations ul li div.image img {
+    width: 30px;
+    margin-left: 10px;
+    max-height: 30px;
+    margin-top: 16px;
+}
+
+.monta-locations ul li div.information {
+    width: calc(100% - 110px);
+    float: left;
+    font-size: 14px;
+}
+
+.monta-locations ul li div.pricemonta {
+    width: 50px;
+    float: right;
+    text-align: right;
+    margin-right: 10px;
+}
+
+
+.monta-locations ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.monta-locations ul.list li.list-focus {
+    background: #79898C;
+    color: #fff;
+}
+
+
+#monta-stores {
+    display: table !important;
+    height: 100%;
+    width: 100%;
+}
+
+#monta-stores .monta-locations,
+#monta-stores .monta-map {
+    display: table-cell;
+    vertical-align: top;
+    position: relative;
+    background: #fff;
+}
+
+#initialPickupsList li {
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    background: white;
+    list-style-type: none;
+}
+
+#initialPickupsList li.list-focus {
+    background-color: #eee;
+    border: 1px solid #79898C;
+}
+
+input[name=initialPickupPointRadio] {
+    display: none;
+}
+
+/******************** STORE LOCATOR CSS */
 
 .monta-cover {
     background: rgba(0, 0, 0, 0.4);
@@ -358,59 +506,6 @@ span.pricemonta {
 
 .monta-pickup-loading {
     padding: 25px;
-}
-
-.monta-locations {
-    width: 30%;
-    /*padding-bottom: 50px;*/
-}
-
-.monta-locations .scroller {
-    height: 100%;
-    width: 100%;
-    overflow: auto;
-    position: relative;
-}
-
-.monta-locations ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.monta-locations ul li {
-    cursor: pointer;
-    padding: 8px 12px;
-    line-height: 20px;
-    font-size: 14px;
-    background: #fff;
-}
-
-.monta-locations ul li:nth-child(odd) {
-    background: #f5f5f5;
-}
-
-.monta-locations ul.list li.list-focus {
-    background: #79898C;
-    color: #fff;
-}
-
-.monta-locations ul li .pricemonta {
-    float: right;
-}
-
-#monta-stores {
-    display: table !important;
-    height: 100%;
-    width: 100%;
-}
-
-#monta-stores .monta-locations,
-#monta-stores .monta-map {
-    display: table-cell;
-    vertical-align: top;
-    position: relative;
-    background: #fff;
 }
 
 
@@ -474,55 +569,11 @@ span.pricemonta {
     cursor: pointer;
 }
 
-#monta-address-required {
-    font-style: italic;
-    padding: 0 15px;
-}
-
-/*Initial pickups stylign*/
-.monta-initial-pickup {
-    margin-top: 20px;
-    border: 1px solid #eee;
-    background: white !important;
-}
-
-.monta-initial-pickup > input {
-    position: absolute;
-    margin: 24px;
-    padding: 0;
-    vertical-align: top;
-}
-
-.monta-initial-pickup > span * {
-    padding-left: 70px;
-}
-
-#initialPickupsList li {
-    margin-bottom: 10px;
-    border: 1px solid #eee;
-    background: white;
-    list-style-type: none;
-}
-
-#initialPickupsList li.list-focus {
-    background-color: #eee;
-    border: 1px solid #79898C;
-}
-
-.initialPickupRadio {
-    margin: 0;
-    float: left;
-    list-style: none;
-}
-
-input[name=initialPickupPointRadio] {
-    display: none;
-}
-
 .monta-shipment-pickup .bh-sl-loc-list {
     margin-top: 10px;
 }
 
+/******************** BROWSER FIXES CSS */
 
 /* Specific styling for firefox */
 @-moz-document url-prefix() {
@@ -536,9 +587,6 @@ input[name=initialPickupPointRadio] {
     .bh-sl-loc-list {
         max-height: 74.5vh;
     }
-
-
-
 }
 
 /* Specific styling for IE */
@@ -548,35 +596,12 @@ input[name=initialPickupPointRadio] {
     }
 }
 
-
-.selectshipment {
-    display: none;
-}
-
-.block {
-    padding: 10px 10px !important;
-    text-align: center;
-    list-style: none;
-    margin: 0 !important;
-    padding: 0;
-    color: #474747 !important;
-}
-
-.montapackingshipmenttime {
-    display: none !important;
-}
-
-
 @media screen and (max-width: 600px) {
     .monta-more-pickup-points {
         display: none !important;
     }
 
     .monta-shipment-pickup.active {
-        margin-top: 0px;
-    !important;
+        margin-top: 0px; !important;
     }
 }
-
-}
-

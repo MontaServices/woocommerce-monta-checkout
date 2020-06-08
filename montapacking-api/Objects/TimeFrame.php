@@ -6,11 +6,14 @@ class MontaCheckout_TimeFrame
 
     public $from;
     public $to;
+    public $type;
     public $code;
     public $description;
     public $options = [];
+    public $requesturl;
 
-    public function __construct($from, $to, $code, $description, $options)
+
+    public function __construct($from, $to, $code, $description, $options, $type, $requesturl = null)
     {
 
         $this->setFrom($from);
@@ -18,7 +21,21 @@ class MontaCheckout_TimeFrame
         $this->setCode($code);
         $this->setDescription($description);
         $this->setOptions($options);
+        $this->setType($type);
+        $this->setRequestUrl($requesturl);
 
+    }
+
+    public function setRequestUrl($requesturl)
+    {
+        $this->requesturl = $requesturl;
+        return $this;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
     }
 
     public function setFrom($from)
