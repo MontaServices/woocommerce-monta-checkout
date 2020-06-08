@@ -94,12 +94,37 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
 
+    add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
+
+
 } else {
 
     add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
     add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);
     add_action('woocommerce_package_rates', 'overrule_package_rates', 20, 2);
 }
+
+
+function filter_woocommerce_cart_needs_shipping_address($needs_shipping_address)
+{
+
+    $cart_needs_shipping_address = true;
+
+    if (empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
+        return $cart_needs_shipping_address;
+    }
+
+
+    $postdata = sanitize_post($_POST['montapacking']);
+
+    if ($postdata['shipment']['type'] == 'pickup') {
+        $cart_needs_shipping_address = false;
+    }
+
+    return $cart_needs_shipping_address;
+}
+
+;
 
 function montacheckout_plugin_add_settings_link($links)
 {
@@ -193,7 +218,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_logerrors">Log errors</label></th>
                     <td><input type="checkbox" name="monta_logerrors"
                                value="1" <?php checked('1', get_option('monta_logerrors')); ?>/>
-                        <br><i style="font-size:12px">Turn on logs which are shown <a href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a></i>
+                        <br><i style="font-size:12px">Turn on logs which are shown <a
+                                    href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a></i>
                     </td>
                 </tr>
 
@@ -219,7 +245,6 @@ function montacheckout_render_settings()
                         <input id="monta_leadingstock_woocommerce" type="radio" name="monta_leadingstock"
                                value="woocommerce" <?php checked('woocommerce', get_option('monta_leadingstock')); ?>/>
                         <label for="monta_leadingstock_woocommerce">WooCommerce</label>
-
 
 
                         <br><i style="font-size:12px">Which stock is leading for the delivery days calculation</i>
@@ -285,7 +310,8 @@ function filter_woocommerce_order_shipping_to_display_shipped_via($html, $instan
     return "&nbsp;<small class='shipped_via'>" . sprintf(__('via %s', 'woocommerce'), esc_attr($method)) . "</small>";
 }
 */
-function filter_woocommerce_order_shipping_method($html, $instance) {
+function filter_woocommerce_order_shipping_method($html, $instance)
+{
     $json = json_decode($instance);
     $order = wc_get_order($json->id);
 
@@ -315,11 +341,11 @@ function filter_woocommerce_order_shipping_method($html, $instance) {
     }
 
     $names = array();
-    foreach ( $order->get_shipping_methods() as $shipping_method ) {
+    foreach ($order->get_shipping_methods() as $shipping_method) {
         $names[] = $shipping_method->get_name();
     }
 
-    return implode( ', ', $names );
+    return implode(', ', $names);
 }
 
 
