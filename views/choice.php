@@ -67,18 +67,18 @@
     <div class="monta-shipment-delivery">
 
         <div class="monta-times-croppped">
-            <span class="delivery-time"><?php _e('Delivery time and date', 'montapacking-checkout'); ?></span>
+
             <label>
                 <div class="imglogo"></div>
 
                 <div class="information">
 
-                    <span class="deliveryinfo deliveryinformation"><?php _e('Your order will be delivered with', 'montapacking-checkout'); ?> <strong
-                                class="shipper"></strong></span>
-                    <span class="deliveryinfo dateinformation"><?php _e('on', 'montapacking-checkout'); ?> <strong
-                                class="date"></strong></span>
-                    <span class="deliveryinfo timeinformation"> <?php _e('between', 'montapacking-checkout'); ?> <strong
-                                class="datetime"></strong></span>
+                    <span class="delivery-time"><?php _e('Delivery time and date', 'montapacking-checkout'); ?></span>
+                    <span class="send-time"><?php _e('Send date', 'montapacking-checkout'); ?></span>
+
+                    <span class="deliveryinfo deliveryinformation"><?php _e('Your order will be', 'montapacking-checkout'); ?> <strong class="shippingtype"></strong> <?php _e('with', 'montapacking-checkout'); ?> <strong class="shipper"></strong></span>
+                    <span class="deliveryinfo dateinformation"><?php _e('on', 'montapacking-checkout'); ?> <strong class="date"></strong></span>
+                    <span class="deliveryinfo timeinformation"> <?php _e('between', 'montapacking-checkout'); ?> <strong class="datetime"></strong></span>
 
                     <div style="clear:both"></div>
 
@@ -197,6 +197,8 @@
         <span style="display:none" class="cropped_name">{.name}</span>
         <span style="display:none" class="cropped_time">{.time}</span>
         <span style="display:none" class="cropped_image">{.img}</span>
+        <span style="display:none" class="cropped_type_text">{.type_text}</span>
+        <span style="display:none" class="cropped_type">{.type}</span>
 
         <span class="radiobutton">
             <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper">
@@ -208,7 +210,7 @@
         </div>
 
         <div class="information">
-            {.name} {.time}
+            {.name} {.time} <span>{.ships_on}</span>
         </div>
         <div class="pricemonta">
             {.price}
@@ -297,10 +299,3 @@
 
     </div>
 </div>
-
-<?php
-if (isset($_SESSION['montapacking-frames-test'])) {
-    //echo "<pre>";
-    //var_dump($_SESSION['montapacking-frames-test']);
-}
-

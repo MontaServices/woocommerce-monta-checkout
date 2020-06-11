@@ -102,10 +102,17 @@ class Montapacking
         ## Shipping regel aanmaken bij order
         $item = new WC_Order_Item_Shipping();
 
+        $tax = (self::get_shipping_total(sanitize_post($_POST)) / 100) * 21;
+
+        $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
+        $shipping_taxes = WC_Tax::calc_shipping_tax($price, WC_Tax::get_shipping_tax_rates());
+        $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Flat rate shipping', $price, $shipping_taxes, 'flat_rate');
+
         $item->set_props(array(
             'method_title' => 'Monta Shipping',
             'method_id' => 0,
-            'total' => wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)))
+            'taxes' => $rate->taxes,
+            'total' => $price,
         ));
 
         ## Ingevulde meta data opslaan
@@ -191,9 +198,15 @@ class Montapacking
                 $item->add_meta_data('Delivery date', $frame->date, true);
 
                 $time_check = $method->from . ' ' . $method->to;
-                if ($time_check != '01:00 01:00' && trim($time_check)) {
+                if ($time_check != '01:00 01:00' && trim($time_check) && $method->from != $method->to) {
                     $item->add_meta_data('Delivery timeframe', $method->from . ' ' . $method->to, true);
                 }
+
+                if ($method->type == 'shippingdate') {
+                    $item->add_meta_data('Delivery type', "Date mentioned above is an send date", true);
+                }
+
+                //var_dump($method->type); exit;
 
                 if (is_array($extras)) {
 
@@ -316,13 +329,13 @@ class Montapacking
                 ?>
                 <td><?php _e('Choose a shipping method', 'montapacking-checkout'); ?></td>
                 <?php
-            } else if($price > 0){
+            } else if ($price > 0) {
                 ?>
                 <td>&euro; <?php echo number_format($price, 2, ',', ''); ?></td>
                 <?php
-            } else if($price == 0){
+            } else if ($price == 0) {
                 ?>
-                <td><?php echo translate('Free shipping', 'montapacking-checkout')?></td>
+                <td><?php echo translate('Free shipping', 'montapacking-checkout') ?></td>
                 <?php
             }
             ?>
@@ -443,7 +456,7 @@ class Montapacking
 
             }
 
-        } else if ($type == 'pickup' && $pickup['price'] > 0) {
+        } else if ($type == 'pickup') {
             $price = $pickup['price'];
             $isfound = true;
         }
@@ -753,7 +766,7 @@ class Montapacking
                         $key = strtotime(date("Y-m-d", strtotime($option->date)));
                         $from = date('d-m-Y', strtotime($option->date));
 
-                        if (!isset($items[$key] )) {
+                        if (!isset($items[$key])) {
                             $items[$key] = (object)[
                                 'code' => $frame->code,
                                 'date' => $from,
@@ -771,7 +784,7 @@ class Montapacking
                     $key = strtotime(date("Y-m-d", strtotime($frame->from)));
                     $from = date('d-m-Y', strtotime($frame->from));
 
-                    if (!isset($items[$key] )) {
+                    if (!isset($items[$key])) {
                         $items[$key] = (object)[
                             'code' => $frame->code,
                             'date' => $from,
@@ -815,11 +828,7 @@ class Montapacking
         ksort($items);
 
 
-
         // sort options to days
-
-        $notimes_counter = 0;
-        $shippingdaycounter = 999;
 
         if (is_array($frames) || is_object($frames)) {
 
@@ -843,7 +852,7 @@ class Montapacking
                             foreach ($option->optioncodes as $optioncode) {
 
                                 if ($optioncode == 'EveningDelivery') {
-                                    $evening = " (" . translate('evening delivery', 'montapacking-checkout').") ";
+                                    $evening = " (" . translate('evening delivery', 'montapacking-checkout') . ") ";
                                 }
                             }
                         }
@@ -852,7 +861,10 @@ class Montapacking
                             'code' => $option->code,
                             'codes' => $option->codes,
                             'optionCodes' => $option->optioncodes,
-                            'name' => $option->description.$evening,
+                            'name' => $option->description . $evening,
+                            'ships_on' => '',
+                            'type' => 'deliverydate',
+                            'type_text' => translate('delivered', 'montapacking-checkout'),
                             'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
                             'from' => date('H:i', strtotime($from . ' +1 hour')),
@@ -861,7 +873,7 @@ class Montapacking
                             'request_url' => $frame->requesturl,
                         ];
 
-                        if ((time()+3600) <= strtotime($option->date)) {
+                        if ((time() + 3600) <= strtotime($option->date)) {
                             $items[$key]->options[] = $options_object;
                         }
                     }
@@ -888,7 +900,10 @@ class Montapacking
                             'code' => $option->code,
                             'codes' => $option->codes,
                             'optionCodes' => $option->optioncodes,
-                            'name' => $option->description . " (".translate('ships on', 'montapacking-checkout')." " . date("d-m-Y", strtotime($option->date)) ." ".translate('from the Netherlands', 'montapacking-checkout').")",
+                            'name' => $option->description,
+                            'ships_on' => "(" . translate('ships on', 'montapacking-checkout') . " " . date("d-m-Y", strtotime($option->date)) . " " . translate('from the Netherlands', 'montapacking-checkout') . ")",
+                            'type' => 'shippingdate',
+                            'type_text' => translate('shipped', 'montapacking-checkout'),
                             'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
                             'from' => date('H:i', strtotime($from . ' +1 hour')),
@@ -897,7 +912,7 @@ class Montapacking
                             'request_url' => $frame->requesturl,
                         ];
 
-                        if ((time()+3600) <= strtotime($option->date)) {
+                        if ((time() + 3600) <= strtotime($option->date)) {
                             $items[$key]->options[] = $options_object;
                         }
 
@@ -912,15 +927,22 @@ class Montapacking
                     foreach ($frame->options as $onr => $option) {
 
                         $key = "NOTIMES";
+                        $desc = $option->description;
+                        $ships_on = '';
+                        $type = 'deliverydate';
+                        $type_text = 'delivered';
 
                         if (strtotime($option->date) > 0) {
-
                             $key = strtotime(date("Y-m-d", strtotime($option->date)));
-                            $desc = $option->description . " (".translate('ships on', 'montapacking-checkout')." " . date("d-m-Y", strtotime($option->date)) ." ".translate('from the Netherlands', 'montapacking-checkout').")";
-                        }elseif ($option->code == 'RED_ShippingDayUnknown') {
+                            $desc = $option->description;
+                            $ships_on = " (" . translate('ships on', 'montapacking-checkout') . " " . date("d-m-Y", strtotime($option->date)) . " " . translate('from the Netherlands', 'montapacking-checkout') . ")";
+                            $type = 'shippingdate';
+                            $type_text = 'shipped';
+                        } elseif ($option->code == 'RED_ShippingDayUnknown') {
                             $key = strtotime(date("Y-m-d"));
-                            $desc = '';
+                            $desc = 'Red je pakket';
                         }
+
 
                         $extras = null;
                         if (isset($option->extras)) {
@@ -932,6 +954,9 @@ class Montapacking
                             'codes' => $option->codes,
                             'code' => $option->code,
                             'name' => $desc,
+                            'ships_on' => $ships_on,
+                            'type' => $type,
+                            'type_text' => translate($type_text, 'montapacking-checkout'),
                             'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
                             'from' => null,
@@ -941,10 +966,9 @@ class Montapacking
                         ];
 
 
-                        if ((time()+3600) <= strtotime($option->date)) {
+                        if (((time() + 3600) <= strtotime($option->date)) || ($key == 'NOTIMES')) {
                             $items[$key]->options[] = $options_object;
                         }
-
 
                     }
                 }
@@ -960,10 +984,15 @@ class Montapacking
 
         }
         $items = $cleared_items;
+
+
+        //print "<pre>";
+        //var_dump($items);
+        //exit;
         ## Frames opslaan in sessie voor bepalen kosten
         $_SESSION['montapacking-frames'] = $items;
 
-        $_SESSION['montapacking-frames-test'] = $items;
+        //$_SESSION['montapacking-frames-test'] = $items;
         return $items;
 
     }

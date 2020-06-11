@@ -61,6 +61,18 @@ msgstr "Selecteer afleverdatum en tijd"
 msgid "Your order will be delivered with"
 msgstr "Je order wordt bezorgd met"
 
+msgid "Your order will be"
+msgstr "Je order wordt"
+
+msgid "delivered"
+msgstr "bezorgd"
+
+msgid "shipped"
+msgstr "verstuurd"
+
+msgid "with"
+msgstr "met"
+
 msgid "on"
 msgstr "op"
 
@@ -72,6 +84,9 @@ msgstr "Klik hier om een andere bezorgoptie te kiezen"
 
 msgid "Delivery time and date"
 msgstr "Afleverdatum en tijd"
+
+msgid "Send date"
+msgstr "Verzenddatum"
 
 msgid "Earlier"
 msgstr "Eerder"
@@ -111,7 +126,7 @@ msgid "No pickups available for the chosen delivery address"
 msgstr "Geen ophaalpunten beschikbaar voor het gekozen adres"
 
 msgid "ships on"
-msgstr "wordt verstuurd op"
+msgstr "verzending op"
 
 msgid "from the Netherlands"
 msgstr "vanuit Nederland"

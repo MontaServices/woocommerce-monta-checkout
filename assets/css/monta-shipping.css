@@ -266,6 +266,12 @@ body.monta-cover-open {
 
 .monta-times-croppped .delivery-time {
     font-weight: 700;
+    display:none;
+}
+
+.monta-times-croppped .send-time {
+    font-weight: 700;
+    display:none;
 }
 
 .monta-times-croppped .imglogo {
@@ -317,13 +323,14 @@ body.monta-cover-open {
 .monta-shipment-shipper label div.image img {
     width: 30px;
     margin-left: 10px;
-    max-height: 30px;
+    height: 30px;
 }
 
 .monta-shipment-shipper label div.information {
     width: calc(100% - 110px);
     float: left;
     font-size: 14px;
+    line-height:30px;
 }
 
 .monta-shipment-shipper label div.pricemonta {
@@ -331,6 +338,7 @@ body.monta-cover-open {
     float: right;
     text-align: right;
     margin-right: 10px;
+    line-height:30px;
 }
 
 .monta-shipment-shipper label input:checked + span {

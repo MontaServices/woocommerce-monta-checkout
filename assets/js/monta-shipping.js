@@ -304,10 +304,11 @@ jQuery(document).ready(function () {
 
                                 // Frames tonen in lijst
 
+                                var hidedatebar = true;
                                 $.each(monta_shipping.frames, function (key, item) {
 
-                                    if (item.code === 'NOTIMES') {
-                                       // $('.monta-times').addClass('monta-hide');
+                                    if (item.date != "") {
+                                        hidedatebar = false;
                                     }
 
                                     var option = item.options[0];
@@ -335,6 +336,10 @@ jQuery(document).ready(function () {
                                     }
 
                                 });
+
+                                if (hidedatebar == true) {
+                                    $('.monta-times').addClass('monta-hide');
+                                }
 
                                 // Select first option
                                 mover.find('input[type=radio]:not(.sameday):first').prop('checked', true).click();
@@ -434,6 +439,8 @@ jQuery(document).ready(function () {
                                     callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
 
                                         monta_shipping.selectPickup(location, markerId);
+
+                                        initialPickupRadio
 
                                     },
                                     callbackListClick: function (markerId, selectedMarker, location) {
@@ -552,6 +559,7 @@ jQuery(document).ready(function () {
 
                     if (monta_shipping.pickup_selected !== null) {
 
+//initialPickupPointRadio
                         var loc = monta_shipping.pickup_selected;
                         var html = '<strong>' + loc.name + '</strong><br />';
                         html += '<span style="font-style: italic"!important;">' + loc.description + '</span><br />';
@@ -561,8 +569,7 @@ jQuery(document).ready(function () {
 
 
                         $('.monta-pickup-selected').html(html);
-
-                        if (markerId > 4) {
+                        if (markerId > 2) {
                             $('.monta-pickup-selected').show();
                             $('.monta-pickup-selected-title').show();
                             $('.monta-selected-pickup').show();
@@ -572,6 +579,13 @@ jQuery(document).ready(function () {
                             $('.monta-pickup-selected').hide();
                             $('.monta-pickup-selected-title').hide();
                             $('.monta-selected-pickup').hide();
+
+
+
+
+
+
+
                         }
 
                         $('.monta-shipment-pickup').addClass('active');
@@ -597,7 +611,7 @@ jQuery(document).ready(function () {
                             $('.monta-cover .monta-pickup-active').removeClass('monta-hide');
 
                             // Remove list-focus class from the initial pickup locations
-                            $("#initialPickupsList li.list-focus").removeClass("list-focus");
+                            //$("#initialPickupsList li.list-focus").removeClass("list-focus");
                             $("#initialPickupRadioDummy").prop("checked", true);
 
                         });
@@ -655,6 +669,11 @@ jQuery(document).ready(function () {
                             html = html.replace(/{.name}/g, item.name);
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
+                            html = html.replace(/{.type}/g, item.type);
+                            html = html.replace(/{.type_text}/g, item.type_text);
+                            html = html.replace(/{.ships_on}/g, item.ships_on);
+
+
                             if (code != 'TBQ') {
                                 shippers.append(html);
                             }
@@ -825,6 +844,21 @@ jQuery(document).ready(function () {
         var dayname = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".dayname").text();
         jQuery("strong.date").text(dayname + " " + day);
 
+
+        var shippingtype = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_type").text();
+
+        if (shippingtype == 'shippingdate') {
+            jQuery(".send-time").css("display", "block");
+            jQuery(".delivery-time").css("display", "none");
+        } else {
+            jQuery(".delivery-time").css("display", "block");
+            jQuery(".send-time").css("display", "none");
+        }
+
+
+        var shippingtype_text = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_type_text").text();
+        jQuery("strong.shippingtype").text(shippingtype_text);
+
         var shipper = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_name").text();
         jQuery("strong.shipper").text(shipper);
 
@@ -836,7 +870,8 @@ jQuery(document).ready(function () {
 
 
         jQuery(".dateinformation").css("display", "none");
-        if (day != 'null') {
+
+        if (day != 'null' && day != '') {
             jQuery(".dateinformation").css("display", "block");
         }
 
