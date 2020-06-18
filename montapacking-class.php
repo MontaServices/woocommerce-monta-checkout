@@ -1006,6 +1006,7 @@ class Montapacking
         if (is_array($frames) || is_object($frames)) {
 
             foreach ($frames as $nr => $frame) {
+            foreach ($frames as $nr => $frame) {
 
                 ## Loop trough options
                 $selected = null;
@@ -1050,6 +1051,7 @@ class Montapacking
                             'shipperOptionsWithValue' => $shipperOptions,
                             'price' => number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
+                            'request_url' => $frame->requesturl,
                         ];
 
                         ## Sorteer opties op laagste prijs

@@ -192,7 +192,7 @@ class MontapackingShipping
             'ShipmentFitsThroughDutchMailbox' => $mailboxfit,
         ]);
 
-        $this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore'];
+        $this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore', 'AFH'];
 
         ## Timeframes omzetten naar bruikbaar object
         $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers']);
