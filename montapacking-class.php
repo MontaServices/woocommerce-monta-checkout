@@ -882,6 +882,7 @@ class Montapacking
             }
 
             foreach ($frames as $nr => $frame) {
+
                 if ($frame->type == 'ShippingDay') {
 
                     foreach ($frame->options as $onr => $option) {
@@ -935,7 +936,7 @@ class Montapacking
                         if (strtotime($option->date) > 0) {
                             $key = strtotime(date("Y-m-d", strtotime($option->date)));
                             $desc = $option->description;
-                            $ships_on = " (" . translate('ships on', 'montapacking-checkout') . " " . date("d-m-Y", strtotime($option->date)) . " " . translate('from the Netherlands', 'montapacking-checkout') . ")";
+                            $ships_on = "";
                             $type = 'shippingdate';
                             $type_text = 'shipped';
                         } elseif ($option->code == 'RED_ShippingDayUnknown') {
@@ -965,10 +966,17 @@ class Montapacking
                             'request_url' => $frame->requesturl,
                         ];
 
-
-                        if (((time() + 3600) <= strtotime($option->date)) || ($key == 'NOTIMES')) {
-                            $items[$key]->options[] = $options_object;
+                        $allow = true;
+                        if (date("Y-m-d",$key) == date("Y-m-d") && $frame->code != 'SameDayDelivery') {
+                            $allow = false;
                         }
+                        if (true === $allow) {
+                            if (((time() + 3600) <= strtotime($option->date)) || ($key == 'NOTIMES')) {
+                                $items[$key]->options[] = $options_object;
+                            }
+                        }
+
+
 
                     }
                 }
