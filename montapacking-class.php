@@ -913,8 +913,15 @@ class Montapacking
                             'request_url' => $frame->requesturl,
                         ];
 
-                        if ((time() + 3600) <= strtotime($option->date)) {
-                            $items[$key]->options[] = $options_object;
+                        $allow = true;
+                        if (date("Y-m-d",$key) == date("Y-m-d")) {
+                            $allow = false;
+                        }
+                        if (true === $allow) {
+
+                            if ((time() + 3600) <= strtotime($option->date)) {
+                                $items[$key]->options[] = $options_object;
+                            }
                         }
 
                     }
