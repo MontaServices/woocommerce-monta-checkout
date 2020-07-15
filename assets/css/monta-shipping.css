@@ -222,10 +222,11 @@ body.monta-cover-open {
 }
 
 .monta-times ul li label > span span {
-    display: block;
+    display: block !important;
     padding: 0 5px;
     text-align: center;
     font-size: 14px;
+    line-height:22px;
 }
 
 .monta-times ul li label input[type=radio] {
@@ -244,13 +245,13 @@ body.monta-cover-open {
 
 .monta-times ul li label span.dayname {
     font-weight: bold;
-    display: block;
+    display: block !important;
     padding-top: 6px;
 }
 
 
 .monta-times ul li label span.day {
-    display: block;
+    display: block !important;
 }
 
 .monta-times ul li label span.description {

@@ -1,3 +1,4 @@
+<!--
 <div class="monta-cover monta-hide">
     <div class="monta-window">
 
@@ -19,7 +20,7 @@
                     </form>
                 <?php } ?>
 
-                <!--Old shipper filter-->
+                <! --Old shipper filter-- >
                 <div class="bh-sl-filters-container">
 
                     <ul id="category-filters" class="bh-sl-filters">
@@ -35,7 +36,7 @@
 
                     <div class="scroller bh-sl-loc-list">
                         <ul class="list">
-                            <!-- pick-up points -->
+                            <! -- pick-up points -- >
                         </ul>
                     </div>
                     <a class="monta-select-pickup"><?php _e( 'Use selection', 'montapacking-checkout' ); ?></a>
@@ -51,3 +52,4 @@
 
     </div>
 </div>
+-->

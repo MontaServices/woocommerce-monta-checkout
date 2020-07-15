@@ -18,7 +18,13 @@ class Montapacking
         $shipment = $type['shipment'];
 
         $time = $shipment['time'];
-        $shipper = $shipment['shipper'];
+
+        $shipper = "";
+        if (isset($shipment['shipper'])) {
+            $shipper = $shipment['shipper'];
+        }
+
+
 
         $items = null;
 
@@ -120,8 +126,17 @@ class Montapacking
 
         $shipment = $type['shipment'];
         $time = $shipment['time'];
-        $shipper = $shipment['shipper'];
-        $extras = $shipment['extras'];
+        $shipper = "";
+        if (isset($shipment['shipper'])) {
+            $shipper = $shipment['shipper'];
+        }
+
+        $extras = "";
+        if (isset($shipment['extras'])) {
+            $extras = $shipment['extras'];
+        }
+
+
         $pickup = $type['pickup'];
 
         $items = null;
@@ -283,7 +298,7 @@ class Montapacking
             $data = sanitize_post($_POST);
         }
 
-        $price = self::get_shipping_total($data);
+        $price = (float) self::get_shipping_total($data);
 
         return $wc_price + $price;
     }
@@ -685,17 +700,19 @@ class Montapacking
             }
 
             ## Add product
+			
+			if (esc_attr(get_option('monta_leadingstock')) != 'woocommerce') {
+				if ($sku != '') {
+					$api->addProduct($sku, $values['quantity'], $length, $width, $weight);
 
-            if ($sku != '') {
-                $api->addProduct($sku, $values['quantity'], $length, $width, $weight);
+					if (false === $api->checkStock($sku)) {
+						$bAllProductsAvailableAtMontapacking = false;
+					}
 
-                if (false === $api->checkStock($sku)) {
-                    $bAllProductsAvailableAtMontapacking = false;
-                }
-
-            } else {
-                $bAllProductsAvailableAtMontapacking = false;
-            }
+				} else {
+					$bAllProductsAvailableAtMontapacking = false;
+				}
+			}
 
         }
 
@@ -947,6 +964,9 @@ class Montapacking
                             $type = 'shippingdate';
                             $type_text = 'shipped';
                         } elseif ($option->code == 'RED_ShippingDayUnknown') {
+                            $key = strtotime(date("Y-m-d"));
+                            $desc = 'Red je pakket';
+                        }elseif ($option->code == 'Trunkrs_ShippingDayUnknown') {
                             $key = strtotime(date("Y-m-d"));
                             $desc = 'Red je pakket';
                         }
