@@ -108,19 +108,6 @@ class Montapacking
         ## Shipping regel aanmaken bij order
         $item = new WC_Order_Item_Shipping();
 
-        $tax = (self::get_shipping_total(sanitize_post($_POST)) / 100) * 21;
-
-        $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
-        $shipping_taxes = WC_Tax::calc_shipping_tax($price, WC_Tax::get_shipping_tax_rates());
-        $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Flat rate shipping', $price, $shipping_taxes, 'flat_rate');
-
-        $item->set_props(array(
-            'method_title' => 'Monta Shipping',
-            'method_id' => 0,
-            'taxes' => $rate->taxes,
-            'total' => $price,
-        ));
-
         ## Ingevulde meta data opslaan
         $type = sanitize_post($_POST['montapacking']);
 
@@ -286,9 +273,53 @@ class Montapacking
             }
         }
 
+        $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
+        
+        if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() ) {
 
-        // Add item to order and save.
+            $tax = (self::get_shipping_total(sanitize_post($_POST)) / 121) * 21;
+
+
+
+            $shipping_taxes = WC_Tax::calc_shipping_tax($price, WC_Tax::get_shipping_tax_rates());
+            $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Flat rate shipping', $tax, $shipping_taxes, 'flat_rate');
+
+            $arr = array();
+            $arr[1] = $tax;
+
+
+
+            $item->set_props(array(
+                'method_title' => 'Monta Shipping',
+                'method_id' => 0,
+                'taxes' => $arr,
+                'total_tax' => $tax,
+                'total' => $price -$tax,
+            ));
+
+
+            $order->set_shipping_total( $order->get_shipping_total() - $tax );
+
+            $order->set_shipping_tax( $order->get_shipping_tax() + $tax);
+            $order->set_cart_tax( $order->get_cart_tax() + $tax);
+            // Add item to order and save.
+
+        } else {
+
+            $item->set_props(array(
+                'method_title' => 'Monta Shipping',
+                'method_id' => 0,
+                'total' => $price,
+            ));
+
+        }
+
         $order->add_item($item);
+
+
+
+
+        var_dump($order);
     }
 
     public static function shipping_total($wc_price = 0)
@@ -700,10 +731,11 @@ class Montapacking
             }
 
             ## Add product
-			
+
 			if (esc_attr(get_option('monta_leadingstock')) != 'woocommerce') {
 				if ($sku != '') {
-					$api->addProduct($sku, $values['quantity'], $length, $width, $weight);
+
+				    $api->addProduct($sku, $values['quantity'], $length, $width, $weight);
 
 					if (false === $api->checkStock($sku)) {
 						$bAllProductsAvailableAtMontapacking = false;
@@ -1115,6 +1147,54 @@ class Montapacking
 
         include 'views/choice.php';
 
+    }
+
+    public static function taxes()
+    {
+
+
+
+        $value = '<strong>' . WC()->cart->get_total() . '</strong> ';
+
+        // If prices are tax inclusive, show taxes here.
+        if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() ) {
+            $tax_string_array = array();
+            $cart_tax_totals  = WC()->cart->get_tax_totals();
+
+            if ( get_option( 'woocommerce_tax_total_display' ) === 'itemized' ) {
+                foreach ( $cart_tax_totals as $code => $tax ) {
+                    $tax_string_array[] = sprintf( '%s %s', $tax->formatted_amount, $tax->label );
+                }
+            } elseif ( ! empty( $cart_tax_totals ) ) {
+
+                $shipping_costs = self::shipping_total();
+                $tax = ($shipping_costs / 121) * 21;
+
+                $vat_ex_shipment =  WC()->cart->get_taxes_total( true, true );
+
+                $price = wc_price( $vat_ex_shipment + $tax);
+
+
+
+                $tax_string_array[] = sprintf( '%s %s',$price, WC()->countries->tax_or_vat() );
+            }
+
+
+            if ( ! empty( $tax_string_array ) ) {
+                $taxable_address = WC()->customer->get_taxable_address();
+                /* translators: %s: country name */
+                $estimated_text = WC()->customer->is_customer_outside_base() && ! WC()->customer->has_calculated_shipping() ? sprintf( ' ' . __( 'estimated for %s', 'woocommerce' ), WC()->countries->estimated_for_prefix( $taxable_address[0] ) . WC()->countries->countries[ $taxable_address[0] ] ) : '';
+                $value .= '<small class="includes_tax">('
+                    /* translators: includes tax information */
+                    . esc_html__( 'includes', 'woocommerce' )
+                    . ' '
+                    . wp_kses_post( implode( ', ', $tax_string_array ) )
+                    . esc_html( $estimated_text )
+                    . ')</small>';
+            }
+        }
+
+        return $value;
     }
 
 }
