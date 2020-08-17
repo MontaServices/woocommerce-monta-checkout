@@ -301,7 +301,7 @@ class Montapacking
             $order->set_shipping_total( $order->get_shipping_total() - $tax );
 
             $order->set_shipping_tax( $order->get_shipping_tax() + $tax);
-            $order->set_cart_tax( $order->get_cart_tax() + $tax);
+            //$order->set_cart_tax( $order->get_cart_tax() + $tax);
             // Add item to order and save.
 
         } else {
