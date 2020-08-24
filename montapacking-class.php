@@ -290,7 +290,7 @@ class Montapacking
 
 
             $item->set_props(array(
-                'method_title' => 'Monta Shipping',
+                'method_title' => 'Webshop verzendmethode',
                 'method_id' => 0,
                 'taxes' => $arr,
                 'total_tax' => $tax,
@@ -307,7 +307,7 @@ class Montapacking
         } else {
 
             $item->set_props(array(
-                'method_title' => 'Monta Shipping',
+                'method_title' => 'Webshop verzendmethode',
                 'method_id' => 0,
                 'total' => $price,
             ));
