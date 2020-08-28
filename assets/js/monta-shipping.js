@@ -305,10 +305,31 @@ jQuery(document).ready(function () {
                                 // Frames tonen in lijst
 
                                 var hidedatebar = true;
+
+                                //lorealfix
+                                var firstdaycounter = 0;
+
+                                var daysavailablecounter = 0;
+
+                                $.each(monta_shipping.frames, function (key, item) {
+                                    daysavailablecounter++;
+                                });
+
                                 $.each(monta_shipping.frames, function (key, item) {
 
                                     if (item.date != "") {
                                         hidedatebar = false;
+                                    }
+
+                                    if (date_today != item.date) {
+                                        firstdaycounter++;
+                                    }
+
+                                    //lorealfix
+
+                                    var showhtml = true;
+                                    if (firstdaycounter == 1 && daysavailablecounter > 1) {
+                                        showhtml = false;
                                     }
 
                                     var option = item.options[0];
@@ -331,7 +352,11 @@ jQuery(document).ready(function () {
                                             html = html.replace(/{.sameday}/g, 'otherday');
                                         }
 
-                                        times.append(html);
+                                        // to disable lorealfix enable line below here
+                                        //showhtml = true;
+                                        if (showhtml == true) {
+                                            times.append(html);
+                                        }
 
                                     }
 
