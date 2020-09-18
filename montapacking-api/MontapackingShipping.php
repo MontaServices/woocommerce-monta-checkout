@@ -329,7 +329,7 @@ class MontapackingShipping
         if (null !== $this->logger && null === $result) {
             $logger = $this->logger;
             $context = array('source' => 'Montapacking Checkout');
-            $logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context);
+            $logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking (".curl_error($ch).")", $context);
         }
 
 

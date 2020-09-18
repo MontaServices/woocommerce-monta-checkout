@@ -316,10 +316,6 @@ class Montapacking
 
         $order->add_item($item);
 
-
-
-
-        var_dump($order);
     }
 
     public static function shipping_total($wc_price = 0)
@@ -720,11 +716,12 @@ class Montapacking
 
         foreach ($items as $item => $values) {
 
-            $sku = get_post_meta($values['product_id'], '_sku', true);
-            $weight = get_post_meta($values['product_id'], '_weight', true);
-            $length = get_post_meta($values['product_id'], '_length', true);
-            $width = get_post_meta($values['product_id'], '_width', true);
-            $stockstatus = get_post_meta($values['product_id'], '_stock_status', true);
+            $sku = $values['data']->sku;
+            $weight =  $values['data']->weight;
+            $length =  $values['data']->length;
+            $width =  $values['data']->width;
+            $stockstatus =  $values['data']->stock_status;
+
 
             if ($stockstatus != 'instock') {
                 $bAllProductsAvailableAtWooCommerce = false;
@@ -733,6 +730,7 @@ class Montapacking
             ## Add product
 
 			if (esc_attr(get_option('monta_leadingstock')) != 'woocommerce') {
+
 				if ($sku != '') {
 
 				    $api->addProduct($sku, $values['quantity'], $length, $width, $weight);

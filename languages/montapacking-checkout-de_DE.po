@@ -1,0 +1,132 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: montapacking-checkout-woocommerce-extension\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-20 11:29+0200\n"
+"PO-Revision-Date: 2020-09-14 10:40+0200\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Loco-Source-Locale: de_DE\n"
+"X-Generator: Poedit 2.4.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Loco-Parser: loco_parse_po\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Select a shipping method."
+msgstr "Wählen Sie eine Versandart."
+
+msgid "Select a pickup location."
+msgstr "Wählen Sie einen Abholpunkt."
+
+msgid ""
+"The shipment option(s) you choose are not available at this time, please "
+"select an other option."
+msgstr ""
+"Die von Ihnen ausgewählten Versandoptionen sind derzeit nicht verfügbar. "
+"Wählen Sie eine andere Option aus."
+
+msgid "Shipping"
+msgstr "Versand"
+
+msgid "Choose a shipping method"
+msgstr "Wählen Sie eine Versandart"
+
+msgid "Shipping method"
+msgstr "Versandart"
+
+msgid "Please fill in an address before selecting a shipping method"
+msgstr ""
+"Bitte geben Sie eine Adresse ein, bevor Sie eine Versandart auswählen"
+
+msgid "Delivery"
+msgstr "Lieferung"
+
+msgid "Pickup"
+msgstr "Abholen"
+
+msgid "Loading..."
+msgstr "Wird geladen..."
+
+msgid "Select delivery time and date"
+msgstr "Wählen Sie Lieferzeit und Datum"
+
+msgid "Your order will be delivered with"
+msgstr "Ihre Bestellung wird mit geliefert"
+
+msgid "Your order will be"
+msgstr "Ihre Bestellung wird sein"
+
+msgid "delivered"
+msgstr "geliefert"
+
+msgid "shipped"
+msgstr "versendet"
+
+msgid "with"
+msgstr "mit"
+
+msgid "on"
+msgstr "auf"
+
+msgid "between"
+msgstr "zwischen"
+
+msgid "Click here to choose another delivery option"
+msgstr "Klicken Sie hier, um eine andere Lieferoption auszuwählen"
+
+msgid "Delivery time and date"
+msgstr "Lieferzeit und -datum"
+
+msgid "Send date"
+msgstr "Sende Datum"
+
+msgid "Earlier"
+msgstr "Vorhin"
+
+msgid "Later"
+msgstr "Später"
+
+msgid "Show more options"
+msgstr "Weitere Optionen anzeigen"
+
+msgid "Selected pickup point"
+msgstr "Ausgewählter Abholpunkt"
+
+msgid "Extra options:"
+msgstr "Zusätzliche Optionen:"
+
+msgid "Search using postal code"
+msgstr "Suche mit Postleitzahl"
+
+msgid "Search"
+msgstr "Suche"
+
+msgid "Use selection"
+msgstr "Auswahl verwenden"
+
+msgid "Free shipping"
+msgstr "Kostenloser Versand"
+
+msgid "evening delivery"
+msgstr "Abendlieferung"
+
+msgid "No deliveries available for the chosen delivery address"
+msgstr "Für die gewählte Lieferadresse sind keine Lieferungen verfügbar"
+
+msgid "No pickups available for the chosen delivery address"
+msgstr "Für die gewählte Lieferadresse sind keine Abholungen verfügbar"
+
+msgid "ships on"
+msgstr "Schiffe weiter"
+
+msgid "from the Netherlands"
+msgstr "aus den Niederlanden"

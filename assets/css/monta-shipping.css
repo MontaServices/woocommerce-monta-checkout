@@ -154,10 +154,11 @@ body.monta-cover-open {
 
 .monta-times .toggle-left,
 .monta-times .toggle-right,
-.monta-times .scroller {
+.monta-times .montascroller {
     vertical-align: top;
     display: table-cell;
     height: 60px;
+    width: 100%;
 }
 
 .monta-times .toggle-left,
@@ -183,7 +184,7 @@ body.monta-cover-open {
     text-align: center;
 }
 
-.monta-times .scroller .mover {
+.monta-times .montascroller .mover {
     overflow: hidden;
     position: relative;
     height: 60px;
@@ -207,7 +208,7 @@ body.monta-cover-open {
     position: relative;
     display: inline-block;
     padding: 10px 15px;
-
+    list-style: none !important;
     margin: 0 5px;
 }
 

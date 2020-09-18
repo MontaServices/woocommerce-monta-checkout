@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapacking Check-out extension
- * Version: 1.16
+ * Version: 1.18
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -152,8 +152,11 @@ function montacheckout_enqueue_scripts()
 {
     // CSS
     if (is_cart() || is_checkout()) {
-        wp_enqueue_style('montapacking_checkout_storelocator', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-storelocator.css'), date("h:i:s"));
-        wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), date("h:i:s"));
+
+
+
+        wp_enqueue_style('montapacking_checkout_storelocator', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-storelocator.css'), array(), date("h:i:s"));
+        wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), array(), date("h:i:s"));
 
         // Javascript
         wp_enqueue_script('montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . esc_attr(get_option('monta_google_key')), ['jquery']);

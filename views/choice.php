@@ -101,7 +101,7 @@
             <div class="monta-times">
 
                 <a class="toggle-left"><</a>
-                <div class="scroller">
+                <div class="montascroller">
 
                     <div class="mover">
                         <ul></ul>

@@ -306,7 +306,7 @@ jQuery(document).ready(function () {
 
                                 var hidedatebar = true;
 
-                                //lorealfix
+                                //clientfix
                                 var firstdaycounter = 0;
 
                                 var daysavailablecounter = 0;
@@ -325,7 +325,7 @@ jQuery(document).ready(function () {
                                         firstdaycounter++;
                                     }
 
-                                    //lorealfix
+
 
                                     var showhtml = true;
                                     if (firstdaycounter == 1 && daysavailablecounter > 1) {
@@ -352,8 +352,8 @@ jQuery(document).ready(function () {
                                             html = html.replace(/{.sameday}/g, 'otherday');
                                         }
 
-                                        // to disable lorealfix enable line below here
-                                        //showhtml = true;
+                                        // to disable client fix enable line below here
+                                        showhtml = true;
                                         if (showhtml == true) {
                                             times.append(html);
                                         }
@@ -869,7 +869,6 @@ jQuery(document).ready(function () {
         var dayname = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".dayname").text();
         jQuery("strong.date").text(dayname + " " + day);
 
-
         var shippingtype = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_type").text();
 
         if (shippingtype == 'shippingdate') {
@@ -907,18 +906,17 @@ jQuery(document).ready(function () {
     }
 
 
-    jQuery("input.montapackingshipmentshipper, input.montapackingshipmenttime ").live("change", function () {
+    jQuery("input.montapackingshipmentshipper, input.montapackingshipmenttime ").on("change", function () {
         updateDeliveryTextBlock();
     });
 
-    jQuery("input.montapackingshipmentshipper ").live("click", function () {
-
+    jQuery('body').on('click', 'input.montapackingshipmentshipper', function() {
         jQuery('.montapackingshipmentshipper').parents('label').removeClass("checked");
         jQuery(this).parents('label').addClass("checked");
 
     });
 
-    jQuery("#othersendmethod").live("click", function () {
+    jQuery('body').on('click', '#othersendmethod', function() {
 
         if (jQuery(".monta-times-croppped").css('display') == 'block') {
             jQuery(".monta-times-croppped").css('display', "none");
