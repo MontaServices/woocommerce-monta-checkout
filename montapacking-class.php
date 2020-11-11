@@ -274,12 +274,11 @@ class Montapacking
         }
 
         $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
-        
+
         if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() ) {
 
+            /*
             $tax = (self::get_shipping_total(sanitize_post($_POST)) / 121) * 21;
-
-
 
             $shipping_taxes = WC_Tax::calc_shipping_tax($price, WC_Tax::get_shipping_tax_rates());
             $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Flat rate shipping', $tax, $shipping_taxes, 'flat_rate');
@@ -303,7 +302,16 @@ class Montapacking
             $order->set_shipping_tax( $order->get_shipping_tax() + $tax);
             //$order->set_cart_tax( $order->get_cart_tax() + $tax);
             // Add item to order and save.
+            */
 
+            $tax = (self::get_shipping_total(sanitize_post($_POST)) / 121) * 21;
+
+            $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
+            $item = new WC_Order_Item_Shipping();
+            $item->set_props(array('method_title' => $rate->label, 'method_id' => $rate->id, 'total' => wc_format_decimal($rate->cost), 'taxes' => $rate->taxes, 'meta_data' => $rate->get_meta_data()));
+            $order->add_item($item);
+
+            $order->calculate_totals(true);
         } else {
 
             $item->set_props(array(
@@ -717,9 +725,13 @@ class Montapacking
         foreach ($items as $item => $values) {
 
             $sku = $values['data']->sku;
-            $weight =  $values['data']->weight;
-            $length =  $values['data']->length;
-            $width =  $values['data']->width;
+            //$weight =  $values['data']->weight;
+            //$length =  $values['data']->length;
+            //$width =  $values['data']->width;
+            $weight = 0;
+            $length = 0;
+            $width = 0;
+
             $stockstatus =  $values['data']->stock_status;
 
 
@@ -780,10 +792,16 @@ class Montapacking
 
     public static function calculateExtras($extra_values = null, $curr = '&euro;')
     {
+        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
+
         $extras = null;
         if (count($extra_values) > 0) {
             foreach ($extra_values as $extra) {
                 ## Extra optie toevoegen
+                if ($freeShippingCouponCode) {
+                    $extra->price = 0;
+                }
+
                 $extras[$extra->code] = (object)[
                     'code' => $extra->code,
                     'name' => $extra->name,
@@ -801,6 +819,8 @@ class Montapacking
         $items = array();
 
         $curr = '&euro;';
+
+        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
 
         //create days
         if (is_array($frames) || is_object($frames)) {
@@ -904,6 +924,10 @@ class Montapacking
                             }
                         }
 
+                        if ($freeShippingCouponCode) {
+                            $option->price = 0;
+                        }
+
                         $options_object = (object)[
                             'code' => $option->code,
                             'codes' => $option->codes,
@@ -942,6 +966,10 @@ class Montapacking
                         $extras = null;
                         if (isset($option->extras)) {
                             $extras = self::calculateExtras($option->extras, $curr);
+                        }
+
+                        if ($freeShippingCouponCode) {
+                            $option->price = 0;
                         }
 
                         $options_object = (object)[
@@ -1007,6 +1035,9 @@ class Montapacking
                             $extras = self::calculateExtras($option->extras, $curr);
                         }
 
+                        if ($freeShippingCouponCode) {
+                            $option->price = 0;
+                        }
 
                         $options_object = (object)[
                             'codes' => $option->codes,
@@ -1067,6 +1098,8 @@ class Montapacking
 
         $items = null;
 
+        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
+
         ## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
         if (is_array($frames) || is_object($frames)) {
 
@@ -1083,6 +1116,10 @@ class Montapacking
                     if (isset($option->extras) && count($option->extras) > 0) {
 
                         foreach ($option->extras as $extra) {
+
+                            if ($freeShippingCouponCode) {
+                                $extra->price = 0;
+                            }
 
                             ## Extra optie toevoegen
                             $extras[$extra->code] = (object)[
@@ -1105,6 +1142,10 @@ class Montapacking
                             $shipperOptions .= $key . "_" . $value . ",";
                         }
                         $shipperOptions = rtrim($shipperOptions, " ,");
+
+                        if ($freeShippingCouponCode) {
+                            $option->price = 0;
+                        }
 
                         $items[$nr] = (object)[
                             'code' => implode(',', $option->codes),
@@ -1193,6 +1234,21 @@ class Montapacking
         }
 
         return $value;
+    }
+
+    public static function checkFreeShippingCouponCodes()
+    {
+        global $woocommerce;
+        if($woocommerce->cart->get_applied_coupons() ){
+            foreach ($woocommerce->cart->get_applied_coupons() as $coupon) {
+                $getDetails = ( new WC_Coupon($coupon));
+
+                if ($getDetails->get_free_shipping()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

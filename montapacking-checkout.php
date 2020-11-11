@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapacking Check-out extension
- * Version: 1.18
+ * Version: 1.21
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -96,12 +96,14 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 
     add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
 
-    add_filter( 'woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1 );
+    add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1 );
 
 
     add_action( 'woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping' );
 
-
+    add_action("woocommerce_removed_coupon", 'updatecheckout');
+    add_action("woocommerce_applied_coupon", 'updatecheckout');
+    
 
 } else {
 
@@ -138,7 +140,10 @@ function filter_woocommerce_cart_needs_shipping_address($needs_shipping_address)
     return $cart_needs_shipping_address;
 }
 
-;
+function updateCheckout()
+{
+    echo '<script type="text/javascript">jQuery("#billing_postcode").trigger("change");</script>';
+}
 
 function montacheckout_plugin_add_settings_link($links)
 {

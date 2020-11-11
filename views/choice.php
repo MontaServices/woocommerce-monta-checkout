@@ -275,6 +275,8 @@
 
                 </div>
 
+                <a class="monta-select-pickup"><?php _e('Use selection', 'montapacking-checkout'); ?></a>
+
             </div>
 
             <div id="monta-stores" class="bh-sl-map-container">
@@ -286,7 +288,7 @@
                             <!-- pick-up points -->
                         </ul>
                     </div>
-                    <a class="monta-select-pickup"><?php _e('Use selection', 'montapacking-checkout'); ?></a>
+
 
                 </div>
                 <div class="monta-map">

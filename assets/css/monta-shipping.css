@@ -555,16 +555,18 @@ input[name=initialPickupPointRadio] {
 }
 
 .monta-select-pickup {
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
     height: 50px;
     background: #79898C;
     color: #fff;
     text-align: center;
-    line-height: 50px;
+
     display: none;
     cursor: pointer;
+    line-height:50px
+
 }
 
 .monta-select-pickup:hover {
