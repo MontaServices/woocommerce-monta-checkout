@@ -199,6 +199,7 @@ class Montapacking
                 $item->add_meta_data('Shipmentmethod', $shipperCode, true);
                 $item->add_meta_data('Delivery date', $frame->date, true);
 
+
                 $time_check = $method->from . ' ' . $method->to;
                 if ($time_check != '01:00 01:00' && trim($time_check) && $method->from != $method->to) {
                     $item->add_meta_data('Delivery timeframe', $method->from . ' ' . $method->to, true);
@@ -304,10 +305,25 @@ class Montapacking
             // Add item to order and save.
             */
 
-            $tax = (self::get_shipping_total(sanitize_post($_POST)) / 121) * 21;
+
+
+
+            $mixed = WC_Tax::get_shipping_tax_rates( null, null );
+
+
+            $vat_percent = 0;
+            if (isset($mixed[1]['rate']) && $mixed[1]['shipping'] == 'yes') {
+                $vat_percent = $mixed[1]['rate'];
+            }
+
+            $vat_calculate = 100 + $vat_percent;
+
+
+            $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
+
 
             $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
-            $item = new WC_Order_Item_Shipping();
+
             $item->set_props(array('method_title' => $rate->label, 'method_id' => $rate->id, 'total' => wc_format_decimal($rate->cost), 'taxes' => $rate->taxes, 'meta_data' => $rate->get_meta_data()));
             $order->add_item($item);
 
@@ -320,9 +336,10 @@ class Montapacking
                 'total' => $price,
             ));
 
+            $order->add_item($item);
         }
 
-        $order->add_item($item);
+
 
     }
 
