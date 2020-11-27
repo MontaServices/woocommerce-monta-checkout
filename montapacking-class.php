@@ -103,6 +103,32 @@ class Montapacking
 
     public static function checkout_store($order)
     {
+        $hasDigitalProducts = false;
+        $hasPhysicalProducts = false;
+
+        foreach ($order->get_items() as $cart_item) {
+            if ($cart_item['quantity']) {
+
+
+                if ($cart_item['variation_id']) {
+                    $product = wc_get_product($cart_item['variation_id']);
+                } else {
+                    $product = wc_get_product($cart_item['product_id']);
+                }
+
+                $virtual =  $product->get_virtual();
+
+                if ($virtual) {;
+                    $hasDigitalProducts = true;
+                } else {
+                    $hasPhysicalProducts = true;
+                }
+            }
+        }
+        if ($hasPhysicalProducts == false && $hasDigitalProducts == true) {
+          return;
+        }
+
         $bMontapackingAdd = false;
 
         ## Shipping regel aanmaken bij order
@@ -413,6 +439,25 @@ class Montapacking
 
     public static function get_shipping_total($data = null)
     {
+        global $woocommerce;
+
+        $items = $woocommerce->cart->get_cart();
+
+        $hasDigitalProducts = false;
+        $hasPhysicalProducts = false;
+        foreach ($items as $item => $values) {
+            $virtual =  $values['data']->get_virtual();
+
+            if ($virtual) {
+                $hasDigitalProducts = true;
+            } else {
+                $hasPhysicalProducts = true;
+            }
+        }
+
+        if ($hasPhysicalProducts == false && $hasDigitalProducts == true) {
+            return 0;
+        }
 
         if ($data === null) {
             if (isset($_POST['post_data'])) {
@@ -739,6 +784,9 @@ class Montapacking
         $bAllProductsAvailableAtMontapacking = true;
         $bAllProductsAvailableAtWooCommerce = true;
 
+        $hasDigitalProducts = false;
+        $hasPhysicalProducts = false;
+
         foreach ($items as $item => $values) {
 
             $sku = $values['data']->sku;
@@ -748,31 +796,41 @@ class Montapacking
             $weight = 0;
             $length = 0;
             $width = 0;
+            $virtual =  $values['data']->get_virtual();
 
-            $stockstatus =  $values['data']->stock_status;
+            if ($virtual) {
+                $hasDigitalProducts = true;
+            } else {
+                $hasPhysicalProducts = true;
+
+                $stockstatus = $values['data']->stock_status;
 
 
-            if ($stockstatus != 'instock') {
-                $bAllProductsAvailableAtWooCommerce = false;
+                if ($stockstatus != 'instock') {
+                    $bAllProductsAvailableAtWooCommerce = false;
+                }
+
+                ## Add product
+
+                if (esc_attr(get_option('monta_leadingstock')) != 'woocommerce') {
+
+                    if ($sku != '') {
+
+                        $api->addProduct($sku, $values['quantity'], $length, $width, $weight);
+
+                        if (false === $api->checkStock($sku)) {
+                            $bAllProductsAvailableAtMontapacking = false;
+                        }
+
+                    } else {
+                        $bAllProductsAvailableAtMontapacking = false;
+                    }
+                }
             }
+        }
 
-            ## Add product
-
-			if (esc_attr(get_option('monta_leadingstock')) != 'woocommerce') {
-
-				if ($sku != '') {
-
-				    $api->addProduct($sku, $values['quantity'], $length, $width, $weight);
-
-					if (false === $api->checkStock($sku)) {
-						$bAllProductsAvailableAtMontapacking = false;
-					}
-
-				} else {
-					$bAllProductsAvailableAtMontapacking = false;
-				}
-			}
-
+        if ($hasPhysicalProducts == false && $hasDigitalProducts == true) {
+            return null;
         }
 
         $subtotal = (WC()->cart->get_subtotal() + WC()->cart->get_subtotal_tax());
