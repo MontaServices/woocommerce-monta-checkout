@@ -336,10 +336,14 @@ class Montapacking
 
             $mixed = WC_Tax::get_shipping_tax_rates( null, null );
 
-
+            $found = false;
             $vat_percent = 0;
-            if (isset($mixed[1]['rate']) && $mixed[1]['shipping'] == 'yes') {
-                $vat_percent = $mixed[1]['rate'];
+            $id = "";
+            foreach ($mixed as $key => $obj) {
+                $vat_percent = $obj['rate'];
+                $found = true;
+                $id = ":".$key;
+                break;
             }
 
             $vat_calculate = 100 + $vat_percent;
@@ -348,9 +352,11 @@ class Montapacking
             $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
 
 
-            $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
+            $rate = new WC_Shipping_Rate('flat_rate_shipping'.$id, 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
 
             $item->set_props(array('method_title' => $rate->label, 'method_id' => $rate->id, 'total' => wc_format_decimal($rate->cost), 'taxes' => $rate->taxes, 'meta_data' => $rate->get_meta_data()));
+
+
             $order->add_item($item);
 
             $order->calculate_totals(true);
@@ -1281,8 +1287,22 @@ class Montapacking
                 }
             } elseif ( ! empty( $cart_tax_totals ) ) {
 
+
+                $mixed = WC_Tax::get_shipping_tax_rates( null, null );
+
+                $found = false;
+                $vat_percent = 0;
+                $id = "";
+                foreach ($mixed as $key => $obj) {
+                    $vat_percent = $obj['rate'];
+                    $found = true;
+                    $id = ":".$key;
+                    break;
+                }
+
+
                 $shipping_costs = self::shipping_total();
-                $tax = ($shipping_costs / 121) * 21;
+                $tax = ($shipping_costs / 121) * $vat_percent;
 
                 $vat_ex_shipment =  WC()->cart->get_taxes_total( true, true );
 
