@@ -27,27 +27,33 @@ class MontaCheckout_Address
 
     }
 
-    public function setLongLat()
+    public function setLongLat($key = null)
     {
 
-        // Get lat and long by address
-        $address = $this->street . ' ' . $this->housenumber . ' ' . $this->housenumberaddition . ', ' . $this->postalcode . ' ' . $this->countrycode . ''; // Google HQ
-        $prepAddr = str_replace('  ', ' ', $address);
-        $prepAddr = str_replace(' ', '+', $prepAddr);
-        $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false');
-        $output = json_decode($geocode);
+        if ($key != null) {
 
-        $result = end($output->results);
-        if (isset($result->geometry)) {
-            $latitude = $result->geometry->location->lat;
-            $longitude = $result->geometry->location->lng;
-        } else {
-            $latitude = 0;
-            $longitude = 0;
+            // Get lat and long by address
+            $address = $this->street . ' ' . $this->housenumber . ' ' . $this->housenumberaddition . ', ' . $this->postalcode . ' ' . $this->countrycode . ''; // Google HQ
+            $prepAddr = str_replace('  ', ' ', $address);
+            $prepAddr = str_replace(' ', '+', $prepAddr);
+
+            $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key='.$key);
+            $output = json_decode($geocode);
+
+            $result = end($output->results);
+            if (isset($result->geometry)) {
+                $latitude = $result->geometry->location->lat;
+                $longitude = $result->geometry->location->lng;
+            } else {
+                $latitude = 0;
+                $longitude = 0;
+            }
+
+            $this->longitude = $longitude;
+            $this->latitude = $latitude;
+
         }
 
-        $this->longitude = $longitude;
-        $this->latitude = $latitude;
 
     }
 

@@ -194,6 +194,8 @@ class MontapackingShipping
 
         $this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore', 'AFH'];
 
+        $this->address->setLongLat($this->googlekey);
+
         ## Timeframes omzetten naar bruikbaar object
         $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers']);
         if (isset($result->Timeframes)) {

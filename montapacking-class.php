@@ -753,8 +753,16 @@ class Montapacking
             }
         }
 
+        if ($type == 'delivery') {
+
+            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
+
+
+        } else if ($type == 'pickup') {
+            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), esc_attr(get_option('monta_google_key')));
+        }
+
         ## Monta packing API aanroepen
-        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
 
         if (!isset($data->ship_to_different_address)) {
 
