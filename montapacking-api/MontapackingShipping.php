@@ -291,7 +291,7 @@ class MontapackingShipping
         }
 
         $method = strtolower($method);
-        //$url = $this->http . $this->user . ':' . $this->pass . '@' . $this->url . $method;
+
         $url = "https://api.montapacking.nl/rest/v5/" . $method;
 
         //$this->debug = true;
@@ -301,11 +301,9 @@ class MontapackingShipping
         }
 
         $this->requesturl = $url.$request;
-
-        $ch = curl_init();
-
         $this->pass = htmlspecialchars_decode($this->pass);
 
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
         curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
@@ -315,6 +313,8 @@ class MontapackingShipping
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
         $result = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($result);
 
         if ($this->debug) {
             echo '<pre>';
@@ -322,17 +322,86 @@ class MontapackingShipping
             echo '<pre>';
         }
 
-        curl_close($ch);
 
-        $result = json_decode($result);
+        if (null === $result) {
+
+            if (null !== $this->logger) {
+                $logger = $this->logger;
+                $context = array('source' => 'Montapacking Checkout');
+                $logger->critical("Webshop was unable to connect to Montapacking REST api. Retry #1 is starting in 3 seconds", $context);
+            }
+
+            sleep(3);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $result = json_decode($result);
+        }
 
 
+        if (null === $result) {
+
+            if (null !== $this->logger) {
+                $logger = $this->logger;
+                $context = array('source' => 'Montapacking Checkout');
+                $logger->critical("Webshop was unable to connect to Montapacking REST api. Retry #2 is starting in 5 seconds", $context);
+            }
+
+            sleep(5);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $result = json_decode($result);
+        }
+
+        if (null === $result) {
+
+            if (null !== $this->logger) {
+                $logger = $this->logger;
+                $context = array('source' => 'Montapacking Checkout');
+                $logger->critical("Webshop was unable to connect to Montapacking REST api. Retry #3 is starting in 10 seconds", $context);
+            }
+
+            sleep(10);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $result = json_decode($result);
+        }
 
         if (null !== $this->logger && null === $result) {
             $logger = $this->logger;
             $context = array('source' => 'Montapacking Checkout');
-            $logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking (".curl_error($ch).")", $context);
+            $logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context);
         }
+
 
 
         if (null !== $this->logger && $result->Warnings) {
