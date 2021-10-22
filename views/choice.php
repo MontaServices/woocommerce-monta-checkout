@@ -186,40 +186,6 @@
 
 </div>
 
-
-<!-- TEMPLATES -->
-
-
-
-<div class="monta-shipper-template">
-    <label>
-
-        <span style="display:none" class="cropped_name">{.name}</span>
-        <span style="display:none" class="cropped_time">{.time}</span>
-        <span style="display:none" class="cropped_image">{.img}</span>
-        <span style="display:none" class="cropped_type_text">{.type_text}</span>
-        <span style="display:none" class="cropped_type">{.type}</span>
-
-        <span class="radiobutton">
-            <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper">
-            <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}">
-        </span>
-
-        <div class="image">
-            {.img}
-        </div>
-
-        <div class="information">
-            {.name} {.time} <span>{.ships_on}</span>
-        </div>
-        <div class="pricemonta">
-            {.price}
-        </div>
-        <div class="clearboth"></div>
-
-    </label>
-</div>
-
 <div class="monta-extra-template">
     <label>
 

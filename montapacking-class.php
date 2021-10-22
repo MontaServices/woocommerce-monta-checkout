@@ -16,15 +16,12 @@ class Montapacking
         $type = sanitize_post($_POST['montapacking']);
         $pickup = $type['pickup'];
         $shipment = $type['shipment'];
-
         $time = $shipment['time'];
 
         $shipper = "";
         if (isset($shipment['shipper'])) {
             $shipper = $shipment['shipper'];
         }
-
-
 
         $items = null;
 
@@ -40,7 +37,6 @@ class Montapacking
 
                     ## Frames naar handige array zetten
                     $items = self::format_frames($frames);
-
                 }
 
                 break;
@@ -71,9 +67,7 @@ class Montapacking
 
                             $found = true;
                             break;
-
                         }
-
                     }
 
                     ## Check of optie is gevonden
@@ -84,21 +78,17 @@ class Montapacking
                 } else {
 
                     $error = true;
-
                 }
 
             } else {
 
                 $error = true;
-
             }
 
             if ($error) {
                 $errors->add('shipment', __('The shipment option(s) you choose are not available at this time, please select an other option.', 'montapacking-checkout'));
             }
-
         }
-
     }
 
     public static function checkout_store($order)
@@ -109,16 +99,16 @@ class Montapacking
         foreach ($order->get_items() as $cart_item) {
             if ($cart_item['quantity']) {
 
-
                 if ($cart_item['variation_id']) {
                     $product = wc_get_product($cart_item['variation_id']);
                 } else {
                     $product = wc_get_product($cart_item['product_id']);
                 }
 
-                $virtual =  $product->get_virtual();
+                $virtual = $product->get_virtual();
 
-                if ($virtual) {;
+                if ($virtual) {
+                    ;
                     $hasDigitalProducts = true;
                 } else {
                     $hasPhysicalProducts = true;
@@ -126,7 +116,7 @@ class Montapacking
             }
         }
         if ($hasPhysicalProducts == false && $hasDigitalProducts == true) {
-          return;
+            return;
         }
 
         $bMontapackingAdd = false;
@@ -149,7 +139,6 @@ class Montapacking
             $extras = $shipment['extras'];
         }
 
-
         $pickup = $type['pickup'];
 
         $items = null;
@@ -164,8 +153,26 @@ class Montapacking
 
                 break;
             case 'pickup':
+
+                /*
+                if ($pickup['description'] == 'parcelShop')
+                {
+                    $order->set_shipping_first_name($order->get_billing_first_an);
+                    $order->set_shipping_last_name('');
+                }
+                else
+                {
+                    $order->set_shipping_first_name($pickup['description']);
+                    $order->set_shipping_last_name('');
+                }
+                */
+
+                $name = $order->get_billing_first_name()." ".$order->get_billing_last_name();
+                $pickup['description'] = $name;
+
                 $order->set_shipping_first_name($pickup['description']);
                 $order->set_shipping_last_name('');
+
                 $order->set_shipping_company($pickup['company']);
                 $order->set_shipping_address_1($pickup['street'] . " " . $pickup['houseNumber']);
                 $order->set_shipping_postcode($pickup['postal']);
@@ -213,9 +220,7 @@ class Montapacking
                         break;
 
                     }
-
                 }
-
             }
 
             ## Check of verzendmethode is gevonden
@@ -234,8 +239,6 @@ class Montapacking
                 if ($method->type == 'shippingdate') {
                     $item->add_meta_data('Delivery type', "Date mentioned above is an send date", true);
                 }
-
-                //var_dump($method->type); exit;
 
                 if (is_array($extras)) {
 
@@ -295,46 +298,14 @@ class Montapacking
                         $item->add_meta_data('No pickup address chosen ', $arr, true);
                         break;
                 }
-
-
             }
         }
 
         $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
 
-        if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() ) {
+        if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
 
-            /*
-            $tax = (self::get_shipping_total(sanitize_post($_POST)) / 121) * 21;
-
-            $shipping_taxes = WC_Tax::calc_shipping_tax($price, WC_Tax::get_shipping_tax_rates());
-            $rate = new WC_Shipping_Rate('flat_rate_shipping', 'Flat rate shipping', $tax, $shipping_taxes, 'flat_rate');
-
-            $arr = array();
-            $arr[1] = $tax;
-
-
-
-            $item->set_props(array(
-                'method_title' => 'Webshop verzendmethode',
-                'method_id' => 0,
-                'taxes' => $arr,
-                'total_tax' => $tax,
-                'total' => $price -$tax,
-            ));
-
-
-            $order->set_shipping_total( $order->get_shipping_total() - $tax );
-
-            $order->set_shipping_tax( $order->get_shipping_tax() + $tax);
-            //$order->set_cart_tax( $order->get_cart_tax() + $tax);
-            // Add item to order and save.
-            */
-
-
-
-
-            $mixed = WC_Tax::get_shipping_tax_rates( null, null );
+            $mixed = WC_Tax::get_shipping_tax_rates(null, null);
 
             $found = false;
             $vat_percent = 0;
@@ -342,7 +313,7 @@ class Montapacking
             foreach ($mixed as $key => $obj) {
                 $vat_percent = $obj['rate'];
                 $found = true;
-                $id = ":".$key;
+                $id = ":" . $key;
                 break;
             }
 
@@ -352,7 +323,7 @@ class Montapacking
             $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
 
 
-            $rate = new WC_Shipping_Rate('flat_rate_shipping'.$id, 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
+            $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
 
             $item->set_props(array('method_title' => $rate->label, 'method_id' => $rate->id, 'total' => wc_format_decimal($rate->cost), 'taxes' => $rate->taxes, 'meta_data' => $rate->get_meta_data()));
 
@@ -372,7 +343,6 @@ class Montapacking
         }
 
 
-
     }
 
     public static function shipping_total($wc_price = 0)
@@ -382,7 +352,7 @@ class Montapacking
             $data = sanitize_post($_POST);
         }
 
-        $price = (float) self::get_shipping_total($data);
+        $price = (float)self::get_shipping_total($data);
 
         return $wc_price + $price;
     }
@@ -452,7 +422,7 @@ class Montapacking
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
         foreach ($items as $item => $values) {
-            $virtual =  $values['data']->get_virtual();
+            $virtual = $values['data']->get_virtual();
 
             if ($virtual) {
                 $hasDigitalProducts = true;
@@ -579,8 +549,18 @@ class Montapacking
             $isfound = true;
         }
 
+
         if (false === $isfound) {
-            return esc_attr(get_option('monta_shippingcosts'));
+
+            $start = esc_attr(get_option('monta_shippingcosts_start'));
+            $default = esc_attr(get_option('monta_shippingcosts'));
+
+            if (trim($start)) {
+                return $start;
+            } else {
+                return $default;
+            }
+
         }
 
 
@@ -801,44 +781,34 @@ class Montapacking
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
 
+
+
+        $skuArray = array();
+        $x=0;
+
         foreach ($items as $item => $values) {
 
-            $sku = $values['data']->sku;
-            //$weight =  $values['data']->weight;
-            //$length =  $values['data']->length;
-            //$width =  $values['data']->width;
-            $weight = 0;
-            $length = 0;
-            $width = 0;
-            $virtual =  $values['data']->get_virtual();
+            $product = wc_get_product($values['product_id']);
+
+            $sku = $product->get_sku();;
+
+            if (trim($sku))
+            {
+                $skuArray[$x] = $sku;
+                $x++;
+            }
+
+            $virtual = $product->get_virtual();
 
             if ($virtual) {
                 $hasDigitalProducts = true;
             } else {
                 $hasPhysicalProducts = true;
 
-                $stockstatus = $values['data']->stock_status;
-
+                $stockstatus = $product->get_stock_status();
 
                 if ($stockstatus != 'instock') {
                     $bAllProductsAvailableAtWooCommerce = false;
-                }
-
-                ## Add product
-
-                if (esc_attr(get_option('monta_leadingstock')) != 'woocommerce') {
-
-                    if ($sku != '') {
-
-                        $api->addProduct($sku, $values['quantity'], $length, $width, $weight);
-
-                        if (false === $api->checkStock($sku)) {
-                            $bAllProductsAvailableAtMontapacking = false;
-                        }
-
-                    } else {
-                        $bAllProductsAvailableAtMontapacking = false;
-                    }
                 }
             }
         }
@@ -866,10 +836,17 @@ class Montapacking
         } else {
             $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
-        //$bStockStatus = true;
+
         if ($type == 'delivery') {
 
-            return $api->getShippingOptions($bStockStatus);
+            if (esc_attr(get_option('monta_checkproductsonsku'))) {
+                return $api->getShippingOptions($bStockStatus, false, false, false, false, $skuArray);
+            }
+            else
+            {
+                return $api->getShippingOptions($bStockStatus);
+            }
+
 
         } else if ($type == 'pickup') {
 
@@ -1078,7 +1055,7 @@ class Montapacking
                         ];
 
                         $allow = true;
-                        if (date("Y-m-d",$key) == date("Y-m-d")) {
+                        if (date("Y-m-d", $key) == date("Y-m-d")) {
                             $allow = false;
                         }
                         if (true === $allow) {
@@ -1113,7 +1090,7 @@ class Montapacking
                         } elseif ($option->code == 'RED_ShippingDayUnknown') {
                             $key = strtotime(date("Y-m-d"));
                             $desc = 'Red je pakket';
-                        }elseif ($option->code == 'Trunkrs_ShippingDayUnknown') {
+                        } elseif ($option->code == 'Trunkrs_ShippingDayUnknown') {
                             $key = strtotime(date("Y-m-d"));
                             $desc = 'Red je pakket';
                         }
@@ -1144,15 +1121,20 @@ class Montapacking
                         ];
 
                         $allow = true;
-                        if (date("Y-m-d",$key) == date("Y-m-d") && $frame->code != 'SameDayDelivery') {
+                        if (date("Y-m-d", $key) == date("Y-m-d") && $frame->code != 'SameDayDelivery') {
                             $allow = false;
                         }
+
+                        if ($option->code == "MultipleShipper_ShippingDayUnknown")
+                        {
+                            $allow = true;
+                        }
+
                         if (true === $allow) {
                             if (((time() + 3600) <= strtotime($option->date)) || ($key == 'NOTIMES')) {
                                 $items[$key]->options[] = $options_object;
                             }
                         }
-
 
 
                     }
@@ -1170,10 +1152,6 @@ class Montapacking
         }
         $items = $cleared_items;
 
-
-        //print "<pre>";
-        //var_dump($items);
-        //exit;
         ## Frames opslaan in sessie voor bepalen kosten
         $_SESSION['montapacking-frames'] = $items;
 
@@ -1281,22 +1259,21 @@ class Montapacking
     {
 
 
-
         $value = '<strong>' . WC()->cart->get_total() . '</strong> ';
 
         // If prices are tax inclusive, show taxes here.
-        if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() ) {
+        if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
             $tax_string_array = array();
-            $cart_tax_totals  = WC()->cart->get_tax_totals();
+            $cart_tax_totals = WC()->cart->get_tax_totals();
 
-            if ( get_option( 'woocommerce_tax_total_display' ) === 'itemized' ) {
-                foreach ( $cart_tax_totals as $code => $tax ) {
-                    $tax_string_array[] = sprintf( '%s %s', $tax->formatted_amount, $tax->label );
+            if (get_option('woocommerce_tax_total_display') === 'itemized') {
+                foreach ($cart_tax_totals as $code => $tax) {
+                    $tax_string_array[] = sprintf('%s %s', $tax->formatted_amount, $tax->label);
                 }
-            } elseif ( ! empty( $cart_tax_totals ) ) {
+            } elseif (!empty($cart_tax_totals)) {
 
 
-                $mixed = WC_Tax::get_shipping_tax_rates( null, null );
+                $mixed = WC_Tax::get_shipping_tax_rates(null, null);
 
                 $found = false;
                 $vat_percent = 0;
@@ -1304,7 +1281,7 @@ class Montapacking
                 foreach ($mixed as $key => $obj) {
                     $vat_percent = $obj['rate'];
                     $found = true;
-                    $id = ":".$key;
+                    $id = ":" . $key;
                     break;
                 }
 
@@ -1312,26 +1289,25 @@ class Montapacking
                 $shipping_costs = self::shipping_total();
                 $tax = ($shipping_costs / 121) * $vat_percent;
 
-                $vat_ex_shipment =  WC()->cart->get_taxes_total( true, true );
+                $vat_ex_shipment = WC()->cart->get_taxes_total(true, true);
 
-                $price = wc_price( $vat_ex_shipment + $tax);
+                $price = wc_price($vat_ex_shipment + $tax);
 
 
-
-                $tax_string_array[] = sprintf( '%s %s',$price, WC()->countries->tax_or_vat() );
+                $tax_string_array[] = sprintf('%s %s', $price, WC()->countries->tax_or_vat());
             }
 
 
-            if ( ! empty( $tax_string_array ) ) {
+            if (!empty($tax_string_array)) {
                 $taxable_address = WC()->customer->get_taxable_address();
                 /* translators: %s: country name */
-                $estimated_text = WC()->customer->is_customer_outside_base() && ! WC()->customer->has_calculated_shipping() ? sprintf( ' ' . __( 'estimated for %s', 'woocommerce' ), WC()->countries->estimated_for_prefix( $taxable_address[0] ) . WC()->countries->countries[ $taxable_address[0] ] ) : '';
+                $estimated_text = WC()->customer->is_customer_outside_base() && !WC()->customer->has_calculated_shipping() ? sprintf(' ' . __('estimated for %s', 'woocommerce'), WC()->countries->estimated_for_prefix($taxable_address[0]) . WC()->countries->countries[$taxable_address[0]]) : '';
                 $value .= '<small class="includes_tax">('
                     /* translators: includes tax information */
-                    . esc_html__( 'includes', 'woocommerce' )
+                    . esc_html__('includes', 'woocommerce')
                     . ' '
-                    . wp_kses_post( implode( ', ', $tax_string_array ) )
-                    . esc_html( $estimated_text )
+                    . wp_kses_post(implode(', ', $tax_string_array))
+                    . esc_html($estimated_text)
                     . ')</small>';
             }
         }
@@ -1342,9 +1318,9 @@ class Montapacking
     public static function checkFreeShippingCouponCodes()
     {
         global $woocommerce;
-        if($woocommerce->cart->get_applied_coupons() ){
+        if ($woocommerce->cart->get_applied_coupons()) {
             foreach ($woocommerce->cart->get_applied_coupons() as $coupon) {
-                $getDetails = ( new WC_Coupon($coupon));
+                $getDetails = (new WC_Coupon($coupon));
 
                 if ($getDetails->get_free_shipping()) {
                     return true;

@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapacking Check-out extension
- * Version: 1.26
+ * Version: 1.32
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -11,10 +11,10 @@
  * Text Domain: montapacking-checkout-woocommerce-extension
  * Domain Path: /languages
  *
- * WC requires at least: 3.6.5
- * WC tested up to: 3.6.5
+ * WC requires at least: 4.0.1
+ * WC tested up to: 5.7.2
  *
- * Copyright: © 2009-2019 WooCommerce.
+ * Copyright: © 2009-2021 WooCommerce.
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -37,8 +37,11 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_google_key');
     register_setting('montapacking-plugin-settings', 'monta_logerrors');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts');
+    register_setting('montapacking-plugin-settings', 'monta_shippingcosts_start');
     register_setting('montapacking-plugin-settings', 'monta_leadingstock');
     register_setting('montapacking-plugin-settings', 'monta_disablepickup');
+    register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
+
 
 });
 
@@ -93,14 +96,9 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     //add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
     add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
-
     add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
-
     add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1 );
-
-
     add_action( 'woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping' );
-
     add_action("woocommerce_removed_coupon", 'updatecheckout');
     add_action("woocommerce_applied_coupon", 'updatecheckout');
     
@@ -114,7 +112,6 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 
 function filter_review_order_before_shipping($needs_shipping_address)
 {
-
     do_action( 'woocommerce_review_order_before_shipping' );
 }
 
@@ -123,13 +120,11 @@ function filter_review_order_before_shipping($needs_shipping_address)
 
 function filter_woocommerce_cart_needs_shipping_address($needs_shipping_address)
 {
-
     $cart_needs_shipping_address = true;
 
     if (empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
         return $cart_needs_shipping_address;
     }
-
 
     $postdata = sanitize_post($_POST['montapacking']);
 
@@ -158,9 +153,6 @@ function montacheckout_enqueue_scripts()
     // CSS
     if (is_cart() || is_checkout()) {
 
-
-
-        wp_enqueue_style('montapacking_checkout_storelocator', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-storelocator.css'), array(), date("h:i:s"));
         wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), array(), date("h:i:s"));
 
         // Javascript
@@ -237,6 +229,24 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
+                    <th scope="row"><label for="monta_shippingcosts_start">Start shipping Costs</label></th>
+                    <td>
+                        <input required type="number" name="monta_shippingcosts_start" step="0.01"
+                               value="<?php echo esc_attr(get_option('monta_shippingcosts_start')); ?>" size="5"/>
+                        <br><i style="font-size:12px">The start shipping costs which is used in the shopping cart
+                            available.</i>
+                    </td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_checkproductsonsku">Check products on SKU</label></th>
+                    <td><input type="checkbox" name="monta_checkproductsonsku"
+                               value="1" <?php checked('1', get_option('monta_checkproductsonsku')); ?>/>
+                    </td>
+                </tr>
+
+                <tr>
                     <th scope="row"><label for="monta_logerrors">Log errors</label></th>
                     <td><input type="checkbox" name="monta_logerrors"
                                value="1" <?php checked('1', get_option('monta_logerrors')); ?>/>
@@ -254,24 +264,7 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
 
-
-                <tr>
-                    <th scope="row"><label for="monta_leadingstock">Leading stock</label></th>
-                    <td>
-
-                        <input id="monta_leadingstock_montapacking" type="radio" name="monta_leadingstock"
-                               value="montapacking" <?php checked('montapacking', get_option('monta_leadingstock')); ?>/>
-                        <label for="monta_leadingstock_montapacking">Montapacking</label>
-
-
-                        <input id="monta_leadingstock_woocommerce" type="radio" name="monta_leadingstock"
-                               value="woocommerce" <?php checked('woocommerce', get_option('monta_leadingstock')); ?>/>
-                        <label for="monta_leadingstock_woocommerce">WooCommerce</label>
-
-
-                        <br><i style="font-size:12px">Which stock is leading for the delivery days calculation</i>
-                    </td>
-                </tr>
+                <input type="hidden" name="monta_leadingstock" value="woocommerce">
 
             </table>
 
@@ -286,52 +279,12 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
             </table>
-
             <?php submit_button(); ?>
-
         </form>
     </div>
     <?php
 }
 
-/*
-function filter_woocommerce_order_shipping_to_display_shipped_via($html, $instance)
-{
-
-    $json = json_decode($instance);
-
-
-    $order = wc_get_order($json->id);
-
-    $line_items_shipping = $order->get_items('shipping');
-
-    $method = (string)$order->get_shipping_method();
-
-    // Loop through order items
-    foreach ($line_items_shipping as $item_id => $item) {
-
-        $meta_data = $item->get_meta_data();
-
-        foreach ($meta_data as $value) {
-
-            if ($value->key == 'Shipmentmethod') {
-
-                $method = strip_tags($value->value);
-
-                if ($value->value == 'SEL,SELBuspakje') {
-                    $method = strip_tags('DHL Parcel');
-                }
-            }
-
-            if ($value->key == 'Pickup Data') {
-                $method = strip_tags($value->value['description']);
-            }
-        }
-    }
-
-    return "&nbsp;<small class='shipped_via'>" . sprintf(__('via %s', 'woocommerce'), esc_attr($method)) . "</small>";
-}
-*/
 function filter_woocommerce_order_shipping_method($html, $instance)
 {
     $json = json_decode($instance);
@@ -369,8 +322,3 @@ function filter_woocommerce_order_shipping_method($html, $instance)
 
     return implode(', ', $names);
 }
-
-
-
-
-

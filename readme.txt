@@ -3,8 +3,8 @@ Contributors: montapacking
 Donate link: 
 Tags: montapacking, checkout, woocommerce, extension, monta
 Requires at least: 4.0.1
-Tested up to: 5.4
-Stable tag: 1.26
+Tested up to: 5.7.2
+Stable tag: 1.32
 Requires PHP: 5.6
 License: GPLv3 or later License
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -54,6 +54,14 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 
 == Changelog ==
+
+#1.28
+
+* PHP 8 compatible
+* Added Budbee Logo
+* Added default start value for price in shopping cart in stead of using the default 'no-connection' price
+* Removed the 'leading stock' option in de the settings, woocommerce is always leading now
+* Code cleanup
 
 
 == Upgrade Notice ==

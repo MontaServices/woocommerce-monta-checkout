@@ -220,7 +220,7 @@ class MontapackingShipping
 
     }
 
-    public function getShippingOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false)
+    public function getShippingOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false, $skus = array())
     {
 
         ## Basis gegevens uitbreiden met shipping option specifieke data
@@ -235,8 +235,15 @@ class MontapackingShipping
 
         $timeframes = null;
 
+        if (count($skus))
+        {
+            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products'], $skus);
+        }
+        else{
+            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products']);
+        }
         ## Timeframes omzetten naar bruikbaar object
-        $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products']);
+
 
         if (trim($this->address->postalcode) && (trim($this->address->housenumber) || trim($this->address->street))) {
 
@@ -264,9 +271,8 @@ class MontapackingShipping
 
     }
 
-    public function call($method, $send = null)
+    public function call($method, $send = null, $skus = array())
     {
-
         $request = '?';
         if ($send != null) {
 
@@ -290,6 +296,14 @@ class MontapackingShipping
 
         }
 
+
+        if (count($skus)){
+            foreach ($skus as $key => $value)
+            {
+                $request .= "&Products[".$key."].Sku=".$value;
+            }
+        }
+
         $method = strtolower($method);
 
         $url = "https://api.montapacking.nl/rest/v5/" . $method;
@@ -301,6 +315,7 @@ class MontapackingShipping
         }
 
         $this->requesturl = $url.$request;
+
         $this->pass = htmlspecialchars_decode($this->pass);
 
         $ch = curl_init();
