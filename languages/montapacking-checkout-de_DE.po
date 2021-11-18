@@ -113,8 +113,8 @@ msgstr "Suche"
 msgid "Use selection"
 msgstr "Auswahl verwenden"
 
-msgid "Free shipping"
-msgstr "Kostenloser Versand"
+msgid "Free of charge"
+msgstr "Kostenlos"
 
 msgid "evening delivery"
 msgstr "Abendlieferung"

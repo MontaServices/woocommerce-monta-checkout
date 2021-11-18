@@ -70,9 +70,18 @@ class MontaCheckout_PickupPoint
                 }
             }
 
+            $name = $details->Company;
+            $override = esc_attr(get_option('monta_pickupname'));;
+
+            if ($details->Code == 'AFH' && trim($override))
+            {
+                $name = $override;
+
+            }
+
             $pickup = (object)[
                 'code' => $details->Code,
-                'name' => $details->Company,
+                'name' => $name,
                 'street' => $details->Street,
                 'houseNumber' => $details->HouseNumber,
                 'zipcode' => $details->PostalCode,

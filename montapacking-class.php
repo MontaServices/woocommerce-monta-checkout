@@ -404,7 +404,7 @@ class Montapacking
                 <?php
             } else if ($price == 0) {
                 ?>
-                <td><?php echo translate('Free shipping', 'montapacking-checkout') ?></td>
+                <td><?php echo translate('Free of charge', 'montapacking-checkout') ?></td>
                 <?php
             }
             ?>
@@ -558,7 +558,8 @@ class Montapacking
             if (trim($start)) {
                 return $start;
             } else {
-                return $default;
+                //return $default;
+                return;
             }
 
         }

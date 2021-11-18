@@ -112,8 +112,8 @@ msgstr "Zoeken"
 msgid "Use selection"
 msgstr "Gebruik selectie"
 
-msgid "Free shipping"
-msgstr "Gratis verzending"
+msgid "Free of charge"
+msgstr "Gratis"
 
 msgid "evening delivery"
 msgstr "avondlevering"

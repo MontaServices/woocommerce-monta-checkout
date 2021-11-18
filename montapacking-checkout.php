@@ -36,6 +36,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_password');
     register_setting('montapacking-plugin-settings', 'monta_google_key');
     register_setting('montapacking-plugin-settings', 'monta_logerrors');
+    register_setting('montapacking-plugin-settings', 'monta_pickupname');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts_start');
     register_setting('montapacking-plugin-settings', 'monta_leadingstock');
@@ -265,6 +266,14 @@ function montacheckout_render_settings()
                 </tr>
 
                 <input type="hidden" name="monta_leadingstock" value="woocommerce">
+
+                <tr>
+                    <th scope="row"><label for="monta_pickupname">Pickup name</label></th>
+                    <td><input type="text" name="monta_pickupname"
+                               value="<?php echo esc_attr(get_option('monta_pickupname')); ?>" size="50"/>
+                        <br><i style="font-size:12px">In some situations you want to change the company name of the option 'AFH'. Here you can override this name.</i>
+                    </td>
+                </tr>
 
             </table>
 
