@@ -178,7 +178,7 @@ class MontapackingShipping
     }
 
 
-    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false)
+    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false,$skus = array())
     {
 
 
@@ -197,7 +197,16 @@ class MontapackingShipping
         $this->address->setLongLat($this->googlekey);
 
         ## Timeframes omzetten naar bruikbaar object
-        $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers']);
+
+
+        if (count($skus))
+        {
+            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers'], $skus);
+        }
+        else{
+            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers']);
+        }
+
         if (isset($result->Timeframes)) {
 
             ## Shippers omzetten naar shipper object

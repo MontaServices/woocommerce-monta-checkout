@@ -678,7 +678,7 @@ jQuery(document).ready(function() {
 
                             var html = templateShipper;
                             html = html.replace(/{.code}/g, realCode);
-                            html = html.replace(/{.img}/g, '<img src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + code + '.png">');
+                            html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + code + '.png">');
                             html = html.replace(/{.name}/g, item.name);
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
@@ -690,6 +690,10 @@ jQuery(document).ready(function() {
                             if (code != 'TBQ') {
                                 shippers.append(html);
                             }
+
+                            $(".loadedLogo").on("error", function() {
+                                $(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/none.png");
+                            });
 
                         });
 

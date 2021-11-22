@@ -851,7 +851,15 @@ class Montapacking
 
         } else if ($type == 'pickup') {
 
-            return $api->getPickupOptions($bStockStatus);
+            if (esc_attr(get_option('monta_checkproductsonsku'))) {
+                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
+            }
+            else
+            {
+                return $api->getPickupOptions($bStockStatus);
+            }
+
+          
 
         }
 
