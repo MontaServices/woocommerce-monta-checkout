@@ -3,7 +3,7 @@
  * Plugin Name: Montapacking Checkout WooCommerce Extension
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Montapacking Check-out extension
- * Version: 1.32
+ * Version: 1.33
  * Author: Montapacking
  * Author URI: https://www.montapacking.nl/
  * Developer: Montapacking
@@ -42,6 +42,10 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_leadingstock');
     register_setting('montapacking-plugin-settings', 'monta_disablepickup');
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
+    register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
+
+
+
 
 
 });
@@ -272,6 +276,14 @@ function montacheckout_render_settings()
                     <td><input type="text" name="monta_pickupname"
                                value="<?php echo esc_attr(get_option('monta_pickupname')); ?>" size="50"/>
                         <br><i style="font-size:12px">In some situations you want to change the company name of the option 'AFH'. Here you can override this name.</i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_standardshipmentname">Standard shipment name</label></th>
+                    <td><input type="text" name="monta_standardshipmentname"
+                               value="<?php echo esc_attr(get_option('monta_standardshipmentname')); ?>" size="50"/>
+                        <br><i style="font-size:12px">We have a standard shipment option in the Montaportal. Here you can override this name.</i>
                     </td>
                 </tr>
 

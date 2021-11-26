@@ -20,6 +20,12 @@ class MontaCheckout_ShippingOption
     public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $mailbox, $price, $currency, $from, $to, $extras, $date)
     {
 
+        $override = esc_attr(get_option('monta_standardshipmentname'));;
+
+        if ($code == 'MultipleShipper_ShippingDayUnknown' && trim($override)) {
+            $description = $override;
+        }
+
         $this->setCode($code);
         $this->setCodes($codes);
         $this->setOptionCodes($optioncodes);

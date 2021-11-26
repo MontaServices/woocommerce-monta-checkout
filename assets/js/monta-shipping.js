@@ -483,7 +483,8 @@ jQuery(document).ready(function() {
 
                                         });
 
-                                        if ($("#initialPickupsList").children().length === 3) {
+                                        //if ($("#initialPickupsList").children().length === 3) {
+                                        if ($("#initialPickupsList").children().length > 0) {
 
                                             $("#monta-pickups").show(100);
 
