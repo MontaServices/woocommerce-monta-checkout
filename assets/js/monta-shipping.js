@@ -335,6 +335,12 @@ jQuery(document).ready(function() {
 
                                         // to disable client fix enable line below here
                                         showhtml = true;
+
+
+                                        if (key == 'NOTIMES' && daysavailablecounter > 1) {
+                                            showhtml = false;
+                                        }
+
                                         if (showhtml == true) {
                                             times.append(html);
                                         }
@@ -895,6 +901,10 @@ jQuery(document).ready(function() {
         if (datetime.trim()) {
             jQuery(".timeinformation").css("display", "block");
         }
+
+        jQuery(".monta-times-croppped").find(".loadedLogo").on("error", function() {
+            jQuery(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/none.png");
+        });
     }
 
 
