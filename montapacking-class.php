@@ -288,14 +288,14 @@ class Montapacking
 
                 switch ($shipment['type']) {
                     case 'delivery':
-                        $arr[] = "No shippers available for the chosen delivery address";
+                        $arr[] = "1 - No shippers available for the chosen delivery address";
                         $arr = implode("\n\r", $arr);
-                        $item->add_meta_data('No shippers available for the chosen delivery address', $arr, true);
+                        $item->add_meta_data('1 - No shippers available for the chosen delivery address', $arr, true);
                         break;
                     case 'pickup':
-                        $arr[] = "No pickups available for the chosen delivery address";
+                        $arr[] = "2 - No pickups available for the chosen delivery address";
                         $arr = implode("\n\r", $arr);
-                        $item->add_meta_data('No pickup address chosen ', $arr, true);
+                        $item->add_meta_data('2 - No pickup address chosen ', $arr, true);
                         break;
                 }
             }
@@ -596,12 +596,9 @@ class Montapacking
                         header('Content-Type: application/json');
                         echo json_encode([
                             'success' => false,
-                            'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
+                            'message' => translate('3 - No shippers available for the chosen delivery address.', 'montapacking-checkout')
                         ]);
 
-                        //$logger = wc_get_logger();
-                        //$context = array('source' => 'Montapacking Checkout');
-                        //$logger->notice('No shippers available for the chosen delivery address', $context);
                     }
 
                 } else {
@@ -609,13 +606,8 @@ class Montapacking
                     header('Content-Type: application/json');
                     echo json_encode([
                         'success' => false,
-                        'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
+                        'message' => translate('4 - No shippers available for the chosen delivery address.', 'montapacking-checkout')
                     ]);
-
-                    //$logger = wc_get_logger();
-                    //$context = array('source' => 'Montapacking Checkout');
-                    //$logger->notice('No shippers available for the chosen delivery address', $context);
-
                 }
 
                 break;

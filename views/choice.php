@@ -29,6 +29,8 @@
 
 </script>
 
+<input id="maxpickuppoints" type="hidden" name="maxpickuppoints" value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')) ; ?>">
+
 
 <div class="woocommerce-shipping-fields montapacking-shipping">
 

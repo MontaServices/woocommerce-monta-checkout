@@ -375,6 +375,7 @@ jQuery(document).ready(function() {
                                 var markers = [];
 
                                 $('#category-filters').html('');
+
                                 $.each(monta_shipping.pickups, function(key, item) {
 
                                     var openingtimes = JSON.parse(item.details.openingtimes);
@@ -421,7 +422,7 @@ jQuery(document).ready(function() {
                                 $('#monta-stores').storeLocator('reset');
 
                                 var config = {
-                                    //'debug': true,
+                                    'debug': false,
                                     'pagination': false,
                                     'infowindowTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/infowindow-description.html',
                                     'listTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/list-location.html',
@@ -448,9 +449,6 @@ jQuery(document).ready(function() {
                                     callbackMarkerClick: function(marker, markerId, $selectedLocation, location) {
 
                                         monta_shipping.selectPickup(location, markerId);
-
-                                        initialPickupRadio
-
                                     },
                                     callbackListClick: function(markerId, selectedMarker, location) {
 
@@ -459,8 +457,6 @@ jQuery(document).ready(function() {
                                     },
                                     callbackNotify: function(notifyText) {
 
-                                        // Show error message
-                                        //console.log(notifyText);
 
                                         monta_shipping.storeLocatorDestroy();
 
@@ -473,7 +469,7 @@ jQuery(document).ready(function() {
 
                                     if ($("#initialPickupsList").length) {
 
-                                        $('#initialPickupsList li:gt(2)').remove();
+                                        $('#initialPickupsList li:gt('+($("#maxpickuppoints").val()-1)+')').remove();
 
                                         //Add radio buttons for initial pickups
                                         $("#initialPickupsList  > li").each(function() {
@@ -579,7 +575,7 @@ jQuery(document).ready(function() {
 
 
                         $('.monta-pickup-selected').html(html);
-                        if (markerId > 2) {
+                        if (markerId > ($("#maxpickuppoints").val()-1)) {
                             $('.monta-pickup-selected').show();
                             $('.monta-pickup-selected-title').show();
                             $('.monta-selected-pickup').show();
@@ -808,7 +804,7 @@ jQuery(document).ready(function() {
 
                         if ($("#initialPickupsList").length) {
 
-                            $('#initialPickupsList li:gt(2)').remove();
+                            $('#initialPickupsList li:gt('+($("#maxpickuppoints").val()-1)+')').remove();
 
                             //Add radio buttons for initial pickups
                             $("#initialPickupsList  > li").each(function() {
@@ -817,7 +813,7 @@ jQuery(document).ready(function() {
 
                             });
 
-                            if ($("#initialPickupsList").children().length === 3) {
+                            if ($("#initialPickupsList").children().length > 0) {
 
                                 $("#monta-pickups").show(100);
 

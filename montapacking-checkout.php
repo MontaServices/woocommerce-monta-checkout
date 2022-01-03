@@ -43,6 +43,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_disablepickup');
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
     register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
+    register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
 
 
 
@@ -106,7 +107,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     add_action( 'woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping' );
     add_action("woocommerce_removed_coupon", 'updatecheckout');
     add_action("woocommerce_applied_coupon", 'updatecheckout');
-    
+
 
 } else {
 
@@ -198,32 +199,32 @@ function montacheckout_render_settings()
             <h1>Montapacking Checkout WooCommerce Extension Settings</h1>
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="monta_shop">Shop</label></th>
+                    <th scope="row"><label for="monta_shop">Shop * </label></th>
                     <td><input required type="text" name="monta_shop"
                                value="<?php echo esc_attr(get_option('monta_shop')); ?>" size="50"/>
                         <br><i style="font-size:12px">The name of the webshop in Monta Portal. Name can be found <a
-                                    target="_new" href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a></i>
+                                    target="_new" href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a>.</i>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_username">Username</label></th>
+                    <th scope="row"><label for="monta_username">Username * </label></th>
                     <td><input required type="text" name="monta_username"
                                value="<?php echo esc_attr(get_option('monta_username')); ?>" size="50"/>
-                        <br><i style="font-size:12px">The username of Monta REST API provided by Montapacking .</i>
+                        <br><i style="font-size:12px">The username of Monta REST API provided by Montapacking.</i>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_password">Password</label></th>
+                    <th scope="row"><label for="monta_password">Password * </label></th>
                     <td><input required type="password" name="monta_password"
                                value="<?php echo esc_attr(get_option('monta_password')); ?>" size="50"/>
-                        <br><i style="font-size:12px">The password of Monta REST API provided by Montapacking .</i>
+                        <br><i style="font-size:12px">The password of Monta REST API provided by Montapacking.</i>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_shippingcosts">Shipping Costs</label></th>
+                    <th scope="row"><label for="monta_shippingcosts">Shipping Costs *</label></th>
                     <td>
                         <input required type="number" name="monta_shippingcosts" step="0.01"
                                value="<?php echo esc_attr(get_option('monta_shippingcosts')); ?>" size="5"/>
@@ -234,7 +235,7 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_shippingcosts_start">Start shipping Costs</label></th>
+                    <th scope="row"><label for="monta_shippingcosts_start">Start shipping Costs *</label></th>
                     <td>
                         <input required type="number" name="monta_shippingcosts_start" step="0.01"
                                value="<?php echo esc_attr(get_option('monta_shippingcosts_start')); ?>" size="5"/>
@@ -248,6 +249,7 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_checkproductsonsku">Check products on SKU</label></th>
                     <td><input type="checkbox" name="monta_checkproductsonsku"
                                value="1" <?php checked('1', get_option('monta_checkproductsonsku')); ?>/>
+                        <br><i style="font-size:12px">If this option is active, the stock, sizes and weights of the SKUs are checked with the data known in the Montaportal.</i>
                     </td>
                 </tr>
 
@@ -256,7 +258,7 @@ function montacheckout_render_settings()
                     <td><input type="checkbox" name="monta_logerrors"
                                value="1" <?php checked('1', get_option('monta_logerrors')); ?>/>
                         <br><i style="font-size:12px">Turn on logs which are shown <a
-                                    href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a></i>
+                                    href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a>.</i>
                     </td>
                 </tr>
 
@@ -265,7 +267,18 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_disablepickup">Disable pickup points</label></th>
                     <td><input type="checkbox" name="monta_disablepickup"
                                value="1" <?php checked('1', get_option('monta_disablepickup')); ?>/>
-                        <br><i style="font-size:12px">When disabled no pickup points are shown</i>
+                        <br><i style="font-size:12px">When disabled no pickup points are shown.</i>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row"><label for="monta_max_pickuppoints">Max pickup points *</label></th>
+                    <td>
+                        <input required type="number" name="monta_max_pickuppoints" step="1" min="1" max="10"
+                               value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')) ; ?>" size="5"/>
+                        <br><i style="font-size:12px">The number of pickupoints shown in the overview view</i>
+                    </td>
                     </td>
                 </tr>
 
@@ -295,8 +308,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_google_key">API Key</label></th>
                     <td><input required type="text" name="monta_google_key"
                                value="<?php echo esc_attr(get_option('monta_google_key')); ?>" size="50"/>
-                        <br><i style="font-size:12px">A Google API key is required for this plug-in. Key can be created
-                            <a target="_new" href="https://console.cloud.google.com/">here</a></i>
+                        <br><i style="font-size:12px">A Google API key is required if you want to make use of the world map. A Google key can be created
+                            <a target="_new" href="https://console.cloud.google.com/">here</a>.</i>
                     </td>
                 </tr>
             </table>

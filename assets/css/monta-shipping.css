@@ -356,7 +356,7 @@ body.monta-cover-open {
 }
 .monta-locations ul.list li.list-focus {
     background: #79898C;
-    color: #fff;
+   border: 1px solid #000;
 }
 #monta-stores {
     display: table !important;

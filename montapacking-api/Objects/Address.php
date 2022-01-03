@@ -30,7 +30,7 @@ class MontaCheckout_Address
     public function setLongLat($key = null)
     {
 
-        if ($key != null) {
+        if ($key != null && trim($key)) {
 
             // Get lat and long by address
             $address = $this->street . ' ' . $this->housenumber . ' ' . $this->housenumberaddition . ', ' . $this->postalcode . ' ' . $this->countrycode . ''; // Google HQ
