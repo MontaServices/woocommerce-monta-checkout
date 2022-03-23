@@ -135,16 +135,24 @@
                                id="initialPickupRadioDummy">
                     </div>
 
-                    <a class="monta-more-pickup-points"><?php _e('Show more options', 'montapacking-checkout'); ?></a>
+                    <div class="monta-pickup-selected"></div>
+
+                    <div id="PCPostNummer" >
+                        <label for="DHLPCPostNummer" class="">Postnummer&nbsp;<abbr class="required" title="verplicht">*</abbr></label>
+                        <input type="text" id="DHLPCPostNummer" name="montapacking[pickup][postnumber]" value="" style="width:100%" disabled="disabled">
+                    </div>
+
+
+                    <p><a class="monta-more-pickup-points"><?php _e('Show more options', 'montapacking-checkout'); ?></a></p>
+
                 </div>
 
             </div>
         </div>
 
 
-        <span class="monta-pickup-selected-title" style="display:none"><?php _e('Selected pickup point', 'montapacking-checkout'); ?></span><br>
+        <!--span class="monta-pickup-selected-title" style="display:none"><?php _e('Selected pickup point', 'montapacking-checkout'); ?></span><br>-->
 
-        <div class="monta-pickup-selected"></div>
 
         <input id="montapackingpickupcode" type="hidden" name="montapacking[pickup][code]"
                class="monta-pickup-input-code monta-pickup-fields">
@@ -196,10 +204,10 @@
         </div>
 
         <div class="information">
-			{.name}
+            {.name}
         </div>
         <div class="pricemonta">
-           {.price}
+            {.price}
         </div>
         <div class="clearboth"></div>
     </label>

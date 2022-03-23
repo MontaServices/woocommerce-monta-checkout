@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: Montapacking Checkout WooCommerce Extension
+ * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
- * Description: Montapacking Check-out extension
- * Version: 1.33
- * Author: Montapacking
- * Author URI: https://www.montapacking.nl/
- * Developer: Montapacking
- * Developer URI: https://www.montapacking.nl/
+ * Description: Monta Check-out extension
+ * Version: 1.36
+ * Author: Monta
+ * Author URI: https://www.monta.nl/
+ * Developer: Monta
+ * Developer URI: https://www.monta.nl/
  * Text Domain: montapacking-checkout-woocommerce-extension
  * Domain Path: /languages
  *
@@ -196,7 +196,7 @@ function montacheckout_render_settings()
             settings_fields('montapacking-plugin-settings');
             do_settings_sections('montapacking-plugin-settings');
             ?>
-            <h1>Montapacking Checkout WooCommerce Extension Settings</h1>
+            <h1>Monta Checkout</h1>
             <table class="form-table">
                 <tr>
                     <th scope="row"><label for="monta_shop">Shop * </label></th>

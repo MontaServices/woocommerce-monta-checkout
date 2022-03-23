@@ -46,6 +46,11 @@ class Montapacking
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
 
+
+                if (isset($pickup) &&  isset($pickup['postnumber']) && trim($pickup['postnumber']) == '') {
+                    $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
+                }
+
                 break;
         }
 
@@ -178,6 +183,18 @@ class Montapacking
                 $order->set_shipping_postcode($pickup['postal']);
                 $order->set_shipping_city($pickup['city']);
                 $order->set_shipping_country($pickup['country']);
+
+                // post nummer voor duitsland
+                if ($pickup['postnumber'] && trim($pickup['postnumber']))
+                {
+                    if (isset($pickup['shippingOptions'])) {
+                       $pickup['shippingOptions'] = $pickup['shippingOptions'].",DHLPCPostNummer_".$pickup['postnumber'] ;
+                    } else {
+                        $pickup['shippingOptions'] = "DHLPCPostNummer_".pickup['postnumber'];
+                    }
+                    unset($pickup['postnumber']);
+                }
+
 
                 $item->add_meta_data('Pickup Data', $pickup, true);
 

@@ -328,6 +328,7 @@ class MontapackingShipping
 
         $this->pass = htmlspecialchars_decode($this->pass);
 
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
         curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
@@ -352,8 +353,8 @@ class MontapackingShipping
 
             if (null !== $this->logger) {
                 $logger = $this->logger;
-                $context = array('source' => 'Montapacking Checkout');
-                $logger->critical("Webshop was unable to connect to Montapacking REST api. Retry #1 is starting in 3 seconds", $context);
+                $context = array('source' => 'Monta Checkout');
+                $logger->critical("Webshop was unable to connect to Monta REST api. Retry #1 is starting in 1 seconds", $context);
             }
 
             sleep(3);
@@ -372,69 +373,18 @@ class MontapackingShipping
             $result = json_decode($result);
         }
 
-
-        if (null === $result) {
-
-            if (null !== $this->logger) {
-                $logger = $this->logger;
-                $context = array('source' => 'Montapacking Checkout');
-                $logger->critical("Webshop was unable to connect to Montapacking REST api. Retry #2 is starting in 5 seconds", $context);
-            }
-
-            sleep(5);
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
-            curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_VERBOSE, true);
-            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $result = json_decode($result);
-        }
-
-        if (null === $result) {
-
-            if (null !== $this->logger) {
-                $logger = $this->logger;
-                $context = array('source' => 'Montapacking Checkout');
-                $logger->critical("Webshop was unable to connect to Montapacking REST api. Retry #3 is starting in 10 seconds", $context);
-            }
-
-            sleep(10);
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url . '?' . $request);
-            curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->pass);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_VERBOSE, true);
-            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $result = json_decode($result);
-        }
-
         if (null !== $this->logger && null === $result) {
             $logger = $this->logger;
-            $context = array('source' => 'Montapacking Checkout');
-            $logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context);
+            $context = array('source' => 'Monta Checkout');
+            $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta", $context);
         }
-
-
 
         if (null !== $this->logger && $result->Warnings) {
 
             foreach ($result->Warnings as $warning) {
 
                 $logger = $this->logger;
-                $context = array('source' => 'Montapacking Checkout');
+                $context = array('source' => 'Monta Checkout');
 
                 if (null !== $warning->ShipperCode) {
                     $logger->notice($warning->ShipperCode . " - " . $warning->Message, $context);
@@ -450,7 +400,7 @@ class MontapackingShipping
 
             foreach ($result->Notices as $notice) {
                 $logger = $this->logger;
-                $context = array('source' => 'Montapacking Checkout');
+                $context = array('source' => 'Monta Checkout');
 
                 if (null !== $notice->ShipperCode) {
                     $logger->notice($notice->ShipperCode . " - " . $notice->Message, $context);
@@ -468,7 +418,7 @@ class MontapackingShipping
                 foreach ($impossibleoption->Reasons as $reason) {
 
                     $logger = $this->logger;
-                    $context = array('source' => 'Montapacking Checkout');
+                    $context = array('source' => 'Monta Checkout');
                     $logger->notice($impossibleoption->ShipperCode . " - " . $reason->Code . " | " . $reason->Reason, $context);
                 }
             }

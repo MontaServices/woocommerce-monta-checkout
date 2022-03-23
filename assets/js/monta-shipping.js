@@ -469,7 +469,7 @@ jQuery(document).ready(function() {
 
                                     if ($("#initialPickupsList").length) {
 
-                                        $('#initialPickupsList li:gt('+($("#maxpickuppoints").val()-1)+')').remove();
+                                        $('#initialPickupsList li:gt(' + ($("#maxpickuppoints").val() - 1) + ')').remove();
 
                                         //Add radio buttons for initial pickups
                                         $("#initialPickupsList  > li").each(function() {
@@ -567,24 +567,49 @@ jQuery(document).ready(function() {
 
                         //initialPickupPointRadio
                         var loc = monta_shipping.pickup_selected;
-                        var html = '<strong>' + loc.name + '</strong><br />';
-                        html += '<span style="font-style: italic"!important;">' + loc.description + '</span><br />';
-                        html += '' + loc.street + ' ' + loc.houseNumber + '<br />';
-                        html += '' + loc.postal + ' ' + loc.city;
-                        html += '<span class="pricemonta">&euro; ' + loc.price + '</span>';
+   
+                        var n = loc.raw.shipperOptionsWithValue.includes("_packStation");
+                        var m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
+
+                        if (n && !m) {
+                            $("#PCPostNummer").css("display", "block");
+                            $("#PCPostNummer input").removeAttr("disabled");
+
+                        } else {
+                            $("#PCPostNummer").css("display", "none");
+                            $("#PCPostNummer input").attr("disabled", "disabled");
+                        }
+
+                        var imageUrl = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + loc.raw.code + ".png"
+
+                        var html = '';
+                        html += '<div class="loadedimage"><img src="' + imageUrl + '" style="width:30px;"></div>';
+                        html += '<div class="loadedinformation">';
+                        html += '<strong>' + loc.name + '</strong><br />';
+                        html += loc.description + '<br />';
+                        html += loc.street + ' ' + loc.houseNumber + '<br />';
+                        html += loc.postal + ' ' + loc.city;
+                        html += '</div>';
+                        html += '<div class="loadedprice">&euro; ' + loc.price + '</div>';
+                        html += '<div class="clear"></div>';
 
 
                         $('.monta-pickup-selected').html(html);
-                        if (markerId > ($("#maxpickuppoints").val()-1)) {
+                        if (markerId > ($("#maxpickuppoints").val() - 1)) {
                             $('.monta-pickup-selected').show();
                             $('.monta-pickup-selected-title').show();
                             $('.monta-selected-pickup').show();
 
+                            $(".bh-sl-loc-list").hide();
+                            $("#monta-stores .bh-sl-loc-list").show();
 
                         } else {
                             $('.monta-pickup-selected').hide();
                             $('.monta-pickup-selected-title').hide();
                             $('.monta-selected-pickup').hide();
+
+                            $(".bh-sl-loc-list").show();
+                            $("#monta-stores .bh-sl-loc-list").show();
                         }
 
                         $('.monta-shipment-pickup').addClass('active');
@@ -804,7 +829,7 @@ jQuery(document).ready(function() {
 
                         if ($("#initialPickupsList").length) {
 
-                            $('#initialPickupsList li:gt('+($("#maxpickuppoints").val()-1)+')').remove();
+                            $('#initialPickupsList li:gt(' + ($("#maxpickuppoints").val() - 1) + ')').remove();
 
                             //Add radio buttons for initial pickups
                             $("#initialPickupsList  > li").each(function() {
@@ -924,6 +949,4 @@ jQuery(document).ready(function() {
             jQuery(".monta-times-extended").css('display', "none");
         }
     });
-
-
 });

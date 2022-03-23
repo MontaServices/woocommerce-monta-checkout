@@ -247,22 +247,29 @@ body.monta-cover-open {
     padding: 10px 0px;
     font-size: 14px;
 }
-.monta-shipment-shipper label div.image {
+.monta-shipment-shipper label div.image, .loadedimage {
     width: 50px;
     float: left;
 }
-.monta-shipment-shipper label div.image img {
+.loadedimage {
+    margin-top: 16px;
+}
+.monta-shipment-shipper label div.image img, .loadedimage img {
     width: 30px;
     margin-left: 10px;
     height: 30px;
 }
-.monta-shipment-shipper label div.information {
+.monta-shipment-shipper label div.information, .loadedinformation {
     width: calc(100% - 110px);
     float: left;
     font-size: 14px;
     line-height:30px;
 }
-.monta-shipment-shipper label div.pricemonta {
+
+.loadedinformation {
+    line-height:20px !important;
+}
+.monta-shipment-shipper label div.pricemonta, .loadedprice {
     width: 50px;
     float: right;
     text-align: right;
@@ -308,6 +315,7 @@ body.monta-cover-open {
 .monta-pickup-selected {
     position: relative;
     display: none;
+    border: 1px solid #79898C;
 }
 .monta-locations {
     width: 30%;
@@ -356,7 +364,7 @@ body.monta-cover-open {
 }
 .monta-locations ul.list li.list-focus {
     background: #79898C;
-   border: 1px solid #000;
+    border: 1px solid #000;
 }
 #monta-stores {
     display: table !important;
@@ -488,4 +496,8 @@ input[name=initialPickupPointRadio] {
         margin-top: 0px;
     !important;
     }
+}
+
+#PCPostNummer {
+    display: none;
 }

@@ -130,3 +130,6 @@ msgstr "Schiffe weiter"
 
 msgid "from the Netherlands"
 msgstr "aus den Niederlanden"
+
+msgid "Please enter a postal number, this is mandatory for this pick-up option"
+msgstr "Bitte geben Sie eine Postnummer an, diese ist für diese Abholoption zwingend erforderlich"

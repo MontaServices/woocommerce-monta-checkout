@@ -1,10 +1,10 @@
-=== Montapacking Checkout WooCommerce Extension ===
-Contributors: montapacking
+=== Monta Checkout ===
+Contributors: monta
 Donate link: 
-Tags: montapacking, checkout, woocommerce, extension, monta
+Tags: monta, checkout, woocommerce, extension, monta
 Requires at least: 4.0.1
 Tested up to: 5.7.2
-Stable tag: 1.33
+Stable tag: 1.36
 Requires PHP: 5.6
 License: GPLv3 or later License
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -13,7 +13,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-WooCommerce plugin to integrate the Montapacking shipping options
+WooCommerce plugin to integrate the Monta shipping options
 
 == Installation ==
 
@@ -27,9 +27,9 @@ WooCommerce plugin to integrate the Montapacking shipping options
 
 # Configuration
 
-Montapacking API Settings: 
+Monta API Settings:
 
-* Specify your username and password for the Montapackings API here
+* Specify your username and password for the Monta's API here
 
 Google API:
 
@@ -39,7 +39,7 @@ This key is needed for the map with pickup points.
 
 * Webshop/Origin:
 
-Name of your webshop as known by Montapacking. This determines which shippers are allowed, cutofftime etc.
+Name of your webshop as known by Monta. This determines which shippers are allowed, cutofftime etc.
 
 
 * Enable shippers:
@@ -55,14 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
-#1.28
+#1.35
 
-* PHP 8 compatible
-* Added Budbee Logo
-* Added default start value for price in shopping cart in stead of using the default 'no-connection' price
-* Removed the 'leading stock' option in de the settings, woocommerce is always leading now
-* Code cleanup
-
+* Added postnumber validation for DHL packstations in Germany
+* Layout change in pickup points
 
 == Upgrade Notice ==
 
