@@ -192,7 +192,7 @@ class MontapackingShipping
             'ShipmentFitsThroughDutchMailbox' => $mailboxfit,
         ]);
 
-        $this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore', 'AFH'];
+        $this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore', 'AFH', 'UPSAP'];
 
         $this->address->setLongLat($this->googlekey);
 
