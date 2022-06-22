@@ -4,7 +4,7 @@ Donate link:
 Tags: monta, checkout, woocommerce, extension, monta
 Requires at least: 4.0.1
 Tested up to: 5.7.2
-Stable tag: 1.39
+Stable tag: 1.40
 Requires PHP: 5.6
 License: GPLv3 or later License
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -59,6 +59,14 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 * Added postnumber validation for DHL packstations in Germany
 * Layout change in pickup points
+
+#1.39
+
+* German language fix
+
+#1.40
+
+* Added PostNL Pakjes Tracked
 
 == Upgrade Notice ==
 
