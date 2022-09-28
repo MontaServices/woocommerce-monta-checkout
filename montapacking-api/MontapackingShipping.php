@@ -309,7 +309,7 @@ class MontapackingShipping
         if (count($skus)){
             foreach ($skus as $key => $value)
             {
-                $request .= "&Products[".$key."].Sku=".$value;
+                $request .= "&Products[".$key."].Sku=".$value[0]."&Products[".$key."].Quantity=".$value[1];
             }
         }
 
@@ -324,7 +324,6 @@ class MontapackingShipping
         }
 
         $this->requesturl = $url.$request;
-
 
         $this->pass = htmlspecialchars_decode($this->pass);
 

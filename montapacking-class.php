@@ -800,11 +800,14 @@ class Montapacking
 
             $product = wc_get_product($values['product_id']);
 
+
+
             $sku = $product->get_sku();;
+            $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
 
             if (trim($sku))
             {
-                $skuArray[$x] = $sku;
+                $skuArray[$x] = array($sku, $quantity);
                 $x++;
             }
 
@@ -1315,18 +1318,15 @@ class Montapacking
                 $tax_string_array[] = sprintf('%s %s', $price, WC()->countries->tax_or_vat());
             }
 
-
             if (!empty($tax_string_array)) {
                 $taxable_address = WC()->customer->get_taxable_address();
                 /* translators: %s: country name */
                 $estimated_text = WC()->customer->is_customer_outside_base() && !WC()->customer->has_calculated_shipping() ? sprintf(' ' . __('estimated for %s', 'woocommerce'), WC()->countries->estimated_for_prefix($taxable_address[0]) . WC()->countries->countries[$taxable_address[0]]) : '';
-                $value .= '<small class="includes_tax">('
+                $value .= '<small class="includes_tax">'
                     /* translators: includes tax information */
-                    . esc_html__('includes', 'woocommerce')
-                    . ' '
-                    . wp_kses_post(implode(', ', $tax_string_array))
+                    . sprintf( __( '(includes %s)', 'woocommerce' ), implode( ', ', $tax_string_array ) )
                     . esc_html($estimated_text)
-                    . ')</small>';
+                    . '</small>';
             }
         }
 
