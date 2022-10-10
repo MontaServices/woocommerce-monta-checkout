@@ -172,7 +172,9 @@ function montacheckout_enqueue_scripts()
 function montacheckout_register_session()
 {
     if (!session_id()) {
-        session_start();
+        session_start( [
+            'read_and_close' => true,
+        ] );
     }
 }
 
