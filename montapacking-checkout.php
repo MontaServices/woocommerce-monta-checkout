@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.43
+ * Version: 1.44
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -172,9 +172,7 @@ function montacheckout_enqueue_scripts()
 function montacheckout_register_session()
 {
     if (!session_id()) {
-        session_start( [
-            'read_and_close' => true,
-        ] );
+        session_start();
     }
 }
 
