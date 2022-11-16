@@ -957,7 +957,7 @@ class Montapacking
                         $key = "NOTIMES";
                         $from = '';
 
-                        if (strtotime($option->date) > 0) {
+                        if ($option->date != null && strtotime($option->date) > 0) {
                             $key = strtotime(date("Y-m-d", strtotime($option->date)));
                             $from = date('d-m-Y', strtotime($option->date));
 
@@ -967,10 +967,17 @@ class Montapacking
                         }
 
                         if (!isset($items[$key])) {
+
+                            $dateName = "";
+                            if($key != "NOTIMES")
+                            {
+                                $dateName = translate(date("l", $key));
+                            }
+
                             $items[$key] = (object)[
                                 'code' => $frame->code,
                                 'date' => $from,
-                                'datename' => translate(date("l", $key)),
+                                'datename' => $dateName,
                                 'description' => $frame->description,
                                 'options' => array(),
                             ];
@@ -1102,7 +1109,7 @@ class Montapacking
                         $type = 'deliverydate';
                         $type_text = 'delivered';
 
-                        if (strtotime($option->date) > 0) {
+                        if ($option->date != null && strtotime($option->date) > 0) {
                             $key = strtotime(date("Y-m-d", strtotime($option->date)));
                             $desc = $option->description;
                             $ships_on = "";
@@ -1142,7 +1149,7 @@ class Montapacking
                         ];
 
                         $allow = true;
-                        if (date("Y-m-d", $key) == date("Y-m-d") && $frame->code != 'SameDayDelivery') {
+                        if ($key != "NOTIMES" && date("Y-m-d", $key) == date("Y-m-d") && $frame->code != 'SameDayDelivery') {
                             $allow = false;
                         }
 
@@ -1238,7 +1245,7 @@ class Montapacking
                         $items[$nr] = (object)[
                             'code' => implode(',', $option->codes),
                             'date' => date('d-m-Y', strtotime($option->date)),
-                            'time' => (date('H:i', strtotime($frame->from)) != date('H:i', strtotime($frame->to))) ? date('H:i', strtotime($frame->from)) . '-' . date('H:i', strtotime($frame->to)) : '',
+                            'time' => (date('H:i', $frame->from != null && $frame->to != null && strtotime($frame->from)) != date('H:i', strtotime($frame->to))) ? date('H:i', strtotime($frame->from)) . '-' . date('H:i', strtotime($frame->to)) : '',
                             'description' => $option->description,
                             'details' => $frame->details,
                             'shipperOptionsWithValue' => $shipperOptions,
