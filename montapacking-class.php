@@ -633,11 +633,17 @@ class Montapacking
                 #echo '<pre>';
                 $frames = self::get_frames('pickup');
                 if ($frames !== null) {
-
+                    
                     ## Frames naar handige array zetten
                     $items = self::format_pickups($frames);
                     #print_r($items);
                     if ($items !== null) {
+
+                        if(sanitize_text_field($_POST['pickup-at-warehouse-hidden']) === 'True'){
+                            $items = array_values(array_intersect_key($items, array_flip(array_keys(array_column($items, "code"), "AFH"))));
+                        } else {
+                            $items = array_values(array_diff_key($items, array_flip(array_keys(array_column($items, "code"), "AFH"))));
+                        }
 
                         ## Get order location
                         // Get lat and long by address
@@ -871,7 +877,7 @@ class Montapacking
                 return $api->getPickupOptions($bStockStatus);
             }
 
-          
+
 
         }
 

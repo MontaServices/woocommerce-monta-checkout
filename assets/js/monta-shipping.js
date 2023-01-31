@@ -235,6 +235,15 @@ jQuery(document).ready(function() {
 
                 setMethod: function() {
 
+                    if ($('.monta-options input[type=radio]:checked').val() === "pickup-at-warehouse") {
+                        $('.monta-options input[type=radio]:checked').prop('value', "pickup");
+                        $(".monta-options input[id='pickup-at-warehouse']").prop('checked', true);
+                        $('.monta-options input[type=hidden]').val("True");
+                    } else {
+                        $(".monta-options input[id='pickup-at-warehouse']").prop('value', 'pickup-at-warehouse');
+                        $('.monta-options input[type=hidden]').val("False");
+                    }
+
                     $('.monta-shipment-delivery').removeClass('active');
                     $('.monta-shipment-shipper').html('');
 
@@ -372,6 +381,8 @@ jQuery(document).ready(function() {
                             // Process pickups
                             if (checked === 'pickup') {
 
+                                monta_shipping.storeLocatorDestroy();
+
                                 var markers = [];
 
                                 $('#category-filters').html('');
@@ -441,6 +452,7 @@ jQuery(document).ready(function() {
                                     'taxonomyFilters': {
                                         'category': 'category-filters',
                                     },
+                                    'shippingMethod': $('.monta-options input[type=hidden]').val(),
                                     catMarkers: {
                                         'PAK': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/PostNL.png', 32, 32],
                                         'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHL.png', 32, 32],
@@ -468,7 +480,7 @@ jQuery(document).ready(function() {
                                 var liExists = setInterval(function() {
 
                                     if ($("#initialPickupsList").length) {
-
+                                        
                                         $('#initialPickupsList li:gt(' + ($("#maxpickuppoints").val() - 1) + ')').remove();
 
                                         //Add radio buttons for initial pickups
@@ -487,6 +499,14 @@ jQuery(document).ready(function() {
 
                                         //if ($("#initialPickupsList").children().length === 3) {
                                         if ($("#initialPickupsList").children().length > 0) {
+                                            
+                                            if($('.monta-options input[type=hidden]').val() === 'True'){
+                                                $('.monta-more-pickup-points').hide();
+                                            } 
+                                            else
+                                            {
+                                                $('.monta-more-pickup-points').show();
+                                            }
 
                                             $("#monta-pickups").show(100);
 
@@ -505,7 +525,7 @@ jQuery(document).ready(function() {
                                     }
 
                                 }, 100);
-
+                                
                             }
 
                         } else {

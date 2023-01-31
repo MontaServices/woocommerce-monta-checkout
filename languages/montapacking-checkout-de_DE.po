@@ -27,6 +27,9 @@ msgstr "Wählen Sie eine Versandart."
 msgid "Select a pickup location."
 msgstr "Wählen Sie einen Abholpunkt."
 
+msgid "Pickup at warehouse"
+msgstr "Abholung im Lager"
+
 msgid ""
 "The shipment option(s) you choose are not available at this time, please "
 "select an other option."

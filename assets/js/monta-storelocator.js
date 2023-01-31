@@ -9,7 +9,7 @@
 	}
 
 	// Variables used across multiple methods
-	var $this, map, listTemplate, infowindowTemplate, dataTypeRead, originalOrigin, originalData, originalZoom, dataRequest, searchInput, addressInput, olat, olng, storeNum, directionsDisplay, directionsService, prevSelectedMarkerBefore, prevSelectedMarkerAfter, firstRun, reload;
+	var $this, map, listTemplate, infowindowTemplate, dataTypeRead, originalOrigin, originalData, originalShippingMethod, originalZoom, dataRequest, searchInput, addressInput, olat, olng, storeNum, directionsDisplay, directionsService, prevSelectedMarkerBefore, prevSelectedMarkerAfter, firstRun, reload;
 	var featuredset = [], locationset = [], normalset = [], markers = [];
 	var filters = {}, locationData = {}, GeoCodeCalc = {}, mappingObj = {};
 
@@ -1855,7 +1855,7 @@
 					}
 				}
 			}
-
+			
 			// Create the array
 			if (this.settings.maxDistance === true && typeof maxDistance !== 'undefined' && maxDistance !== null) {
 				if (data.distance <= maxDistance) {
@@ -2679,7 +2679,8 @@
 				originPoint = new google.maps.LatLng(orig_lat, orig_lng);
 
 				// If the origin hasn't changed use the existing data so we aren't making unneeded AJAX requests
-				if ((typeof originalOrigin !== 'undefined') && (origin === originalOrigin) && (typeof originalData !== 'undefined')) {
+				if ((typeof originalOrigin !== 'undefined') && (origin === originalOrigin) && 
+					(typeof originalData !== 'undefined') && originalShippingMethod === _this.settings.shippingMethod) {
 					origin = originalOrigin;
 					dataRequest = originalData;
 				}
@@ -2737,8 +2738,9 @@
 			// Get the length unit
 			var distUnit = (_this.settings.lengthUnit === 'km') ? _this.settings.kilometersLang : _this.settings.milesLang;
 
-			// Save data and origin separately so we can potentially avoid multiple AJAX requests
+			// Save data, shippingMethod and origin separately so we can potentially avoid multiple AJAX requests
 			originalData = dataRequest;
+			originalShippingMethod = _this.settings.shippingMethod;
 			if ( typeof origin !== 'undefined' ) {
 				originalOrigin = origin;
 			}
@@ -2747,7 +2749,7 @@
 			if (_this.settings.callbackSuccess) {
 				_this.settings.callbackSuccess.call(this, mappingObject, originPoint, data, page);
 			}
-
+			
 			openMap = $mapDiv.hasClass('bh-sl-map-open');
 
 			// Set a variable for fullMapStart so we can detect the first run
@@ -2794,7 +2796,7 @@
 						'lng'        : $(this).find('coordinates').text().split(',')[0],
 						'description': $(this).find('description').text()
 					};
-
+					
 					_this.locationsSetup(locationData, orig_lat, orig_lng, origin, maxDistance);
 
 					i++;
@@ -2810,7 +2812,7 @@
 							locationData[this.attributes[key].name] = this.attributes[key].value;
 						}
 					}
-
+					
 					_this.locationsSetup(locationData, orig_lat, orig_lng, origin, maxDistance);
 
 					i++;

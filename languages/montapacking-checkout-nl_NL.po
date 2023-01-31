@@ -52,6 +52,9 @@ msgstr "Bezorgopties"
 msgid "Pickup"
 msgstr "Ophaalpunt"
 
+msgid "Pickup at warehouse"
+msgstr "Afhalen in magazijn"
+
 msgid "Loading..."
 msgstr "Laden..."
 
@@ -133,5 +136,3 @@ msgstr "vanuit Nederland"
 
 msgid "Please enter a postal number, this is mandatory for this pick-up option"
 msgstr "Vul alstublieft een postnummer in, dit is verplicht voor deze afhaaloptie"
-
-

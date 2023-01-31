@@ -62,6 +62,18 @@
             </label>
 
         </div>
+        <div class="monta-option monta-disabled monta-option-pickup-at-warehouse">
+
+        <label>
+            <input type="radio" name="montapacking[shipment][type]" value="pickup-at-warehouse" class="selectshipment"
+                autocomplete="on" id="pickup-at-warehouse"/>
+            <input type="hidden" name="pickup-at-warehouse-hidden"/>
+            <span class="block">
+                <?php _e('Pickup at warehouse', 'montapacking-checkout'); ?>
+            </span>
+        </label>
+
+        </div>
     </div>
 
     <div class="monta-loading"></div>

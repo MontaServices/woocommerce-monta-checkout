@@ -125,9 +125,11 @@ class MontaCheckout_ShippingOption
         return $this;
     }
 
-    public function setDate($date)
+    public function setDate($date = null)
     {
-        $this->date = date('Y-m-d H:i:s', strtotime($date));
+        if ($date != null) {
+            $this->date = date('Y-m-d H:i:s', strtotime($date));
+        }
     }
 
     public function toArray()
