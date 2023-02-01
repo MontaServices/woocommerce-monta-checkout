@@ -637,13 +637,14 @@ class Montapacking
                     ## Frames naar handige array zetten
                     $items = self::format_pickups($frames);
                     #print_r($items);
-                    if ($items !== null) {
 
-                        if(sanitize_text_field($_POST['pickup-at-warehouse-hidden']) === 'True'){
-                            $items = array_values(array_intersect_key($items, array_flip(array_keys(array_column($items, "code"), "AFH"))));
-                        } else {
-                            $items = array_values(array_diff_key($items, array_flip(array_keys(array_column($items, "code"), "AFH"))));
-                        }
+                    if(sanitize_text_field($_POST['pickup-at-warehouse-hidden']) === 'True'){
+                        $items = array_values(array_intersect_key($items, array_flip(array_keys(array_column($items, "code"), "AFH"))));
+                    } else {
+                        $items = array_values(array_diff_key($items, array_flip(array_keys(array_column($items, "code"), "AFH"))));
+                    }
+
+                    if ($items !== null && count($items) > 0) {
 
                         ## Get order location
                         // Get lat and long by address

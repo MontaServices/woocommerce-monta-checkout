@@ -235,7 +235,7 @@ jQuery(document).ready(function() {
 
                 setMethod: function() {
 
-                    if ($('.monta-options input[type=radio]:checked').val() === "pickup-at-warehouse") {
+                    if ($('.monta-options input[type=radio]:checked').prop('id') === "pickup-at-warehouse") {
                         $('.monta-options input[type=radio]:checked').prop('value', "pickup");
                         $(".monta-options input[id='pickup-at-warehouse']").prop('checked', true);
                         $('.monta-options input[type=hidden]').val("True");

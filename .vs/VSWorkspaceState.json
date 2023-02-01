@@ -2,8 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\assets",
-    "\\assets\\js"
+    "\\assets\\js",
+    "\\languages",
+    "\\views"
   ],
-  "SelectedNode": "\\montapacking-class.php",
+  "SelectedNode": "\\languages\\montapacking-checkout-nl_NL.po",
   "PreviewInSolutionExplorer": false
 }
