@@ -96,7 +96,7 @@ class Montapacking
         }
     }
 
-    public static function checkout_store($order)
+    public static function checkout_store(WC_Abstract_Order $order)
     {
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
@@ -342,11 +342,19 @@ class Montapacking
 
             $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
 
-            $item->set_props(array('method_title' => $rate->label, 'method_id' => $rate->id, 'total' => wc_format_decimal($rate->cost), 'taxes' => $rate->taxes, 'meta_data' => $rate->get_meta_data()));
+            $item->set_props(array(
+                'method_title' => $rate->label,
+                'method_id' => $rate->id,
+                'total' => wc_format_decimal($rate->cost),
+                'taxes' => $rate->taxes,
+                'meta_data' => $rate->get_meta_data()
+                ));
 
 
             $order->add_item($item);
+            $order->save();
 
+            WC()->session->set('chosen_shipping_methods', 'flat_rate_shipping' . $id );
             $order->calculate_totals(true);
         } else {
 
@@ -356,10 +364,10 @@ class Montapacking
                 'total' => $price,
             ));
 
+            WC()->session->set('chosen_shipping_methods', 0 );
             $order->add_item($item);
         }
-
-
+        $order->save();
     }
 
     public static function shipping_total($wc_price = 0)
