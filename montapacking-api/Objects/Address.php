@@ -37,7 +37,7 @@ class MontaCheckout_Address
             $prepAddr = str_replace('  ', ' ', $address);
             $prepAddr = str_replace(' ', '+', $prepAddr);
 
-            $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key='.$key);
+            $geocode = wp_remote_retrieve_body(wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key='.$key));
             $output = json_decode($geocode);
 
             $result = end($output->results);

@@ -175,8 +175,8 @@ class Montapacking
                 $name = $order->get_billing_first_name()." ".$order->get_billing_last_name();
                 $pickup['description'] = $name;
 
-                $order->set_shipping_first_name($pickup['description']);
-                $order->set_shipping_last_name('');
+                $order->set_shipping_first_name($order->get_billing_first_name());
+                $order->set_shipping_last_name($order->get_billing_last_name());
 
                 $order->set_shipping_company($pickup['company']);
                 $order->set_shipping_address_1($pickup['street'] . " " . $pickup['houseNumber']);
