@@ -354,7 +354,7 @@ class Montapacking
             $order->add_item($item);
             $order->save();
 
-            WC()->session->set('chosen_shipping_methods', 'flat_rate_shipping' . $id );
+            WC()->session->set('chosen_shipping_methods', ['flat_rate_shipping' . $id] );
             $order->calculate_totals(true);
         } else {
 
@@ -364,7 +364,7 @@ class Montapacking
                 'total' => $price,
             ));
 
-            WC()->session->set('chosen_shipping_methods', 0 );
+            WC()->session->set('chosen_shipping_methods', [0] );
             $order->add_item($item);
         }
         $order->save();
