@@ -513,7 +513,8 @@ jQuery(document).ready(function() {
                             if (checked == 'pickup') {
                                 $(".monta-times-croppped-error-pickup").css("display", "block")
                             } else {
-                                $(".monta-times-croppped-error-deliveries").css("display", "block")
+                                $('#tabselector input[type=radio]:not(:checked)').click();
+                                $('#tabselector').addClass('monta-hide');
                             }
 
 

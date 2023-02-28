@@ -38,7 +38,7 @@
 
     <p id="monta-address-required"><?php _e("Please fill in an address before selecting a shipping method", 'montapacking-checkout') ?></p>
 
-    <div class="monta-options <?php echo esc_attr(get_option('monta_disablepickup')) ? "monta-hide" : "" ?>">
+    <div class="monta-options <?php echo esc_attr(get_option('monta_disablepickup')) ? "monta-hide" : "" ?>" id="tabselector">
 
         <div class="monta-option monta-disabled monta-option-delivery">
 
