@@ -158,20 +158,6 @@ class Montapacking
 
                 break;
             case 'pickup':
-
-                /*
-                if ($pickup['description'] == 'parcelShop')
-                {
-                    $order->set_shipping_first_name($order->get_billing_first_an);
-                    $order->set_shipping_last_name('');
-                }
-                else
-                {
-                    $order->set_shipping_first_name($pickup['description']);
-                    $order->set_shipping_last_name('');
-                }
-                */
-
                 $name = $order->get_billing_first_name()." ".$order->get_billing_last_name();
                 $pickup['description'] = $name;
 
@@ -190,7 +176,7 @@ class Montapacking
                     if (isset($pickup['shippingOptions'])) {
                        $pickup['shippingOptions'] = $pickup['shippingOptions'].",DHLPCPostNummer_".$pickup['postnumber'] ;
                     } else {
-                        $pickup['shippingOptions'] = "DHLPCPostNummer_".pickup['postnumber'];
+                        $pickup['shippingOptions'] = "DHLPCPostNummer_".$pickup['postnumber'];
                     }
                     unset($pickup['postnumber']);
                 }

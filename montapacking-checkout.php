@@ -337,13 +337,13 @@ function filter_woocommerce_order_shipping_method($html, $instance)
                 $method = strip_tags($value->value);
 
                 if ($value->value == 'SEL,SELBuspakje') {
-                    $method = strip_tags('DHL Parcel');
+                    $method = strip_tags('DHL');
                 }
                 return $method;
             }
 
             if ($value->key == 'Pickup Data') {
-                $method = strip_tags($value->value['description']);
+                $method = strip_tags($value->value['company']);
                 return $method;
             }
         }
