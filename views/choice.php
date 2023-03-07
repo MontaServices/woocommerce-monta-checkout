@@ -29,7 +29,8 @@
 
 </script>
 
-<input id="maxpickuppoints" type="hidden" name="maxpickuppoints" value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')) ; ?>">
+<input id="maxpickuppoints" type="hidden" name="maxpickuppoints"
+       value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')); ?>">
 
 
 <div class="woocommerce-shipping-fields montapacking-shipping">
@@ -38,7 +39,8 @@
 
     <p id="monta-address-required"><?php _e("Please fill in an address before selecting a shipping method", 'montapacking-checkout') ?></p>
 
-    <div class="monta-options <?php echo esc_attr(get_option('monta_disablepickup')) ? "monta-hide" : "" ?>" id="tabselector">
+    <div class="monta-options <?php echo esc_attr(get_option('monta_disablepickup')) ? "monta-hide" : "" ?>"
+         id="tabselector">
 
         <div class="monta-option monta-disabled monta-option-delivery">
 
@@ -78,9 +80,13 @@
                     <span class="delivery-time"><?php _e('Delivery time and date', 'montapacking-checkout'); ?></span>
                     <span class="send-time"><?php _e('Send date', 'montapacking-checkout'); ?></span>
 
-                    <span class="deliveryinfo deliveryinformation"><?php _e('Your order will be', 'montapacking-checkout'); ?> <strong class="shippingtype"></strong> <?php _e('with', 'montapacking-checkout'); ?> <strong class="shipper"></strong></span>
-                    <span class="deliveryinfo dateinformation"><?php _e('on', 'montapacking-checkout'); ?> <strong class="date"></strong></span>
-                    <span class="deliveryinfo timeinformation"> <?php _e('between', 'montapacking-checkout'); ?> <strong class="datetime"></strong></span>
+                    <span class="deliveryinfo deliveryinformation"><?php _e('Your order will be', 'montapacking-checkout'); ?> <strong
+                                class="shippingtype"></strong> <?php _e('with', 'montapacking-checkout'); ?> <strong
+                                class="shipper"></strong></span>
+                    <span class="deliveryinfo dateinformation"><?php _e('on', 'montapacking-checkout'); ?> <strong
+                                class="date"></strong></span>
+                    <span class="deliveryinfo timeinformation"> <?php _e('between', 'montapacking-checkout'); ?> <strong
+                                class="datetime"></strong></span>
 
                     <div style="clear:both"></div>
 
@@ -94,7 +100,6 @@
 
             <div class="clear:both"></div>
         </div>
-
 
 
         <div class="monta-times-extended" style="display:none">
@@ -137,13 +142,17 @@
 
                     <div class="monta-pickup-selected"></div>
 
-                    <div id="PCPostNummer" >
-                        <label for="DHLPCPostNummer" class="">Postnummer&nbsp;<abbr class="required" title="verplicht">*</abbr></label>
-                        <input type="text" id="DHLPCPostNummer" name="montapacking[pickup][postnumber]" value="" style="width:100%" disabled="disabled">
+                    <div id="PCPostNummer">
+                        <label for="DHLPCPostNummer" class="">Postnummer&nbsp;<abbr class="required"
+                                                                                    title="verplicht">*</abbr></label>
+                        <input type="text" id="DHLPCPostNummer" name="montapacking[pickup][postnumber]" value=""
+                               style="width:100%" disabled="disabled">
                     </div>
 
 
-                    <p><a class="monta-more-pickup-points"><?php _e('Show more options', 'montapacking-checkout'); ?></a></p>
+                    <p>
+                        <a class="monta-more-pickup-points"><?php _e('Show more options', 'montapacking-checkout'); ?></a>
+                    </p>
 
                 </div>
 
@@ -240,21 +249,23 @@
         <div class="monta-pickup-active monta-hide bh-sl-container">
 
             <a class="monta-close-pickup">x</a>
+            <div style="flex-direction: row; display: flex;">
+                <div class="monta-options bh-sl-form-container" style="width: 65%">
+                    <!--Old shipper filter-->
+                    <div class="bh-sl-filters-container">
 
-            <div class="monta-options bh-sl-form-container">
+                        <ul id="category-filters" class="bh-sl-filters" style="white-space: nowrap; overflow-x: auto;">
+                        </ul>
 
-                <!--Old shipper filter-->
-                <div class="bh-sl-filters-container">
-
-                    <ul id="category-filters" class="bh-sl-filters">
-                    </ul>
-
+                    </div>
                 </div>
-
-                <a class="monta-select-pickup"><?php _e('Use selection', 'montapacking-checkout'); ?></a>
-
+                <div class="montapacking-search-zipcode-container">
+                    <label for="montapacking-search-zipcode" class="montapacking-search-zipcode-label"><?php _e('Search using postal code', 'montapacking-checkout'); ?></label>
+                    <input type="text" name="montapacking-search-zipcode" id="montapacking-search-zipcode" title="<?php _e('Postcode', 'montapacking-checkout'); ?>" placeholder="<?php _e('Postcode', 'montapacking-checkout'); ?>" class="montapacking-search-zipcode-input">
+                    <button type="button" class="button montapacking-search-zipcode-button" id="montapacking-search-zipcode-button"><?php _e('Search', 'montapacking-checkout'); ?></button>
+                </div>
             </div>
-
+            <a class="monta-select-pickup"><?php _e('Use selection', 'montapacking-checkout'); ?></a>
             <div id="monta-stores" class="bh-sl-map-container">
 
                 <div class="monta-locations">

@@ -3,9 +3,9 @@ jQuery(document).ready(function() {
 
         try {
 
-            var ajax_url = woocommerce_params.ajax_url;
+            const ajax_url = woocommerce_params.ajax_url;
 
-            var monta_shipping = {
+            const monta_shipping = {
                 $checkout_form: $('form.checkout'),
                 $monta_cover: $('div.monta-cover'),
                 $body: $(' body '),
@@ -23,9 +23,9 @@ jQuery(document).ready(function() {
 
                 pickupLocator: null,
 
-                init: function() {
+                init: function () {
 
-                    $(document).ready(function() {
+                    $(document).ready(function () {
                         $("#billing_postcode").trigger("change");
                     });
 
@@ -35,7 +35,7 @@ jQuery(document).ready(function() {
                     this.$checkout_form.on('click', '#ship-to-different-address input', this.updateDeliveries);
                     this.$checkout_form.on('change', '.country_select', this.updateDeliveries);
 
-                    var elms = '';
+                    let elms = '';
                     elms += '#billing_address_1,';
                     elms += '#billing_house_number,';
                     elms += '#billing_street_name,';
@@ -67,7 +67,7 @@ jQuery(document).ready(function() {
 
                 },
 
-                checkAddress: function() {
+                checkAddress: function () {
 
                     if ($('#billing_street_name:visible').length) {
                         var address = $('#billing_street_name').val();
@@ -82,12 +82,12 @@ jQuery(document).ready(function() {
                     }
 
 
-                    var zipcode = $('#billing_postcode').val();
-                    var place = $('#billing_city').val();
-                    var country = $('#billing_country').val();
-                    var other = $('#ship-to-different-address-checkbox').prop('checked');
+                    const zipcode = $('#billing_postcode').val();
+                    const place = $('#billing_city').val();
+                    const country = $('#billing_country').val();
+                    const other = $('#ship-to-different-address-checkbox').prop('checked');
 
-                    var ship_address = $('#shipping_address_1').val();
+                    const ship_address = $('#shipping_address_1').val();
 
                     if ($('#shipping_house_number:visible').length) {
                         var ship_housenumber = $('#shipping_house_number').val();
@@ -95,9 +95,9 @@ jQuery(document).ready(function() {
                         var ship_housenumber = $('#shipping_address_1').val();
                     }
 
-                    var ship_zipcode = $('#shipping_postcode').val();
-                    var ship_place = $('#shipping_city').val();
-                    var ship_country = $('#shipping_country').val();
+                    const ship_zipcode = $('#shipping_postcode').val();
+                    const ship_place = $('#shipping_city').val();
+                    const ship_country = $('#shipping_country').val();
 
                     if (other) {
 
@@ -141,16 +141,16 @@ jQuery(document).ready(function() {
 
                 },
 
-                updateWooCheckout: function() {
+                updateWooCheckout: function () {
 
                     $(document.body).trigger('update_checkout');
 
                 },
 
-                updateSlider: function() {
+                updateSlider: function () {
 
-                    var times = $('.monta-times');
-                    var viewing = times.find('.mover').width();
+                    const times = $('.monta-times');
+                    const viewing = times.find('.mover').width();
 
                     monta_shipping.timeSize = times.find('li').outerWidth(true);
                     monta_shipping.maxMove = times.find('li').length;
@@ -159,11 +159,11 @@ jQuery(document).ready(function() {
 
                 },
 
-                movePrevious: function() {
+                movePrevious: function () {
 
-                    var moving = $('.monta-times ul');
-                    var times = $('.monta-times');
-                    var viewing = times.find('.mover').width();
+                    const moving = $('.monta-times ul');
+                    const times = $('.monta-times');
+                    const viewing = times.find('.mover').width();
 
                     monta_shipping.moveAmount = Math.floor((viewing / monta_shipping.timeSize));
                     monta_shipping.viewAt -= monta_shipping.moveAmount;
@@ -177,11 +177,11 @@ jQuery(document).ready(function() {
 
                 },
 
-                moveNext: function() {
+                moveNext: function () {
 
-                    var moving = $('.monta-times ul');
-                    var times = $('.monta-times');
-                    var viewing = times.find('.mover').width();
+                    const moving = $('.monta-times ul');
+                    const times = $('.monta-times');
+                    const viewing = times.find('.mover').width();
 
                     monta_shipping.moveAmount = Math.floor((viewing / monta_shipping.timeSize));
                     monta_shipping.viewAt += monta_shipping.moveAmount;
@@ -195,16 +195,12 @@ jQuery(document).ready(function() {
                     }, 500);
 
                 },
-
-                updateDeliveries: function(callback) {
-
-                    var data = $('form.checkout').serialize();
+                updateDeliveries: function (callback) {
+                    let data = $('form.checkout').serialize();
                     data += '&action=monta_shipping_options';
 
-                    $.post(ajax_url, data).done(function(result) {
-
+                    $.post(ajax_url, data).done(function (result) {
                         if (result.success) {
-
                             // Frames onthouden
                             if (result.frames !== undefined) {
                                 monta_shipping.frames = result.frames;
@@ -212,14 +208,10 @@ jQuery(document).ready(function() {
                                 monta_shipping.pickups = result.pickups;
                                 monta_shipping.pickup_default = result.default;
                             }
-
                         } else {
-
                             // Show error message
                             $('.monta-times .mover').html('<div class="error">' + result.message + '</div>');
-
                         }
-
                         $('.monta-loading').removeClass('active');
 
                         monta_shipping.enableRadio();
@@ -227,21 +219,14 @@ jQuery(document).ready(function() {
                         if ($.isFunction(callback)) {
                             callback(result.success, result);
                         }
-
                     });
-
-
-                },
-
-                setMethod: function() {
-
+                }, setMethod: function () {
                     $('.monta-shipment-delivery').removeClass('active');
                     $('.monta-shipment-shipper').html('');
 
-                    var checked = $('.monta-options input[type=radio]:checked').val();
+                    const checked = $('.monta-options input[type=radio]:checked').val();
 
                     if (checked === "pickup") {
-
                         // Hide alternate billing address option
                         $("#ship-to-different-address").hide();
                         $("#ship-to-different-address").next().hide();
@@ -260,7 +245,7 @@ jQuery(document).ready(function() {
 
                     }
 
-                    monta_shipping.updateDeliveries(function(success, result) {
+                    monta_shipping.updateDeliveries(function (success, result) {
 
                         $(".monta-times-cropped-error").css("display", "none");
 
@@ -273,14 +258,14 @@ jQuery(document).ready(function() {
 
                                 $('.monta-shipment-delivery').addClass('active');
 
-                                var mover = $('.monta-times .mover');
+                                const mover = $('.monta-times .mover');
                                 mover.html('<ul></ul>');
 
-                                var times = mover.find('ul');
+                                const times = mover.find('ul');
 
                                 // get the date of today , this is for validation if the checkbox needed to be checked (sameday or not sameday)
-                                var d = new Date();
-                                var date_today = d.toLocaleDateString('nl-NL', {
+                                const d = new Date();
+                                const date_today = d.toLocaleDateString('nl-NL', {
                                     month: '2-digit',
                                     day: '2-digit',
                                     year: 'numeric'
@@ -288,36 +273,36 @@ jQuery(document).ready(function() {
 
                                 // Frames tonen in lijst
 
-                                var hidedatebar = true;
+                                let hidedatebar = true;
 
-                                var firstdaycounter = 0;
+                                let firstdaycounter = 0;
 
-                                var daysavailablecounter = 0;
+                                let daysavailablecounter = 0;
 
-                                $.each(monta_shipping.frames, function(key, item) {
+                                $.each(monta_shipping.frames, function (key, item) {
                                     daysavailablecounter++;
                                 });
 
-                                $.each(monta_shipping.frames, function(key, item) {
+                                $.each(monta_shipping.frames, function (key, item) {
 
-                                    if (item.date != "") {
+                                    if (item.date !== "") {
                                         hidedatebar = false;
                                     }
 
-                                    if (date_today != item.date) {
+                                    if (date_today !== item.date) {
                                         firstdaycounter++;
                                     }
 
-                                    var showhtml = true;
-                                    if (firstdaycounter == 1 && daysavailablecounter > 1) {
+                                    let showhtml = true;
+                                    if (firstdaycounter === 1 && daysavailablecounter > 1) {
                                         showhtml = false;
                                     }
 
-                                    var option = item.options[0];
+                                    const option = item.options[0];
 
                                     if (option !== null && option !== undefined) {
 
-                                        var html = $('.monta-choice-template').html();
+                                        let html = $('.monta-choice-template').html();
                                         html = html.replace(/{.id}/g, key);
                                         html = html.replace(/{.code}/g, (item.code !== null) ? item.code : '');
                                         html = html.replace(/{.day}/g, item.date);
@@ -327,7 +312,7 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.price}/g, item.price);
 
                                         // exclude the checking of today delivery, this is not the most wanted option for clients
-                                        if (date_today == item.date) {
+                                        if (date_today === item.date) {
                                             html = html.replace(/{.sameday}/g, 'sameday');
                                         } else {
                                             html = html.replace(/{.sameday}/g, 'otherday');
@@ -337,11 +322,11 @@ jQuery(document).ready(function() {
                                         showhtml = true;
 
 
-                                        if (key == 'NOTIMES' && daysavailablecounter > 1) {
+                                        if (key === 'NOTIMES' && daysavailablecounter > 1) {
                                             showhtml = false;
                                         }
 
-                                        if (showhtml == true) {
+                                        if (showhtml === true) {
                                             times.append(html);
                                         }
 
@@ -349,7 +334,7 @@ jQuery(document).ready(function() {
 
                                 });
 
-                                if (hidedatebar == true) {
+                                if (hidedatebar === true) {
                                     $('.monta-times').addClass('monta-hide');
                                 }
 
@@ -371,179 +356,33 @@ jQuery(document).ready(function() {
 
                             // Process pickups
                             if (checked === 'pickup') {
-
-                                var markers = [];
-
-                                $('#category-filters').html('');
-
-                                $.each(monta_shipping.pickups, function(key, item) {
-
-                                    var openingtimes = JSON.parse(item.details.openingtimes);
-                                    var allopeningtimes = [];
-                                    for (var k in openingtimes) {
-
-                                        var times = openingtimes[k];
-                                        var timeline = times.from + " - " + times.to + " uur";
-
-                                        allopeningtimes.push(timeline);
-                                    }
-
-                                    allopeningtimes.join(" / ");
-
-                                    markers.push({
-                                        'id': '1',
-                                        'code': item.code + '_' + item.details.code,
-                                        'shippingOptions': item.shipperOptionsWithValue,
-                                        'category': item.code,
-                                        'name': item.details.name,
-                                        'lat': item.details.lat,
-                                        'lng': item.details.lng,
-                                        'street': item.details.street,
-                                        'houseNumber': item.details.houseNumber,
-                                        'city': item.details.place,
-                                        'postal': item.details.zipcode,
-                                        'country': item.details.country,
-                                        'description': item.description,
-                                        'price': item.price,
-                                        'openingtimes': allopeningtimes,
-                                        'image': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.code + ".png",
-                                        'price_raw': item.price_raw,
-                                        'raw': item
-                                    });
-
-                                    if ($('.cat-' + item.code + '').length === 0) {
-
-                                        $('#category-filters').append('<li class="cat-' + item.code + '"><label><input class="monta-shipper-filter" type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.description + '</label></li>');
-
-                                    }
-
-                                });
-
-                                $('#monta-stores').storeLocator('reset');
-
-                                var config = {
-                                    'debug': false,
-                                    'pagination': false,
-                                    'infowindowTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/infowindow-description.html',
-                                    'listTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/list-location.html',
-                                    'distanceAlert': -1,
-                                    'dataType': "json",
-                                    'dataRaw': JSON.stringify(markers, null, 2),
-                                    'slideMap': false,
-                                    'inlineDirections': true,
-                                    'originMarker': true,
-                                    'dragSearch': false,
-                                    'defaultLoc': true,
-                                    'defaultLat': monta_shipping.pickup_default.lat,
-                                    'defaultLng': monta_shipping.pickup_default.lng,
-                                    'lengthUnit': 'km',
-                                    'exclusiveFiltering': true,
-                                    'taxonomyFilters': {
-                                        'category': 'category-filters',
-                                    },
-                                    catMarkers: {
-                                        'PAK': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/PostNL.png', 32, 32],
-                                        'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHL.png', 32, 32],
-                                        'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32]
-                                    },
-                                    callbackMarkerClick: function(marker, markerId, $selectedLocation, location) {
-
-                                        monta_shipping.selectPickup(location, markerId);
-                                    },
-                                    callbackListClick: function(markerId, selectedMarker, location) {
-
-                                        monta_shipping.selectPickup(location, markerId);
-
-                                    },
-                                    callbackNotify: function(notifyText) {
-
-
-                                        monta_shipping.storeLocatorDestroy();
-
-                                    }
-                                };
-
-                                monta_shipping.pickupLocator = $('#monta-stores').storeLocator(config);
-
-                                var liExists = setInterval(function() {
-
-                                    if ($("#initialPickupsList").length) {
-
-                                        $('#initialPickupsList li:gt(' + ($("#maxpickuppoints").val() - 1) + ')').remove();
-
-                                        //Add radio buttons for initial pickups
-                                        $("#initialPickupsList  > li").each(function() {
-
-                                            var element = $("input");
-                                            var radioButtons = $(this).find(element);
-
-                                            if (radioButtons.length < 1) {
-
-                                                $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
-
-                                            }
-
-                                        });
-
-                                        //if ($("#initialPickupsList").children().length === 3) {
-                                        if ($("#initialPickupsList").children().length > 0) {
-
-                                            $("#monta-pickups").show(100);
-
-                                            $('.monta-loading').removeClass('active');
-
-                                            $('.monta-shipment-pickup').addClass('active');
-
-                                            $(".monta-pickup-initial-points").removeClass("monta-hide");
-
-                                            monta_shipping.enableRadio();
-
-                                            clearInterval(liExists);
-
-                                        }
-
-                                    }
-
-                                }, 100);
-
+                                let markers = formatMarkers(monta_shipping.pickups);
+                                InitializeStoreLocator(markers, monta_shipping.pickup_default.lat, monta_shipping.pickup_default.lng, monta_shipping);
                             }
-
                         } else {
-
-                            if (checked == 'pickup') {
+                            if (checked === 'pickup') {
                                 $(".monta-times-croppped-error-pickup").css("display", "block")
                             } else {
                                 $('#tabselector input[type=radio]:not(:checked)').click();
                                 $('#tabselector').addClass('monta-hide');
                             }
-
-
                             monta_shipping.storeLocatorDestroy();
-
                         }
-
-                    });
-
+                    })
                     monta_shipping.updateWooCheckout();
-
                 },
-
-                showPickupMap: function() {
-
-                    var checked = $('.monta-options input[type=radio]:checked').val();
+                showPickupMap: function () {
+                    const checked = $('.monta-options input[type=radio]:checked').val();
 
                     if (checked === "pickup") {
-
                         $('body').addClass('monta-cover-open');
 
                         $('.monta-cover').removeClass('monta-hide');
                         $('.monta-cover .monta-pickup-loading').addClass('monta-hide');
                         $('.monta-cover .monta-pickup-active').removeClass('monta-hide');
-
                     }
 
-                    $('.monta-close-pickup').on('click', function() {
-
+                    $('.monta-close-pickup').on('click', function () {
                         $('body').removeClass('monta-cover-open');
 
                         $('.monta-cover').addClass('monta-hide');
@@ -553,24 +392,45 @@ jQuery(document).ready(function() {
                         // Remove list-focus class from the initial pickup locations
                         $("#initialPickupsList li.list-focus").removeClass("list-focus");
                         $("#initialPickupRadioDummy").prop("checked", true);
-
                     });
 
+                    document.getElementById('montapacking-search-zipcode-button').addEventListener('click', (e) => {
+                        let zipcode = document.getElementById('montapacking-search-zipcode').value;
+                        if (zipcode.length > 0) {
+                            let data = $('form.checkout').serializeArray();
+                            data.push({name: "ship_to_different_address", value: 1});
+                            data.push({name: "action", value: "monta_shipping_options"});
+
+                            data.find(input => input.name === 'shipping_address_1').value = "";
+                            data.find(input => input.name === 'shipping_address_2').value = "";
+                            data.find(input => input.name === 'shipping_city').value = "";
+                            data.find(input => input.name === 'shipping_postcode').value = zipcode;
+
+                            $.post(ajax_url, $.param(data)).done(function (result) {
+                                if (result.success) {
+                                    if (result.pickups !== undefined) {
+                                        let markers = formatMarkers(result.pickups);
+                                        InitializeStoreLocator(markers, result.default.lat, result.default.lng, monta_shipping);
+                                    }
+                                } else {
+                                    // Show error message
+
+                                }
+                            });
+                        }
+                    })
                 },
-
-                selectPickup: function(location, markerId) {
-
+                selectPickup: function (location, markerId) {
                     monta_shipping.pickup_selected = location;
 
                     $('.monta-select-pickup').addClass('active');
 
                     if (monta_shipping.pickup_selected !== null) {
-
                         //initialPickupPointRadio
-                        var loc = monta_shipping.pickup_selected;
-   
-                        var n = loc.raw.shipperOptionsWithValue.includes("_packStation");
-                        var m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
+                        const loc = monta_shipping.pickup_selected;
+
+                        const n = loc.raw.shipperOptionsWithValue.includes("_packStation");
+                        const m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
 
                         if (n && !m) {
                             $("#PCPostNummer").css("display", "block");
@@ -581,9 +441,9 @@ jQuery(document).ready(function() {
                             $("#PCPostNummer input").attr("disabled", "disabled");
                         }
 
-                        var imageUrl = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + loc.raw.code + ".png"
+                        const imageUrl = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + loc.raw.code + ".png";
 
-                        var html = '';
+                        let html = '';
                         html += '<div class="loadedimage"><img src="' + imageUrl + '" style="width:30px;"></div>';
                         html += '<div class="loadedinformation">';
                         html += '<strong>' + loc.name + '</strong><br />';
@@ -593,7 +453,6 @@ jQuery(document).ready(function() {
                         html += '</div>';
                         html += '<div class="loadedprice">&euro; ' + loc.price + '</div>';
                         html += '<div class="clear"></div>';
-
 
                         $('.monta-pickup-selected').html(html);
                         if (markerId > ($("#maxpickuppoints").val() - 1)) {
@@ -627,8 +486,7 @@ jQuery(document).ready(function() {
                         $('.monta-pickup-input-country').val(loc.country);
                         $('.monta-pickup-input-price').val(loc.price_raw);
 
-                        $('.monta-select-pickup').on('click', function() {
-
+                        $('.monta-select-pickup').on('click', function () {
                             $('body').removeClass('monta-cover-open');
 
                             $('.monta-cover').addClass('monta-hide');
@@ -638,52 +496,41 @@ jQuery(document).ready(function() {
                             // Remove list-focus class from the initial pickup locations
                             //$("#initialPickupsList li.list-focus").removeClass("list-focus");
                             $("#initialPickupRadioDummy").prop("checked", true);
-
                         });
-
                         monta_shipping.updateWooCheckout();
-
                     }
                 },
-
-                storeLocatorDestroy: function() {
-
+                storeLocatorDestroy: function () {
                     $('#monta-stores .bh-sl-loc-list .list').html('');
                     $('#monta-stores .bh-sl-map').removeClass('bh-sl-map-open').html('');
                     $('#monta-stores .monta-select-pickup').removeClass('active');
 
                     $('#monta-stores').storeLocator('destroy');
                 },
-
-                setTimeframe: function() {
-
-                    var value = $(this).val();
-                    var shippers = $('.monta-shipment-shipper');
-                    var options = monta_shipping.frames[value].options;
-
+                setTimeframe: function () {
+                    const value = $(this).val();
+                    const shippers = $('.monta-shipment-shipper');
+                    const options = monta_shipping.frames[value].options;
 
                     // Empty shippers
                     shippers.html('');
 
                     if (options !== undefined && options !== null) {
+                        $.each(options, function (key, item) {
+                            const realCode = item.code;
 
-                        $.each(options, function(key, item) {
-
-                            var realCode = item.code;
-
-                            var code = '';
-                            $.each(item.codes, function(key, item) {
+                            let code = '';
+                            $.each(item.codes, function (key, item) {
                                 code += ((code !== '') ? ',' : '') + item;
                             });
 
                             // The API returns format like (00:00 to 00:00 for DPD, exclude them here)
-                            var time = '<strong>' + item.from + ' - ' + item.to + '</strong>';
+                            let time = '<strong>' + item.from + ' - ' + item.to + '</strong>';
                             if (item.from === item.to) {
                                 time = '';
                             }
 
-
-                            var templateShipper = '<label>\n\n' +
+                            const templateShipper = '<label>\n\n' +
                                 '        <span style="display:none" class="cropped_name">{.name}</span>\n' +
                                 '        <span style="display:none" class="cropped_time">{.time}</span>\n' +
                                 '        <span style="display:none" class="cropped_image">{.img}</span>\n' +
@@ -705,7 +552,7 @@ jQuery(document).ready(function() {
                                 '        <div class="clearboth"></div>\n\n' +
                                 '    </label>';
 
-                            var html = templateShipper;
+                            let html = templateShipper;
                             html = html.replace(/{.code}/g, realCode);
                             html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + code + '.png">');
                             html = html.replace(/{.name}/g, item.name);
@@ -715,43 +562,34 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.type_text}/g, item.type_text);
                             html = html.replace(/{.ships_on}/g, item.ships_on);
 
-
-                            if (code != 'TBQ') {
+                            if (code !== 'TBQ') {
                                 shippers.append(html);
                             }
 
-                            $(".loadedLogo").on("error", function() {
+                            $(".loadedLogo").on("error", function () {
                                 $(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/none.png");
                             });
 
                         });
-
                         shippers.find('input[type=radio]:first').prop('checked', true);
 
                         monta_shipping.setShipper();
-
                     } else {
-
                         shippers.html('');
-
                     }
-
                     monta_shipping.updateWooCheckout();
-
                 },
-
-                setShipper: function() {
-
-                    var shipper = $('.monta-shipment-shipper input[type=radio]:checked').val();
-                    var frame = $('.monta-times input[type=radio]:checked').val();
-                    var extras = $('.monta-shipment-extra-options');
+                setShipper: function () {
+                    const shipper = $('.monta-shipment-shipper input[type=radio]:checked').val();
+                    const frame = $('.monta-times input[type=radio]:checked').val();
+                    const extras = $('.monta-shipment-extra-options');
 
                     // Specify selected option
-                    var options = null;
+                    let options = null;
 
-                    $.each(monta_shipping.frames[frame].options, function(key, item) {
+                    $.each(monta_shipping.frames[frame].options, function (key, item) {
 
-                        var realCode = item.code;
+                        const realCode = item.code;
 
                         if (realCode === shipper) {
 
@@ -767,14 +605,14 @@ jQuery(document).ready(function() {
                         $('.monta-shipment-extras').addClass('active');
 
                         extras.html('');
-                        $.each(options, function(key, item) {
+                        $.each(options, function (key, item) {
 
-                            var code = '';
-                            $.each(item.codes, function(key, item) {
+                            let code = '';
+                            $.each(item.codes, function (key, item) {
                                 code += ((code !== '') ? ',' : '') + item;
                             });
 
-                            var html = $('.monta-extra-template').html();
+                            let html = $('.monta-extra-template').html();
                             html = html.replace(/{.code}/g, item.code);
                             html = html.replace(/{.name}/g, item.name);
                             html = html.replace(/{.price}/g, item.price);
@@ -794,7 +632,7 @@ jQuery(document).ready(function() {
 
                 },
 
-                disableRadio: function() {
+                disableRadio: function () {
 
                     $('.monta-options .monta-option').addClass('monta-disabled');
                     $('.monta-options input[type="radio"]').prop('disabled', true);
@@ -805,35 +643,35 @@ jQuery(document).ready(function() {
 
                 },
 
-                enableRadio: function() {
+                enableRadio: function () {
 
                     $('.monta-options .monta-option').removeClass('monta-disabled');
                     $('.monta-options input[type="radio"]').prop('disabled', false);
 
                 },
 
-                hideAddressMsg: function() {
+                hideAddressMsg: function () {
 
                     $("#monta-address-required").hide();
 
                 },
 
-                showAddressMsg: function() {
+                showAddressMsg: function () {
 
                     $("#monta-address-required").show();
 
                 },
 
-                sortInitialPickups: function() {
+                sortInitialPickups: function () {
 
-                    var liExists = setInterval(function() {
+                    const liExists = setInterval(function () {
 
                         if ($("#initialPickupsList").length) {
 
                             $('#initialPickupsList li:gt(' + ($("#maxpickuppoints").val() - 1) + ')').remove();
 
                             //Add radio buttons for initial pickups
-                            $("#initialPickupsList  > li").each(function() {
+                            $("#initialPickupsList  > li").each(function () {
 
                                 $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
 
@@ -861,14 +699,14 @@ jQuery(document).ready(function() {
 
                 },
 
-                selectDeliveryOption: function() {
+                selectDeliveryOption: function () {
 
                     //Check and click delivery button
                     $('.monta-options input[value=delivery]').prop('checked', true).click();
 
                 },
 
-                deSelectDeliveryOption: function() {
+                deSelectDeliveryOption: function () {
 
                     //Un-check and click delivery button
                     $('.monta-options input[value=delivery]').prop('checked', false);
@@ -885,13 +723,13 @@ jQuery(document).ready(function() {
     });
 
     function updateDeliveryTextBlock() {
-        var day = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".day").text();
-        var dayname = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".dayname").text();
+        const day = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".day").text();
+        const dayname = jQuery("input.montapackingshipmenttime:checked").parent("label").find(".dayname").text();
         jQuery("strong.date").text(dayname + " " + day);
 
-        var shippingtype = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_type").text();
+        const shippingtype = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_type").text();
 
-        if (shippingtype == 'shippingdate') {
+        if (shippingtype === 'shippingdate') {
             jQuery(".send-time").css("display", "block");
             jQuery(".delivery-time").css("display", "none");
         } else {
@@ -900,22 +738,22 @@ jQuery(document).ready(function() {
         }
 
 
-        var shippingtype_text = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_type_text").text();
+        const shippingtype_text = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_type_text").text();
         jQuery("strong.shippingtype").text(shippingtype_text);
 
-        var shipper = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_name").text();
+        const shipper = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_name").text();
         jQuery("strong.shipper").text(shipper);
 
-        var datetime = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_time").text();
+        const datetime = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_time").text();
         jQuery("strong.datetime").text(datetime);
 
-        var image = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_image").html();
+        const image = jQuery("input.montapackingshipmentshipper:checked").parents("label").find(".cropped_image").html();
         jQuery("div.imglogo").html(image);
 
 
         jQuery(".dateinformation").css("display", "none");
 
-        if (day != 'null' && day != '') {
+        if (day !== 'null' && day !== '') {
             jQuery(".dateinformation").css("display", "block");
         }
 
@@ -929,6 +767,124 @@ jQuery(document).ready(function() {
         });
     }
 
+    function InitializeStoreLocator(markers, defaultLat, defaultLng, monta_shipping) {
+        $ = jQuery;
+        $('#monta-stores').storeLocator('destroy');
+
+        const config = {
+            'debug': false,
+            'pagination': false,
+            'infowindowTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/infowindow-description.html',
+            'listTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/list-location.html',
+            'distanceAlert': -1,
+            'dataType': "json",
+            'dataRaw': JSON.stringify(markers, null, 2),
+            'slideMap': false,
+            'inlineDirections': true,
+            'originMarker': true,
+            'dragSearch': false,
+            'defaultLoc': true,
+            'defaultLat': defaultLat,
+            'defaultLng': defaultLng,
+            'lengthUnit': 'km',
+            'exclusiveFiltering': true,
+            'taxonomyFilters': {
+                'category': 'category-filters',
+            },
+            catMarkers: {
+                'PAK': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/PostNL.png', 32, 32],
+                'AFH': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/AFH.png', 32, 32],
+                'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLservicepunt.png', 32, 32],
+                'DHLFYPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLFYPickupPoint.png', 32, 32],
+                'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32]
+            },
+            callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
+                monta_shipping.selectPickup(location, markerId);
+            },
+            callbackListClick: function (markerId, selectedMarker, location) {
+                monta_shipping.selectPickup(location, markerId);
+            },
+            callbackNotify: function (notifyText) {
+                monta_shipping.storeLocatorDestroy();
+            }
+        };
+        monta_shipping.pickupLocator = $('#monta-stores').storeLocator(config);
+
+        const liExists = setInterval(function () {
+            if ($("#initialPickupsList").length) {
+
+                $('#initialPickupsList li:gt(' + ($("#maxpickuppoints").val() - 1) + ')').remove();
+
+                //Add radio buttons for initial pickups
+                $("#initialPickupsList  > li").each(function () {
+                    const element = $("input");
+                    const radioButtons = $(this).find(element);
+
+                    if (radioButtons.length < 1) {
+                        $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
+                    }
+                });
+
+                //if ($("#initialPickupsList").children().length === 3) {
+                if ($("#initialPickupsList").children().length > 0) {
+                    $("#monta-pickups").show(100);
+
+                    $('.monta-loading').removeClass('active');
+
+                    $('.monta-shipment-pickup').addClass('active');
+
+                    $(".monta-pickup-initial-points").removeClass("monta-hide");
+
+                    monta_shipping.enableRadio();
+
+                    clearInterval(liExists);
+                }
+            }
+        }, 100);
+    }
+
+    function formatMarkers(pickups) {
+        let markers = [];
+        //document.getElementById('category-filters').innerHTML = "";
+        jQuery.each(pickups, function (key, item) {
+            const openingtimes = JSON.parse(item.details.openingtimes);
+            const allopeningtimes = [];
+            for (let k in openingtimes) {
+                const times = openingtimes[k];
+                const timeline = times.from + " - " + times.to + " uur";
+
+                allopeningtimes.push(timeline);
+            }
+
+            allopeningtimes.join(" / ");
+
+            markers.push({
+                'id': '1',
+                'code': item.code + '_' + item.details.code,
+                'shippingOptions': item.shipperOptionsWithValue,
+                'category': item.code,
+                'name': item.details.name,
+                'lat': item.details.lat,
+                'lng': item.details.lng,
+                'street': item.details.street,
+                'houseNumber': item.details.houseNumber,
+                'city': item.details.place,
+                'postal': item.details.zipcode,
+                'country': item.details.country,
+                'description': item.description,
+                'price': item.price,
+                'openingtimes': allopeningtimes,
+                'image': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.code + ".png",
+                'price_raw': item.price_raw,
+                'raw': item
+            });
+
+            if (jQuery('.cat-' + item.code + '').length === 0) {
+                jQuery('#category-filters').append('<li class="cat-' + item.code + '"><label><input class="monta-shipper-filter" type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.description + '</label></li>');
+            }
+        });
+        return markers;
+    }
 
     jQuery("input.montapackingshipmentshipper, input.montapackingshipmenttime ").on("change", function() {
         updateDeliveryTextBlock();
@@ -937,12 +893,10 @@ jQuery(document).ready(function() {
     jQuery('body').on('click', 'input.montapackingshipmentshipper', function() {
         jQuery('.montapackingshipmentshipper').parents('label').removeClass("checked");
         jQuery(this).parents('label').addClass("checked");
-
     });
 
     jQuery('body').on('click', '#othersendmethod', function() {
-
-        if (jQuery(".monta-times-croppped").css('display') == 'block') {
+        if (jQuery(".monta-times-croppped").css('display') === 'block') {
             jQuery(".monta-times-croppped").css('display', "none");
             jQuery(".monta-times-extended").css('display', "block");
         } else {

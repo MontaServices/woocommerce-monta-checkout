@@ -58,6 +58,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 #1.49
 
 * Fixed wrong data in order summary delivery field
+* Added field in storelocator to search for pickuppoints based on different postcode/zipcode
 
 #1.48
 

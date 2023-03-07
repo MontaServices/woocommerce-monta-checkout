@@ -470,6 +470,28 @@ input[name=initialPickupPointRadio] {
 .monta-shipment-pickup .bh-sl-loc-list {
     margin-top: 10px;
 }
+
+.montapacking-search-zipcode-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 30%;
+}
+
+.montapacking-search-zipcode-label {
+    margin-right: 2%;
+    margin-bottom: 0;
+}
+
+.montapacking-search-zipcode-input{
+    width: 25% !important;
+}
+
+.montapacking-search-zipcode-button{
+    margin-left: 2%;
+}
+
 /******************** BROWSER FIXES CSS */
 /* Specific styling for firefox */
 @-moz-document url-prefix() {

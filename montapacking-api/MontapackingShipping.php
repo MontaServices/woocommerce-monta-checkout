@@ -186,7 +186,7 @@ class MontapackingShipping
             'OnlyPickupPoints' => 'true',
             //'MaxNumberOfPickupPoints' => 3,
             'ProductsOnStock' => ($onstock) ? 'TRUE' : 'FALSE',
-            'MaiboxShipperMandatory' => $mailbox,
+            'MailboxShipperMandatory' => $mailbox,
             'TrackingMandatory' => $trackingonly,
             'InsuranceRequired' => $insurance,
             'ShipmentFitsThroughDutchMailbox' => $mailboxfit,

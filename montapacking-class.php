@@ -159,7 +159,7 @@ class Montapacking
                 break;
             case 'pickup':
                 $name = $order->get_billing_first_name()." ".$order->get_billing_last_name();
-                $pickup['description'] = $name;
+                $pickup['name'] = $name;
 
                 $order->set_shipping_first_name($order->get_billing_first_name());
                 $order->set_shipping_last_name($order->get_billing_last_name());
@@ -189,8 +189,9 @@ class Montapacking
                 //$arr[] = $pickup['shipper'];
                 //$arr[] = $pickup['code'];
                 $arr[] = "<b>Ophaalpunt</b>";
-                $arr[] = $pickup['company'];
                 $arr[] = $pickup['description'];
+                $arr[] = $pickup['company'];
+                $arr[] = $pickup['name'];
                 $arr[] = $pickup['street'] . " " . $pickup['houseNumber'];
                 $arr[] = $pickup['postal'] . " " . $pickup['city'] . " (" . $pickup['country'] . ")";
 

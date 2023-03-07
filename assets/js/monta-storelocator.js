@@ -1,3 +1,7 @@
+/*! jQuery Google Maps Store Locator - v3.1.10 - 2023-02-19
+* http://www.bjornblog.com/web/jquery-store-locator-plugin
+* Copyright (c) 2023 Bjorn Holine; Licensed MIT */
+
 ;(function ($, window, document, undefined) {
 	'use strict';
 
@@ -9,134 +13,134 @@
 	}
 
 	// Variables used across multiple methods
-	var $this, map, listTemplate, infowindowTemplate, dataTypeRead, originalOrigin, originalData, originalZoom, dataRequest, searchInput, addressInput, olat, olng, storeNum, directionsDisplay, directionsService, prevSelectedMarkerBefore, prevSelectedMarkerAfter, firstRun, reload;
+	var $this, map, listTemplate, infowindowTemplate, dataTypeRead, originalOrigin, originalData, originalZoom, dataRequest, searchInput, addressInput, olat, olng, storeNum, directionsDisplay, directionsService, prevSelectedMarkerBefore, prevSelectedMarkerAfter, firstRun, reload, nameAttrs;
 	var featuredset = [], locationset = [], normalset = [], markers = [];
 	var filters = {}, locationData = {}, GeoCodeCalc = {}, mappingObj = {};
 
-    // Create the defaults once. DO NOT change these settings in this file - settings should be overridden in the plugin call
-    var defaults = {
-        'ajaxData'                   : null,
-        'altDistanceNoResult'        : false,
-        'autoComplete'               : false,
-        'autoCompleteDisableListener': false,
-        'autoCompleteOptions'        : {},
-        'autoGeocode'                : false,
-        'bounceMarker'               : true,
-        'catMarkers'                 : null,
-        'dataLocation'               : 'data/locations.json',
-        'dataRaw'                    : null,
-        'dataType'                   : 'json',
-        'debug'                      : false,
-        'defaultLat'                 : null,
-        'defaultLng'                 : null,
-        'defaultLoc'                 : false,
-        'disableAlphaMarkers'        : false,
-        'distanceAlert'              : 60,
-        'dragSearch'                 : false,
-        'exclusiveFiltering'         : false,
-        'exclusiveTax'               : null,
-        'featuredDistance'           : null,
-        'featuredLocations'          : false,
-        'fullMapStart'               : false,
-        'fullMapStartBlank'          : false,
-        'fullMapStartListLimit'      : false,
-        'infoBubble'                 : null,
-        'inlineDirections'           : false,
-        'lengthUnit'                 : 'm',
-        'listColor1'                 : '#ffffff',
-        'listColor2'                 : '#eeeeee',
-        'loading'                    : false,
-        'locationsPerPage'           : 10,
-        'mapSettings'                : {
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            zoom     : 12
-        },
-        'markerCluster'              : null,
-        'markerImg'                  : null,
-        'markerDim'                  : null,
-        'maxDistance'                : false,
-        'modal'                      : false,
-        'nameAttribute'              : 'name',
-        'nameSearch'                 : false,
-        'noForm'                     : false,
-        'openNearest'                : false,
-        'originMarker'               : false,
-        'originMarkerDim'            : null,
-        'originMarkerImg'            : null,
-        'pagination'                 : false,
-        'querystringParams'          : false,
-        'selectedMarkerImg'          : null,
-        'selectedMarkerImgDim'       : null,
-        'sessionStorage'             : false,
-        'slideMap'                   : true,
-        'sortBy'                     : null,
-        'storeLimit'                 : 26,
-        'taxonomyFilters'            : null,
-        'visibleMarkersList'         : false,
-        'xmlElement'                 : 'marker',
-        // HTML elements
-        'addressID'                  : 'bh-sl-address',
-        'closeIcon'                  : 'bh-sl-close-icon',
-        'formContainer'              : 'bh-sl-form-container',
-        'formID'                     : 'bh-sl-user-location',
-        'geocodeID'                  : null,
-        'lengthSwapID'               : 'bh-sl-length-swap',
-        'loadingContainer'           : 'bh-sl-loading',
-        'locationList'               : 'bh-sl-loc-list',
-        'mapID'                      : 'bh-sl-map',
-        'maxDistanceID'              : 'bh-sl-maxdistance',
-        'modalContent'               : 'bh-sl-modal-content',
-        'modalWindow'                : 'bh-sl-modal-window',
-        'orderID'                    : 'bh-sl-order',
-        'overlay'                    : 'bh-sl-overlay',
-        'regionID'                   : 'bh-sl-region',
-        'searchID'                   : 'bh-sl-search',
-        'sortID'                     : 'bh-sl-sort',
-        'taxonomyFiltersContainer'   : 'bh-sl-filters-container',
-        // Templates
-        'infowindowTemplatePath'     : 'assets/js/plugins/storeLocator/templates/infowindow-description.html',
-        'listTemplatePath'           : 'assets/js/plugins/storeLocator/templates/location-list-description.html',
-        'KMLinfowindowTemplatePath'  : 'assets/js/plugins/storeLocator/templates/kml-infowindow-description.html',
-        'KMLlistTemplatePath'        : 'assets/js/plugins/storeLocator/templates/kml-location-list-description.html',
-        'listTemplateID'             : null,
-        'infowindowTemplateID'       : null,
-        // Callbacks
-        'callbackAutoGeoSuccess'     : null,
-        'callbackBeforeSend'         : null,
-        'callbackCloseDirections'    : null,
-        'callbackCreateMarker'       : null,
-        'callbackDirectionsRequest'  : null,
-        'callbackFilters'            : null,
-        'callbackFormVals'           : null,
-        'callbackGeocodeRestrictions': null,
-        'callbackJsonp'              : null,
-        'callbackListClick'          : null,
-        'callbackMapSet'             : null,
-        'callbackMarkerClick'        : null,
-        'callbackModalClose'         : null,
-        'callbackModalOpen'          : null,
-        'callbackModalReady'         : null,
-        'callbackNearestLoc'         : null,
-        'callbackNoResults'          : null,
-        'callbackNotify'             : null,
-        'callbackOrder'              : null,
-        'callbackPageChange'         : null,
-        'callbackRegion'             : null,
-        'callbackSorting'            : null,
-        'callbackSuccess'            : null,
-        // Language options
-        'addressErrorAlert'          : 'Unable to find address',
-        'autoGeocodeErrorAlert'      : 'Automatic location detection failed. Please fill in your address or zip code.',
-        'distanceErrorAlert'         : 'Unfortunately, our closest location is more than ',
-        'kilometerLang'              : 'kilometer',
-        'kilometersLang'             : 'kilometers',
-        'mileLang'                   : 'mile',
-        'milesLang'                  : 'miles',
-        'noResultsTitle'             : 'No results',
-        'noResultsDesc'              : 'No locations were found with the given criteria. Please modify your selections or input.',
-        'nextPage'                   : 'Next &raquo;',
-        'prevPage'                   : '&laquo; Prev'
-    };
+	// Create the defaults once. DO NOT change these settings in this file - settings should be overridden in the plugin call
+	var defaults = {
+		'ajaxData'                   : null,
+		'altDistanceNoResult'        : false,
+		'autoComplete'               : false,
+		'autoCompleteDisableListener': false,
+		'autoCompleteOptions'        : {},
+		'autoGeocode'                : false,
+		'bounceMarker'               : true, // Deprecated.
+		'catMarkers'                 : null,
+		'dataLocation'               : 'data/locations.json',
+		'dataRaw'                    : null,
+		'dataType'                   : 'json',
+		'debug'                      : false,
+		'defaultLat'                 : null,
+		'defaultLng'                 : null,
+		'defaultLoc'                 : false,
+		'disableAlphaMarkers'        : false,
+		'distanceAlert'              : 60,
+		'dragSearch'                 : false,
+		'exclusiveFiltering'         : false,
+		'exclusiveTax'               : null,
+		'featuredDistance'           : null,
+		'featuredLocations'          : false,
+		'fullMapStart'               : false,
+		'fullMapStartBlank'          : false,
+		'fullMapStartListLimit'      : false,
+		'infoBubble'                 : null,
+		'inlineDirections'           : false,
+		'lengthUnit'                 : 'm',
+		'listColor1'                 : '#ffffff',
+		'listColor2'                 : '#eeeeee',
+		'loading'                    : false,
+		'locationsPerPage'           : 10,
+		'mapSettings'                : {
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			zoom     : 12
+		},
+		'markerCluster'              : null,
+		'markerImg'                  : null,
+		'markerDim'                  : null,
+		'maxDistance'                : false,
+		'modal'                      : false,
+		'nameAttribute'              : 'name',
+		'nameSearch'                 : false,
+		'noForm'                     : false,
+		'openNearest'                : false,
+		'originMarker'               : false,
+		'originMarkerDim'            : null,
+		'originMarkerImg'            : null,
+		'pagination'                 : false,
+		'querystringParams'          : false,
+		'selectedMarkerImg'          : null,
+		'selectedMarkerImgDim'       : null,
+		'sessionStorage'             : false,
+		'slideMap'                   : true,
+		'sortBy'                     : null,
+		'storeLimit'                 : 26,
+		'taxonomyFilters'            : null,
+		'visibleMarkersList'         : false,
+		'xmlElement'                 : 'marker',
+		// HTML elements
+		'addressID'                  : 'bh-sl-address',
+		'closeIcon'                  : 'bh-sl-close-icon',
+		'formContainer'              : 'bh-sl-form-container',
+		'formID'                     : 'bh-sl-user-location',
+		'geocodeID'                  : null,
+		'lengthSwapID'               : 'bh-sl-length-swap',
+		'loadingContainer'           : 'bh-sl-loading',
+		'locationList'               : 'bh-sl-loc-list',
+		'mapID'                      : 'bh-sl-map',
+		'maxDistanceID'              : 'bh-sl-maxdistance',
+		'modalContent'               : 'bh-sl-modal-content',
+		'modalWindow'                : 'bh-sl-modal-window',
+		'orderID'                    : 'bh-sl-order',
+		'overlay'                    : 'bh-sl-overlay',
+		'regionID'                   : 'bh-sl-region',
+		'searchID'                   : 'bh-sl-search',
+		'sortID'                     : 'bh-sl-sort',
+		'taxonomyFiltersContainer'   : 'bh-sl-filters-container',
+		// Templates
+		'infowindowTemplatePath'     : 'assets/js/plugins/storeLocator/templates/infowindow-description.html',
+		'listTemplatePath'           : 'assets/js/plugins/storeLocator/templates/location-list-description.html',
+		'KMLinfowindowTemplatePath'  : 'assets/js/plugins/storeLocator/templates/kml-infowindow-description.html',
+		'KMLlistTemplatePath'        : 'assets/js/plugins/storeLocator/templates/kml-location-list-description.html',
+		'listTemplateID'             : null,
+		'infowindowTemplateID'       : null,
+		// Callbacks
+		'callbackAutoGeoSuccess'     : null,
+		'callbackBeforeSend'         : null,
+		'callbackCloseDirections'    : null,
+		'callbackCreateMarker'       : null,
+		'callbackDirectionsRequest'  : null,
+		'callbackFilters'            : null,
+		'callbackFormVals'           : null,
+		'callbackGeocodeRestrictions': null,
+		'callbackJsonp'              : null,
+		'callbackListClick'          : null,
+		'callbackMapSet'             : null,
+		'callbackMarkerClick'        : null,
+		'callbackModalClose'         : null,
+		'callbackModalOpen'          : null,
+		'callbackModalReady'         : null,
+		'callbackNearestLoc'         : null,
+		'callbackNoResults'          : null,
+		'callbackNotify'             : null,
+		'callbackOrder'              : null,
+		'callbackPageChange'         : null,
+		'callbackRegion'             : null,
+		'callbackSorting'            : null,
+		'callbackSuccess'            : null,
+		// Language options
+		'addressErrorAlert'          : 'Unable to find address',
+		'autoGeocodeErrorAlert'      : 'Automatic location detection failed. Please fill in your address or zip code.',
+		'distanceErrorAlert'         : 'Unfortunately, our closest location is more than ',
+		'kilometerLang'              : 'kilometer',
+		'kilometersLang'             : 'kilometers',
+		'mileLang'                   : 'mile',
+		'milesLang'                  : 'miles',
+		'noResultsTitle'             : 'No results',
+		'noResultsDesc'              : 'No locations were found with the given criteria. Please modify your selections or input.',
+		'nextPage'                   : 'Next &raquo;',
+		'prevPage'                   : '&laquo; Prev'
+	};
 
 	// Plugin constructor
 	function Plugin(element, options) {
@@ -388,6 +392,34 @@
 		},
 
 		/**
+		 * Range helper function for coordinate validation
+		 *
+		 * @param min {number} minimum number allowed
+		 * @param num {number} number to check
+		 * @param max {number} maximum number allowed
+		 *
+		 * @returns {boolean}
+		 */
+		inRange: function(min, num, max){
+			this.writeDebug('inRange',arguments);
+			num = Math.abs(num);
+			return isFinite(num) && (num >= min) && (num <= max);
+		},
+
+		/**
+		 * Coordinate validation
+		 *
+		 * @param lat {number} latitude
+		 * @param lng {number} longitude
+		 *
+		 * @returns {boolean}
+		 */
+		coordinatesInRange: function (lat, lng) {
+			this.writeDebug('coordinatesInRange',arguments);
+			return this.inRange(-90, lat, 90) && this.inRange(-180, lng, 180);
+		},
+
+		/**
 		 * Check for query string
 		 *
 		 * @param param {string} query string parameter to test
@@ -631,8 +663,8 @@
 		_start: function () {
 			this.writeDebug('_start');
 			var _this = this,
-					doAutoGeo = this.settings.autoGeocode,
-					latlng;
+				doAutoGeo = this.settings.autoGeocode,
+				latlng;
 
 			// Full map blank start
 			if (_this.settings.fullMapStartBlank !== false) {
@@ -648,7 +680,7 @@
 				_this.map = new google.maps.Map(document.getElementById(_this.settings.mapID), myOptions);
 
 				// Re-center the map when the browser is re-sized
-				google.maps.event.addDomListener(window, 'resize', function() {
+				window.addEventListener('resize', function() {
 					var center = _this.map.getCenter();
 					google.maps.event.trigger(_this.map, 'resize');
 					_this.map.setCenter(center);
@@ -825,17 +857,35 @@
 		 */
 		hasEmptyObjectVals: function (obj) {
 			this.writeDebug('hasEmptyObjectVals',arguments);
-				var objTest = true;
+			var objTest = true;
 
-				for(var key in obj) {
-					if (obj.hasOwnProperty(key)) {
-						if (obj[key] !== '' && obj[key].length !== 0) {
-							objTest = false;
-						}
+			for(var key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					if (obj[key] !== '' && obj[key].length !== 0) {
+						objTest = false;
 					}
 				}
+			}
 
-				return objTest;
+			return objTest;
+		},
+
+		/**
+		 * Checks to see if only a single taxonomy group has a selected value
+		 *
+		 * @param obj {Object} the object to check
+		 * @param key {string} Key value of current filter group
+		 *
+		 * @returns {boolean}
+		 */
+		hasSingleGroupFilterVal: function(obj, key) {
+			this.writeDebug('hasSingleGroupFilterVal',arguments);
+
+			// Copy the object so the original doesn't change.
+			var objCopy = Object.assign({}, obj);
+			delete objCopy[key];
+
+			return this.hasEmptyObjectVals(objCopy);
 		},
 
 		/**
@@ -926,14 +976,19 @@
 		 * Location distance sorting function
 		 *
 		 * @param locationsarray {array} locationset array
+		 * @param distanceOverride {boolean} Force sort by distance
 		 */
-		sortNumerically: function (locationsarray) {
+		sortNumerically: function (locationsarray, distanceOverride) {
 			this.writeDebug('sortNumerically',arguments);
 			var property = (
 				this.settings.sortBy !== null &&
 				this.settings.sortBy.hasOwnProperty('prop') &&
 				typeof this.settings.sortBy.prop !== 'undefined'
 			) ?  this.settings.sortBy.prop : 'distance';
+
+			if (typeof distanceOverride !== 'undefined' && distanceOverride === true) {
+				property = 'distance';
+			}
 
 			if (this.settings.sortBy !== null && this.settings.sortBy.hasOwnProperty('order') && this.settings.sortBy.order.toString() === 'desc') {
 				locationsarray.sort(function (a, b) {
@@ -1025,8 +1080,13 @@
 						}
 					}
 
-					if (testResults.indexOf(true) === -1) {
-						filterTest = false;
+					// First handle name search, then standard filtering.
+					if (typeof nameAttrs !== 'undefined' && nameAttrs.indexOf(k) !== -1 && testResults.indexOf(true) !== -1) {
+						return true;
+					} else {
+						if (testResults.indexOf(true) === -1) {
+							filterTest = false;
+						}
 					}
 				}
 			}
@@ -1208,24 +1268,23 @@
 				// Create the default markers
 				if (this.settings.disableAlphaMarkers === true || this.settings.storeLimit === -1 || this.settings.storeLimit > 26 || this.settings.catMarkers !== null || this.settings.markerImg !== null || (this.settings.fullMapStart === true && firstRun === true && (isNaN(this.settings.fullMapStartListLimit) || this.settings.fullMapStartListLimit > 26 || this.settings.fullMapStartListLimit === -1))) {
 					marker = new google.maps.Marker({
-						position : point,
-						map      : map,
 						draggable: false,
-						icon: markerImg // Reverts to default marker if nothing is passed
+						icon     : markerImg, // Reverts to default marker if nothing is passed
+						map      : map,
+						optimized: false,
+						position : point,
+						title    : name,
 					});
 				}
 				else {
-					// Letter markers image
-					letterMarkerImg = {
-						url: 'https://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-b.png&text=' + letter + '&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48'
-					};
-
 					// Letter markers
 					marker = new google.maps.Marker({
-						position : point,
+						draggable: false,
+						label    : letter,
 						map      : map,
-						icon     : letterMarkerImg,
-						draggable: false
+						optimized: false,
+						position : point,
+						title    : name,
 					});
 				}
 			}
@@ -1856,6 +1915,12 @@
 				}
 			}
 
+			// Make sure the location coordinates are valid.
+			if (!this.coordinatesInRange(data.lat, data.lng)) {
+				this.writeDebug('locationsSetup', "location ignored because coordinates out of range: " + maxDistance, data);
+				return;
+			}
+
 			// Create the array
 			if (this.settings.maxDistance === true && typeof maxDistance !== 'undefined' && maxDistance !== null) {
 				if (data.distance <= maxDistance) {
@@ -2450,7 +2515,13 @@
 		openNearestLocation: function(nearestLoc, infowindow, storeStart, page) {
 			this.writeDebug('openNearestLocation',arguments);
 
-			if (this.settings.openNearest !== true || typeof nearestLoc === 'undefined' || (this.settings.fullMapStart === true && firstRun === true) || (this.settings.defaultLoc === true && firstRun === true)) {
+			if (
+				this.settings.openNearest !== true ||
+				typeof nearestLoc === 'undefined' ||
+				typeof originalOrigin === 'undefined' ||
+				(this.settings.fullMapStart === true && firstRun === true && this.settings.querystringParams === false) ||
+				(this.settings.defaultLoc === true && firstRun === true && this.settings.querystringParams === false)
+			) {
 				return;
 			}
 
@@ -2461,7 +2532,7 @@
 				_this.settings.callbackNearestLoc.call(this, _this.map, nearestLoc, infowindow, storeStart, page);
 			}
 
-			var markerId = 0;
+			var markerId = (nearestLoc.hasOwnProperty('markerid')) ? nearestLoc.markerid : 0;
 			var selectedMarker = markers[markerId];
 
 			_this.createInfowindow(selectedMarker, 'left', infowindow, storeStart, page);
@@ -2502,17 +2573,7 @@
 
 				map.panTo(selectedMarker.getPosition());
 				var listLoc = 'left';
-				if (_this.settings.bounceMarker === true) {
-					selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
-					setTimeout(function () {
-							selectedMarker.setAnimation(null);
-							_this.createInfowindow(selectedMarker, listLoc, infowindow, storeStart, page);
-						}, 700
-					);
-				}
-				else {
-					_this.createInfowindow(selectedMarker, listLoc, infowindow, storeStart, page);
-				}
+				_this.createInfowindow(selectedMarker, listLoc, infowindow, storeStart, page);
 
 				// Custom selected marker override
 				if (_this.settings.selectedMarkerImg !== null) {
@@ -2639,7 +2700,7 @@
 
 			// Featured locations radius restriction.
 			if (this.settings.featuredDistance !== null) {
-					featuredset = this.featuredDistanceRestriction(mappingObject);
+				featuredset = this.featuredDistanceRestriction(mappingObject);
 			}
 
 			return featuredset;
@@ -2705,6 +2766,74 @@
 				dataRequest.done(function (data) {
 					_this.processData(mappingObject, originPoint, data, page);
 				});
+			}
+		},
+
+		/**
+		 * Disable input fields that aren't available within the current location set
+		 */
+		maybeDisableFilterOptions: function() {
+			this.writeDebug('maybeDisableFilterOptions');
+			var availableValues = [];
+			var _this = this;
+
+			// Initially reset any input/option fields that were previously disabled.
+			for (var taxKey in this.settings.taxonomyFilters) {
+				if (this.settings.taxonomyFilters.hasOwnProperty(taxKey)) {
+					for (var x = 0; x < this.settings.taxonomyFilters[taxKey].length; x++) {
+						$('#' + this.settings.taxonomyFilters[taxKey] + ' input,option').each(function () {
+							var disabled = $(this).attr('disabled')
+
+							if (typeof disabled !== 'undefined') {
+								$(this).removeAttr('disabled');
+							}
+						});
+					}
+				}
+			}
+
+			// Loop through current location set to determine what filter values are still available.
+			for (var location in locationset) {
+				if (locationset.hasOwnProperty(location)) {
+					// Loop through the location values.
+					for (var locationKey in locationset[location]) {
+						if (filters.hasOwnProperty(locationKey) && locationset[location][locationKey] !== '') {
+							if (availableValues.hasOwnProperty(locationKey)) {
+								var availableVal = availableValues[locationKey].concat(',', locationset[location][locationKey].replace(', ', ',').trim());
+								availableValues[locationKey] = Array.from(new Set(availableVal.split(','))).toString();
+							} else {
+								availableValues[locationKey] = locationset[location][locationKey].replace(', ', ',').trim();
+							}
+						}
+					}
+				}
+			}
+
+			// Account for missing filter properties in location set.
+			for (var keyName in filters) {
+				if (!availableValues.hasOwnProperty(keyName)) {
+					availableValues[keyName] = '';
+				}
+			}
+
+			// Update input and option fields to disabled if they're not available.
+			for (var key in this.settings.taxonomyFilters) {
+				if (this.settings.taxonomyFilters.hasOwnProperty(key)) {
+					for (var i = 0; i < this.settings.taxonomyFilters[key].length; i++) {
+						if (availableValues.hasOwnProperty(key)) {
+							$('#' + this.settings.taxonomyFilters[key] + ' input, #' + this.settings.taxonomyFilters[key] + ' option').each(function () {
+								if ($(this).val() !== '' && Array.from(new Set(availableValues[key].split(','))).indexOf($(this).val()) === -1) {
+									// Select options should still be available if only a select option has been selected.
+									if ($(this).prop('tagName') === 'OPTION' && _this.hasSingleGroupFilterVal(filters, key)) {
+										return;
+									}
+
+									$(this).attr('disabled', true);
+								}
+							});
+						}
+					}
+				}
 			}
 		},
 
@@ -2820,7 +2949,39 @@
 			// Name search - using taxonomy filter to handle
 			if (_this.settings.nameSearch === true) {
 				if (typeof searchInput !== 'undefined' && '' !== searchInput) {
-					filters[_this.settings.nameAttribute] = [searchInput];
+
+					if (_this.settings.nameAttribute.indexOf(',')) {
+						nameAttrs = _this.settings.nameAttribute.split(',');
+
+						// Multiple name attributes should swap to exclusive filtering.
+						if (_this.settings.exclusiveTax !== null) {
+							_this.settings.exclusiveTax.concat(nameAttrs);
+						} else {
+							_this.settings.exclusiveTax = nameAttrs;
+						}
+
+						for (var a = 0; a < nameAttrs.length; a++) {
+							filters[nameAttrs[a].trim()] = [searchInput];
+						}
+					} else {
+						filters[_this.settings.nameAttribute] = [searchInput];
+					}
+				}
+
+				// Check for a previous value.
+				if (
+					typeof searchInput !== 'undefined' &&
+					'' === searchInput
+				) {
+					if (typeof nameAttrs !== 'undefined') {
+						for (var pa = 0; pa < nameAttrs.length; pa++) {
+							if (nameAttrs[pa] in filters) {
+								delete filters[nameAttrs[pa]];
+							}
+						}
+					} else {
+						delete filters[_this.settings.nameAttribute];
+					}
 				}
 			}
 
@@ -2837,14 +2998,23 @@
 							}
 
 							// Swap pattern matching depending on name search vs. taxonomy filtering.
-							if ( k === _this.settings.nameAttribute ) {
-								taxFilters[k][z] = '(?:^|\\s)' + filters[k][z].replace(/([.*+?^=!:${}()|\[\]\/\\]|&\s+)/g, '');
+							if (typeof nameAttrs !== 'undefined') {
+								if (nameAttrs.indexOf(k) !== -1) {
+									taxFilters[k][z] = '(?:^|\\s)' + filters[k][z].replace(/([.*+?^=!:${}()|\[\]\/\\]|&\s+)/g, '');
+								} else {
+									taxFilters[k][z] = '(?=.*' + filters[k][z].replace(/([.*+?^=!:${}()|\[\]\/\\]|&\s+)/g, '') + '(?!\\s))';
+								}
 							} else {
-								taxFilters[k][z] = '(?=.*' + filters[k][z].replace(/([.*+?^=!:${}()|\[\]\/\\]|&\s+)/g, '') + '(?!\\s))';
+								if (k === _this.settings.nameAttribute) {
+									taxFilters[k][z] = '(?:^|\\s)' + filters[k][z].replace(/([.*+?^=!:${}()|\[\]\/\\]|&\s+)/g, '');
+								} else {
+									taxFilters[k][z] = '(?=.*' + filters[k][z].replace(/([.*+?^=!:${}()|\[\]\/\\]|&\s+)/g, '') + '(?!\\s))';
+								}
 							}
 						}
 					}
 				}
+
 				// Filter the data
 				if (!_this.isEmptyObject(taxFilters)) {
 					locationset = $.grep(locationset, function (val) {
@@ -2855,6 +3025,23 @@
 
 			// Sorting
 			if (_this.settings.sortBy !== null && typeof _this.settings.sortBy === 'object') {
+
+				// Sort the multi-dimensional array by distance to get the nearest location first when enabled
+				if (_this.settings.openNearest === true && typeof originalOrigin !== 'undefined') {
+					this.sortNumerically(locationset, true);
+
+					// Save the closest location to a variable for openNearest setting
+					if (typeof locationset[0] !== 'undefined') {
+
+						if (this.settings.sortBy.hasOwnProperty('order') && this.settings.sortBy.order.toString() === 'desc') {
+							nearestLoc = locationset[locationset.length - 1];
+						} else {
+							nearestLoc = locationset[0];
+						}
+					}
+				}
+
+				// Custom sorting
 				_this.sortCustom(locationset);
 			} else {
 				// Sort the multi-dimensional array by distance
@@ -2877,12 +3064,14 @@
 							}
 						}
 						else {
+							_this.emptyResult();
 							throw new Error('No locations found. Please check the dataLocation setting and path.');
+							return;
 						}
 					}
 				}
 
-				// Save the closest location to a variable for openNearest setting.
+				// Save the closest location to a variable for openNearest setting
 				if (typeof locationset[0] !== 'undefined') {
 					nearestLoc = locationset[0];
 				}
@@ -2893,9 +3082,9 @@
 
 				// Create array for featured locations
 				featuredset = $.grep(locationset, function (val) {
-						if (val.hasOwnProperty('featured')) {
-								return val.featured === 'true';
-						}
+					if (val.hasOwnProperty('featured')) {
+						return val.featured === 'true';
+					}
 				});
 
 				// Featured location restrictions.
@@ -2911,6 +3100,11 @@
 				// Combine the arrays
 				locationset = [];
 				locationset = featuredset.concat(normalset);
+			}
+
+			// Disable filter inputs of there are no locations with the values left.
+			if (firstRun !== true && _this.settings.exclusiveFiltering === false) {
+				_this.maybeDisableFilterOptions();
 			}
 
 			// Slide in the map container
@@ -2944,6 +3138,16 @@
 			}
 			else {
 				storeNum = _this.settings.storeLimit;
+			}
+
+			// If fullMapStart is enabled and taxFilters is reset and name search and origin are empty, swap back to the original length.
+			if (
+				_this.settings.fullMapStart === true &&
+				_this.isEmptyObject(taxFilters) &&
+				(searchInput === '' || typeof searchInput === 'undefined') &&
+				(addressInput === '' || typeof addressInput === 'undefined')
+			) {
+				storeNum = locationset.length;
 			}
 
 			// If pagination is on, change the store limit to the setting and slice the locationset array
@@ -2999,7 +3203,7 @@
 			_this.map = new google.maps.Map(document.getElementById(_this.settings.mapID), myOptions);
 
 			// Re-center the map when the browser is re-sized
-			google.maps.event.addDomListener(window, 'resize', function() {
+			window.addEventListener('resize', function() {
 				var center = _this.map.getCenter();
 				google.maps.event.trigger(_this.map, 'resize');
 				_this.map.setCenter(center);
@@ -3020,7 +3224,7 @@
 				_this.settings.callbackMapSet.call(this, _this.map, originPoint, originalZoom, myOptions);
 			}
 
-			// Initialize the infowondow
+			// Initialize the infowindow
 			if ( typeof InfoBubble !== 'undefined' && _this.settings.infoBubble !== null ) {
 				var infoBubbleSettings = _this.settings.infoBubble;
 				infoBubbleSettings.map = _this.map;
@@ -3029,7 +3233,6 @@
 			} else {
 				infowindow = new google.maps.InfoWindow();
 			}
-
 
 			// Add origin marker if the setting is set
 			_this.originMarker(_this.map, origin, originPoint);
@@ -3059,6 +3262,18 @@
 				marker = _this.createMarker(point, locationset[y].name, locationset[y].address, letter, _this.map, locationset[y].category);
 				marker.set('id', y);
 				markers[y] = marker;
+
+				// Add marker ID to location data
+				locationset[y].markerid = marker.get('id');
+
+				if (this.settings.dataRaw !== null) {
+					for (var l = 0; l < this.settings.dataRaw.length; l++) {
+						if (this.settings.dataRaw[l] && this.settings.dataRaw[l].hasOwnProperty('id') && this.settings.dataRaw[l].id === locationset[y].id) {
+							this.settings.dataRaw[l].markerid = locationset[y].markerid;
+						}
+					}
+				}
+
 				if (
 					(_this.settings.fullMapStart === true && firstRun === true && _this.settings.querystringParams !== true) ||
 					(_this.settings.mapSettings.zoom === 0) ||

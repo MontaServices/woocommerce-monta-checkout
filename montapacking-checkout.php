@@ -343,7 +343,7 @@ function filter_woocommerce_order_shipping_method($html, $instance)
             }
 
             if ($value->key == 'Pickup Data') {
-                $method = strip_tags($value->value['company']);
+                $method = strip_tags($value->value['description']);
                 return $method;
             }
         }
