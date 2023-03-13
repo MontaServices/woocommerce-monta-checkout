@@ -804,8 +804,9 @@ jQuery(document).ready(function() {
             callbackListClick: function (markerId, selectedMarker, location) {
                 monta_shipping.selectPickup(location, markerId);
             },
-            callbackNotify: function (notifyText) {
-                monta_shipping.storeLocatorDestroy();
+            callbackNotify: function (error) {
+                $('#monta-stores').storeLocator('mapping',{ lat: defaultLat, lng: defaultLng });
+                document.getElementsByClassName('monta-more-pickup-points')[0].style.display = 'none';
             }
         };
         monta_shipping.pickupLocator = $('#monta-stores').storeLocator(config);
@@ -828,13 +829,9 @@ jQuery(document).ready(function() {
                 //if ($("#initialPickupsList").children().length === 3) {
                 if ($("#initialPickupsList").children().length > 0) {
                     $("#monta-pickups").show(100);
-
                     $('.monta-loading').removeClass('active');
-
                     $('.monta-shipment-pickup').addClass('active');
-
                     $(".monta-pickup-initial-points").removeClass("monta-hide");
-
                     monta_shipping.enableRadio();
 
                     clearInterval(liExists);
@@ -872,6 +869,7 @@ jQuery(document).ready(function() {
                 'postal': item.details.zipcode,
                 'country': item.details.country,
                 'description': item.description,
+                'distance': item.details.distance / 1000,
                 'price': item.price,
                 'openingtimes': allopeningtimes,
                 'image': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.code + ".png",

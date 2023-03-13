@@ -59,6 +59,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 * Fixed wrong data in order summary delivery field
 * Added field in storelocator to search for pickuppoints based on different postcode/zipcode
+* Better fallback for missing google key. You can now show pickuppoints without a Google maps key. The missing Google maps key will only disable the map view.
 
 #1.48
 

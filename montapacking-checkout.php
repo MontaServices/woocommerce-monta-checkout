@@ -306,7 +306,7 @@ function montacheckout_render_settings()
             <table class="form-table">
                 <tr>
                     <th scope="row"><label for="monta_google_key">API Key</label></th>
-                    <td><input required type="text" name="monta_google_key"
+                    <td><input type="text" name="monta_google_key"
                                value="<?php echo esc_attr(get_option('monta_google_key')); ?>" size="50"/>
                         <br><i style="font-size:12px">A Google API key is required if you want to make use of the world map. A Google key can be created
                             <a target="_new" href="https://console.cloud.google.com/">here</a>.</i>
