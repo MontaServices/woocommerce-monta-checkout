@@ -137,7 +137,7 @@ jQuery(document).ready(function() {
                         }
                     }
 
-                    $('#monta-stores').storeLocator('destroy');
+                    monta_shipping.storeLocatorDestroy();
 
                 },
 
@@ -409,12 +409,13 @@ jQuery(document).ready(function() {
                             $.post(ajax_url, $.param(data)).done(function (result) {
                                 if (result.success) {
                                     if (result.pickups !== undefined) {
+                                        monta_shipping.pickups = result.pickups;
+                                        monta_shipping.pickup_default = result.default;
+
+                                        document.getElementById('category-filters').style.visibility = 'hidden';
                                         let markers = formatMarkers(result.pickups);
                                         InitializeStoreLocator(markers, result.default.lat, result.default.lng, monta_shipping);
                                     }
-                                } else {
-                                    // Show error message
-
                                 }
                             });
                         }
@@ -769,7 +770,7 @@ jQuery(document).ready(function() {
 
     function InitializeStoreLocator(markers, defaultLat, defaultLng, monta_shipping) {
         $ = jQuery;
-        $('#monta-stores').storeLocator('destroy');
+        monta_shipping.storeLocatorDestroy();
 
         const config = {
             'debug': false,
@@ -804,13 +805,19 @@ jQuery(document).ready(function() {
             callbackListClick: function (markerId, selectedMarker, location) {
                 monta_shipping.selectPickup(location, markerId);
             },
+            callbackSorting: () => {
+                runListTrim(monta_shipping);
+            },
             callbackNotify: function (error) {
                 $('#monta-stores').storeLocator('mapping',{ lat: defaultLat, lng: defaultLng });
                 document.getElementsByClassName('monta-more-pickup-points')[0].style.display = 'none';
             }
         };
         monta_shipping.pickupLocator = $('#monta-stores').storeLocator(config);
+        runListTrim(monta_shipping);
+    }
 
+    function runListTrim(monta_shipping){
         const liExists = setInterval(function () {
             if ($("#initialPickupsList").length) {
 
