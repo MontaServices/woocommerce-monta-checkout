@@ -29,9 +29,6 @@ jQuery(document).ready(function() {
                         $("#billing_postcode").trigger("change");
                     });
 
-                    // Hide option on start
-                    $("#ship-to-different-address").hide();
-
                     this.$checkout_form.on('click', '#ship-to-different-address input', this.updateDeliveries);
                     this.$checkout_form.on('change', '.country_select', this.updateDeliveries);
 
@@ -227,22 +224,12 @@ jQuery(document).ready(function() {
                     const checked = $('.monta-options input[type=radio]:checked').val();
 
                     if (checked === "pickup") {
-                        // Hide alternate billing address option
-                        $("#ship-to-different-address").hide();
-                        $("#ship-to-different-address").next().hide();
-                        $("#ship-to-different-address input").prop("checked", false);
-
                         $('.monta-loading').addClass('active');
 
                         $('.monta-shipment-extras').removeClass('active');
-
                     } else {
-
-                        $("#ship-to-different-address").show();
-
                         $('.monta-loading').addClass('active');
                         $(".monta-shipment-pickup").removeClass("active");
-
                     }
 
                     monta_shipping.updateDeliveries(function (success, result) {
