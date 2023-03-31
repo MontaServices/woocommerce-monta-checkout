@@ -20,6 +20,7 @@ jQuery(document).ready(function() {
                 pickups: null,
                 pickup_default: null,
                 pickup_selected: null,
+                first_preferred: null,
 
                 pickupLocator: null,
 
@@ -97,51 +98,37 @@ jQuery(document).ready(function() {
                     const ship_country = $('#shipping_country').val();
 
                     if (other) {
-
                         if (ship_zipcode !== '' && ship_housenumber !== '') {
-
                             monta_shipping.enableRadio();
                             monta_shipping.hideAddressMsg();
 
                             //Select first shipping option
                             monta_shipping.selectDeliveryOption();
-
                         } else {
-
                             monta_shipping.disableRadio();
                             monta_shipping.showAddressMsg();
 
                             monta_shipping.deSelectDeliveryOption();
-
                         }
                     } else {
-
                         if (zipcode !== '' && housenumber !== '') {
-
                             monta_shipping.enableRadio();
                             monta_shipping.hideAddressMsg();
 
                             //Select first shipping option
                             monta_shipping.selectDeliveryOption();
-
                         } else {
-
                             monta_shipping.disableRadio();
                             monta_shipping.showAddressMsg();
 
                             monta_shipping.deSelectDeliveryOption();
-
                         }
                     }
-
                     monta_shipping.storeLocatorDestroy();
-
                 },
 
                 updateWooCheckout: function () {
-
                     $(document.body).trigger('update_checkout');
-
                 },
 
                 updateSlider: function () {
@@ -268,10 +255,12 @@ jQuery(document).ready(function() {
 
                                 $.each(monta_shipping.frames, function (key, item) {
                                     daysavailablecounter++;
+                                    if(monta_shipping.firstPreferred == null && item.options[0].is_preferred){
+                                        monta_shipping.firstPreferred = item;
+                                    }
                                 });
 
                                 $.each(monta_shipping.frames, function (key, item) {
-
                                     if (item.date !== "") {
                                         hidedatebar = false;
                                     }
@@ -295,8 +284,12 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.day}/g, item.date);
                                         html = html.replace(/{.dayname}/g, item.datename);
                                         html = html.replace(/{.time}/g, item.time);
-                                        html = html.replace(/{.description}/g, (item.description !== null) ? item.description : '');
+                                        html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
+
+                                        if(monta_shipping.firstPreferred != null && monta_shipping.firstPreferred.date === item.date){
+                                            html = html.replace(/{.preferred}/g, true);
+                                        }
 
                                         // exclude the checking of today delivery, this is not the most wanted option for clients
                                         if (date_today === item.date) {
@@ -306,12 +299,7 @@ jQuery(document).ready(function() {
                                         }
 
                                         // to disable client fix enable line below here
-                                        showhtml = true;
-
-
-                                        if (key === 'NOTIMES' && daysavailablecounter > 1) {
-                                            showhtml = false;
-                                        }
+                                        showhtml = !(key === 'NOTIMES' && daysavailablecounter > 1);
 
                                         if (showhtml === true) {
                                             times.append(html);
@@ -321,12 +309,15 @@ jQuery(document).ready(function() {
 
                                 });
 
-                                if (hidedatebar === true) {
+                                if (hidedatebar === true && monta_shipping.firstPreferred === null)
                                     $('.monta-times').addClass('monta-hide');
-                                }
 
                                 // Select first option
-                                mover.find('input[type=radio]:not(.sameday):first').prop('checked', true).click();
+                                if(monta_shipping.firstPreferred != null) {
+                                    mover.find('input[type=radio][data-preferred=\'true\']:not(.sameday):first').prop('checked', true).click();
+                                } else {
+                                    mover.find('input[type=radio]:not(.sameday):first').prop('checked', true).click();
+                                }
 
                                 // Update slider for scrolling
                                 monta_shipping.updateSlider();
@@ -435,7 +426,7 @@ jQuery(document).ready(function() {
                         html += '<div class="loadedimage"><img src="' + imageUrl + '" style="width:30px;"></div>';
                         html += '<div class="loadedinformation">';
                         html += '<strong>' + loc.name + '</strong><br />';
-                        html += loc.description + '<br />';
+                        html += loc.displayname + '<br />';
                         html += loc.street + ' ' + loc.houseNumber + '<br />';
                         html += loc.postal + ' ' + loc.city;
                         html += '</div>';
@@ -469,6 +460,7 @@ jQuery(document).ready(function() {
                         $('.monta-pickup-input-street').val(loc.street);
                         $('.monta-pickup-input-houseNumber').val(loc.houseNumber);
                         $('.monta-pickup-input-description').val(loc.description);
+                        $('.monta-pickup-input-displayname').val(loc.displayname);
                         $('.monta-pickup-input-postal').val(loc.postal);
                         $('.monta-pickup-input-city').val(loc.city);
                         $('.monta-pickup-input-country').val(loc.country);
@@ -518,7 +510,7 @@ jQuery(document).ready(function() {
                                 time = '';
                             }
 
-                            const templateShipper = '<label>\n\n' +
+                            let html = '<label>\n\n' +
                                 '        <span style="display:none" class="cropped_name">{.name}</span>\n' +
                                 '        <span style="display:none" class="cropped_time">{.time}</span>\n' +
                                 '        <span style="display:none" class="cropped_image">{.img}</span>\n' +
@@ -526,7 +518,7 @@ jQuery(document).ready(function() {
                                 '        <span style="display:none" class="cropped_type">{.type}</span>\n\n' +
                                 '        <span class="radiobutton">\n' +
                                 '            <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper">\n' +
-                                '            <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}">\n' +
+                                '            <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}" data-preferred="{.preferred}">\n' +
                                 '        </span>\n\n' +
                                 '        <div class="image">\n' +
                                 '            {.img}\n' +
@@ -539,11 +531,10 @@ jQuery(document).ready(function() {
                                 '        </div>\n' +
                                 '        <div class="clearboth"></div>\n\n' +
                                 '    </label>';
-
-                            let html = templateShipper;
                             html = html.replace(/{.code}/g, realCode);
                             html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + code + '.png">');
-                            html = html.replace(/{.name}/g, item.name);
+                            html = html.replace(/{.name}/g, item.displayname);
+                            html = html.replace(/{.preferred}/g, item.is_preferred);
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
                             html = html.replace(/{.type}/g, item.type);
@@ -863,6 +854,7 @@ jQuery(document).ready(function() {
                 'postal': item.details.zipcode,
                 'country': item.details.country,
                 'description': item.description,
+                'displayname': item.displayname,
                 'distance': item.details.distance / 1000,
                 'price': item.price,
                 'openingtimes': allopeningtimes,
@@ -872,7 +864,7 @@ jQuery(document).ready(function() {
             });
 
             if (jQuery('.cat-' + item.code + '').length === 0) {
-                jQuery('#category-filters').append('<li class="cat-' + item.code + '"><label><input class="monta-shipper-filter" type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.description + '</label></li>');
+                jQuery('#category-filters').append('<li class="cat-' + item.code + '"><label><input class="monta-shipper-filter" type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.displayname + '</label></li>');
             }
         });
         return markers;

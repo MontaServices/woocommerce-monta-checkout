@@ -9,6 +9,8 @@ class MontaCheckout_ShippingOption
     public $optioncodes;
     public $optionsWithValue;
     public $description;
+    public $displayname;
+    public $isPreferred;
     public $mailbox;
     public $price;
     public $currency;
@@ -17,7 +19,7 @@ class MontaCheckout_ShippingOption
     public $extras;
     public $date;
 
-    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $mailbox, $price, $currency, $from, $to, $extras, $date)
+    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $displayname, $isPreferred, $mailbox, $price, $currency, $from, $to, $extras, $date)
     {
 
         $override = esc_attr(get_option('monta_standardshipmentname'));;
@@ -31,6 +33,8 @@ class MontaCheckout_ShippingOption
         $this->setOptionCodes($optioncodes);
         $this->setOptionsWithValue($optionsWithValue);
         $this->setDescription($description);
+        $this->setDisplayName($displayname);
+        $this->setIspreferred($isPreferred);
         $this->setMailbox($mailbox);
         $this->setPrice($price);
         $this->setCurrency($currency);
@@ -68,6 +72,18 @@ class MontaCheckout_ShippingOption
     public function setDescription($description)
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function setDisplayname($displayname)
+    {
+        $this->displayname = $displayname;
+        return $this;
+    }
+
+    public function setIsPreferred($isPreferred)
+    {
+        $this->isPreferred = $isPreferred;
         return $this;
     }
 

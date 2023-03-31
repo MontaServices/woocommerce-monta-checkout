@@ -77,6 +77,8 @@ class MontaCheckout_TimeFrame
                     $option->ShipperOptionCodes,
                     $option->ShipperOptionsWithValue,
                     $option->Description,
+                    $option->DisplayName,
+                    $option->IsPreferred,
                     $option->IsMailbox,
                     $option->SellPrice,
                     $option->SellPriceCurrency,

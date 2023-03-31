@@ -226,7 +226,7 @@
 <ul class="monta-choice-template">
     <li>
         <label>
-            <input type="radio" name="montapacking[shipment][time]" value="{.id}"
+            <input type="radio" name="montapacking[shipment][time]" value="{.id}" data-preferred="{.preferred}"
                    class="montapackingshipmenttime {.sameday}">
             <span>
                 <span class="dayname">{.dayname}</span>
