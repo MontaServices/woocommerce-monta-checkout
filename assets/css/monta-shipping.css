@@ -81,9 +81,10 @@ body.monta-cover-open {
     vertical-align: middle;
     position: relative;
 }
-.montapacking-shipping .monta-options .monta-option:nth-child(1) {
+.montapacking-shipping .monta-options .monta-option {
     padding: 0 8px 0 0 !important;
 }
+
 .montapacking-shipping .monta-options .monta-option label {
     display: block;
     height: 100%;
@@ -516,7 +517,6 @@ input[name=initialPickupPointRadio] {
     }
     .monta-shipment-pickup.active {
         margin-top: 0px;
-    !important;
     }
 }
 

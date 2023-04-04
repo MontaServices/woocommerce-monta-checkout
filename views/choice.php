@@ -64,6 +64,17 @@
             </label>
 
         </div>
+        <div class="monta-option monta-disabled monta-option-pickup">
+
+            <label>
+                <input type="radio" name="montapacking[shipment][type]" value="collect" class="selectshipment"
+                       autocomplete="on"/>
+                <span class="block">
+					<?php _e('Store Collect', 'montapacking-checkout'); ?>
+				</span>
+            </label>
+
+        </div>
     </div>
 
     <div class="monta-loading"></div>

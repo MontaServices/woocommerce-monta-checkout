@@ -253,10 +253,11 @@ jQuery(document).ready(function() {
 
                                 let daysavailablecounter = 0;
 
+                                monta_shipping.first_preferred = null;
                                 $.each(monta_shipping.frames, function (key, item) {
                                     daysavailablecounter++;
-                                    if(monta_shipping.firstPreferred == null && item.options[0].is_preferred){
-                                        monta_shipping.firstPreferred = item;
+                                    if(monta_shipping.first_preferred == null && item.options[0].is_preferred){
+                                        monta_shipping.first_preferred = item;
                                     }
                                 });
 
@@ -287,7 +288,7 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
 
-                                        if(monta_shipping.firstPreferred != null && monta_shipping.firstPreferred.date === item.date){
+                                        if(monta_shipping.first_preferred != null && monta_shipping.first_preferred.date === item.date){
                                             html = html.replace(/{.preferred}/g, true);
                                         }
 
@@ -309,11 +310,11 @@ jQuery(document).ready(function() {
 
                                 });
 
-                                if (hidedatebar === true && monta_shipping.firstPreferred === null)
+                                if (hidedatebar === true && monta_shipping.first_preferred === null)
                                     $('.monta-times').addClass('monta-hide');
 
                                 // Select first option
-                                if(monta_shipping.firstPreferred != null) {
+                                if(monta_shipping.first_preferred != null) {
                                     mover.find('input[type=radio][data-preferred=\'true\']:not(.sameday):first').prop('checked', true).click();
                                 } else {
                                     mover.find('input[type=radio]:not(.sameday):first').prop('checked', true).click();
@@ -334,6 +335,13 @@ jQuery(document).ready(function() {
 
                             // Process pickups
                             if (checked === 'pickup') {
+                                monta_shipping.pickup_selected = null;
+                                let markers = formatMarkers(monta_shipping.pickups);
+                                InitializeStoreLocator(markers, monta_shipping.pickup_default.lat, monta_shipping.pickup_default.lng, monta_shipping);
+                            }
+
+                            if (checked === 'collect') {
+                                monta_shipping.pickup_selected = null;
                                 let markers = formatMarkers(monta_shipping.pickups);
                                 InitializeStoreLocator(markers, monta_shipping.pickup_default.lat, monta_shipping.pickup_default.lng, monta_shipping);
                             }
@@ -352,7 +360,7 @@ jQuery(document).ready(function() {
                 showPickupMap: function () {
                     const checked = $('.monta-options input[type=radio]:checked').val();
 
-                    if (checked === "pickup") {
+                    if (checked === "pickup" || checked === 'collect') {
                         $('body').addClass('monta-cover-open');
 
                         $('.monta-cover').removeClass('monta-hide');
@@ -567,20 +575,15 @@ jQuery(document).ready(function() {
                     let options = null;
 
                     $.each(monta_shipping.frames[frame].options, function (key, item) {
-
                         const realCode = item.code;
 
                         if (realCode === shipper) {
-
                             options = item.extras;
                             return false;
-
                         }
-
                     });
 
                     if (options !== undefined && options !== null) {
-
                         $('.monta-shipment-extras').addClass('active');
 
                         extras.html('');
@@ -597,108 +600,70 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.price}/g, item.price);
 
                             extras.append(html);
-
                         });
-
                     } else {
-
                         $('.monta-shipment-extras').removeClass('active');
                         extras.html('');
-
                     }
 
                     monta_shipping.updateWooCheckout();
-
                 },
 
                 disableRadio: function () {
-
                     $('.monta-options .monta-option').addClass('monta-disabled');
                     $('.monta-options input[type="radio"]').prop('disabled', true);
 
                     $(".monta-shipment-delivery").removeClass("active");
                     $(".monta-shipment-extras").removeClass("active");
                     $(".monta-shipment-pickup").removeClass("active");
-
                 },
 
                 enableRadio: function () {
-
                     $('.monta-options .monta-option').removeClass('monta-disabled');
                     $('.monta-options input[type="radio"]').prop('disabled', false);
-
                 },
 
                 hideAddressMsg: function () {
-
                     $("#monta-address-required").hide();
-
                 },
 
                 showAddressMsg: function () {
-
                     $("#monta-address-required").show();
-
                 },
 
                 sortInitialPickups: function () {
-
                     const liExists = setInterval(function () {
-
                         if ($("#initialPickupsList").length) {
-
                             $('#initialPickupsList li:gt(' + ($("#maxpickuppoints").val() - 1) + ')').remove();
 
                             //Add radio buttons for initial pickups
                             $("#initialPickupsList  > li").each(function () {
-
                                 $(this).prepend("<input name='initialPickupPointRadio' class='initialPickupRadio' type='radio'>");
-
                             });
 
                             if ($("#initialPickupsList").children().length > 0) {
-
                                 $("#monta-pickups").show(100);
-
                                 $('.monta-loading').removeClass('active');
-
                                 $('.monta-shipment-pickup').addClass('active');
-
                                 $(".monta-pickup-initial-points").removeClass("monta-hide");
-
                                 monta_shipping.enableRadio();
 
                                 clearInterval(liExists);
-
                             }
-
                         }
-
                     }, 100);
-
                 },
-
                 selectDeliveryOption: function () {
-
                     //Check and click delivery button
                     $('.monta-options input[value=delivery]').prop('checked', true).click();
-
                 },
-
                 deSelectDeliveryOption: function () {
-
                     //Un-check and click delivery button
                     $('.monta-options input[value=delivery]').prop('checked', false);
-
                 },
-
             };
-
             monta_shipping.init();
-
-
         } catch (e) {}
-
     });
 
     function updateDeliveryTextBlock() {
