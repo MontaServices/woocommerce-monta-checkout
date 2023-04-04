@@ -41,6 +41,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts_start');
     register_setting('montapacking-plugin-settings', 'monta_leadingstock');
     register_setting('montapacking-plugin-settings', 'monta_disablepickup');
+    register_setting('montapacking-plugin-settings', 'monta_disablecollect');
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
     register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
     register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
@@ -271,6 +272,13 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
 
+                <tr>
+                    <th scope="row"><label for="monta_disablecollect">Disable collect in store</label></th>
+                    <td><input type="checkbox" name="monta_disablecollect"
+                               value="1" <?php checked('1', get_option('monta_disablecollect')); ?>/>
+                        <br><i style="font-size:12px">When disabled no store collect options are shown.</i>
+                    </td>
+                </tr>
 
                 <tr>
                     <th scope="row"><label for="monta_max_pickuppoints">Max pickup points *</label></th>

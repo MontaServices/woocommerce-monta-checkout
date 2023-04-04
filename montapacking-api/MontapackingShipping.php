@@ -195,7 +195,7 @@ class MontapackingShipping
         if ($afhOnly){
             $this->allowedshippers = ['AFH'];
         } else {
-            $this->allowedshippers = ['PAK', 'DHLservicepunt', /* 'DPDparcelstore', */ 'DHLParcelConnectPickupPoint', /* 'UPSAP', 'DHLservicepuntGroot', */ 'DHLFYPickupPoint', /* 'DPDparcelstoreGroot', 'GLSPickupPoint' */];
+            //$this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore', 'DHLParcelConnectPickupPoint', 'UPSAP', 'DHLservicepuntGroot', 'DHLFYPickupPoint', 'DPDparcelstoreGroot', 'GLSPickupPoint'];
         }
 
         $this->address->setLongLat($this->googlekey);
