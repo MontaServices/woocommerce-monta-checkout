@@ -60,6 +60,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 * Fixed issue with different shipping addresses and pickuppoints
 * Added support for preferred shipper and shipper display names
+* Added seperate tab for in store/ warehouse pickup
 
 #1.49
 

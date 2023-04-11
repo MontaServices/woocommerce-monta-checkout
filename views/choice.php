@@ -39,7 +39,7 @@
 
     <p id="monta-address-required"><?php _e("Please fill in an address before selecting a shipping method", 'montapacking-checkout') ?></p>
 
-    <div class="monta-options <?php echo esc_attr(get_option('monta_disablepickup')) ? "monta-hide" : "" ?>"
+    <div class="monta-options <?php echo esc_attr(get_option('monta_disablepickup') && get_option('monta_disablecollect')) ? "monta-hide" : "" ?>"
          id="tabselector">
 
         <div class="monta-option monta-disabled monta-option-delivery">
@@ -53,13 +53,24 @@
             </label>
 
         </div>
-        <div class="monta-option monta-disabled monta-option-pickup">
+        <div class="monta-option monta-disabled monta-option-pickup <?php echo esc_attr(get_option('monta_disablepickup')) ? "monta-hide" : "" ?>">
 
             <label>
                 <input type="radio" name="montapacking[shipment][type]" value="pickup" class="selectshipment"
                        autocomplete="on"/>
                 <span class="block">
 					<?php _e('Pickup', 'montapacking-checkout'); ?>
+				</span>
+            </label>
+
+        </div>
+        <div class="monta-option monta-disabled monta-option-pickup <?php echo esc_attr(get_option('monta_disablecollect')) ? "monta-hide" : "" ?>">
+
+            <label>
+                <input type="radio" name="montapacking[shipment][type]" value="collect" class="selectshipment"
+                       autocomplete="on"/>
+                <span class="block">
+					<?php _e('Store Collect', 'montapacking-checkout'); ?>
 				</span>
             </label>
 

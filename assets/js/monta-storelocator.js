@@ -2740,7 +2740,7 @@
 				originPoint = new google.maps.LatLng(orig_lat, orig_lng);
 
 				// If the origin hasn't changed use the existing data so we aren't making unneeded AJAX requests
-				if ((typeof originalOrigin !== 'undefined') && (origin === originalOrigin) && (typeof originalData !== 'undefined')) {
+				if ((typeof originalOrigin !== 'undefined') && (origin === originalOrigin) && (typeof originalData !== 'undefined') && _this.settings.dataType != 'json') {
 					origin = originalOrigin;
 					dataRequest = originalData;
 				}

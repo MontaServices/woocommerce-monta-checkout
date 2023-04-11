@@ -178,7 +178,7 @@ class MontapackingShipping
     }
 
 
-    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false,$skus = array())
+    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false,$skus = array(), $afhOnly = false)
     {
 
 
@@ -192,7 +192,11 @@ class MontapackingShipping
             'ShipmentFitsThroughDutchMailbox' => $mailboxfit,
         ]);
 
-        $this->_allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore', 'AFH', 'DHLParcelConnectPickupPoint', 'UPSAP', 'GLSPickupPoint'];
+        if ($afhOnly){
+            $this->allowedshippers = ['AFH'];
+        } else {
+            //$this->allowedshippers = ['PAK', 'DHLservicepunt', 'DPDparcelstore', 'DHLParcelConnectPickupPoint', 'UPSAP', 'DHLservicepuntGroot', 'DHLFYPickupPoint', 'DPDparcelstoreGroot', 'GLSPickupPoint'];
+        }
 
         $this->address->setLongLat($this->googlekey);
 
@@ -201,10 +205,10 @@ class MontapackingShipping
 
         if (count($skus))
         {
-            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers'], $skus);
+            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products'], $skus);
         }
         else{
-            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products', 'allowedshippers']);
+            $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products']);
         }
 
         if (isset($result->Timeframes)) {
@@ -284,28 +288,29 @@ class MontapackingShipping
     {
         $request = '?';
         if ($send != null) {
-
-            ## Request neede data
+            ## Request needed data
             foreach ($send as $data) {
-
                 if (isset($this->{$data}) && $this->{$data} != null) {
-
                     if (!is_array($this->{$data})) {
-
                         $request .= '&' . http_build_query($this->{$data}->toArray());
-
                     } else {
                         $request .= '&' . http_build_query($this->{$data});
-
                     }
-
                 }
-
             }
-
         }
 
+        if($this->allowedshippers != null) {
+            $index = 0;
+            foreach ($this->allowedshippers as $shipper){
+                $request .= '&AllowedShippers[' . $index  . "]=" . $shipper;
+                $index++;
+            }
+        }
 
+        $logger = $this->logger;
+        $context = array('source' => 'Monta Checkout');
+        $logger->critical($request, $context);
         if (count($skus)){
             foreach ($skus as $key => $value)
             {

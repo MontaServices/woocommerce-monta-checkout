@@ -712,6 +712,95 @@ class Montapacking
                 }
 
                 break;
+            case 'collect':
+
+                #echo '<pre>';
+                $frames = self::get_frames('collect');
+                if ($frames !== null) {
+
+                    ## Frames naar handige array zetten
+                    $items = self::format_pickups($frames);
+                    #print_r($items);
+                    if ($items !== null) {
+
+                        ## Get order location
+                        // Get lat and long by address
+                        if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
+
+                            $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
+                                sanitize_text_field($_POST['shipping_address_2']) . ' ' .
+                                sanitize_text_field($_POST['shipping_postcode']) . ', ' .
+                                sanitize_text_field($_POST['shipping_city']) . ' ' .
+                                sanitize_text_field($_POST['shipping_country']) . '';
+
+                        } else {
+
+                            $address = sanitize_text_field($_POST['billing_address_1']) . ' ' .
+                                sanitize_text_field($_POST['billing_address_2']) . ' ' .
+                                sanitize_text_field($_POST['billing_postcode']) . ', ' .
+                                sanitize_text_field($_POST['billing_city']) . ' ' .
+                                sanitize_text_field($_POST['billing_country']) . '';
+
+                        }
+                        $prepAddr = str_replace('  ', ' ', $address);
+                        $prepAddr = str_replace(' ', '+', $prepAddr);
+
+                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr(get_option('monta_google_key')));
+                        if (isset($geocode['body'])) {
+                            $geocode = $geocode['body'];
+                        }
+
+                        $output = json_decode($geocode);
+
+                        $result = end($output->results);
+                        if (isset($result->geometry)) {
+                            $latitude = $result->geometry->location->lat;
+                            $longitude = $result->geometry->location->lng;
+                        } else {
+                            $latitude = 0;
+                            $longitude = 0;
+                        }
+
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => true,
+                            'default' => (object)[
+                                'lat' => $latitude,
+                                'lng' => $longitude,
+                            ],
+                            'pickups' => $items
+                        ]);
+
+                    } else {
+
+                        header('Content-Type: application/json');
+
+                        echo json_encode([
+                            'success' => false,
+                            'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
+                        ]);
+
+                        //$logger = wc_get_logger();
+                        //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
+                        //$logger->notice('No pickups available for the chosen delivery address', $context);
+
+                    }
+
+                } else {
+
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
+                    ]);
+
+                    //$logger = wc_get_logger();
+                    //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
+                    //$logger->notice('No pickups available for the chosen delivery address', $context);
+
+                }
+
+                break;
         }
 
         wp_die();
@@ -743,14 +832,12 @@ class Montapacking
             $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
 
 
-        } else if ($type == 'pickup') {
+        } else if ($type == 'pickup' || $type == 'collect') {
             $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), esc_attr(get_option('monta_google_key')));
         }
 
         ## Monta packing API aanroepen
-
         if (!isset($data->ship_to_different_address)) {
-
             ## Set address of customer
             $api->setAddress(
                 $data->billing_address_1,
@@ -761,9 +848,7 @@ class Montapacking
                 $data->billing_state,
                 $data->billing_country
             );
-
         } else {
-
             ## Set shipping adres of customer when different
             $api->setAddress(
                 $data->shipping_address_1,
@@ -774,7 +859,6 @@ class Montapacking
                 $data->shipping_state,
                 $data->shipping_country
             );
-
         }
 
         ## Fill products
@@ -786,16 +870,11 @@ class Montapacking
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
 
-
-
         $skuArray = array();
         $x=0;
 
         foreach ($items as $item => $values) {
-
             $product = wc_get_product($values['product_id']);
-
-
 
             $sku = $product->get_sku();;
             $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
@@ -837,8 +916,6 @@ class Montapacking
         }
 
         ## Type timeframes ophalen
-
-
         if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
             $bStockStatus = $bAllProductsAvailableAtWooCommerce;
         } else {
@@ -846,7 +923,6 @@ class Montapacking
         }
 
         if ($type == 'delivery') {
-
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 return $api->getShippingOptions($bStockStatus, false, false, false, false, $skuArray);
             }
@@ -854,10 +930,7 @@ class Montapacking
             {
                 return $api->getShippingOptions($bStockStatus);
             }
-
-
         } else if ($type == 'pickup') {
-
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
             }
@@ -865,9 +938,14 @@ class Montapacking
             {
                 return $api->getPickupOptions($bStockStatus);
             }
-
-          
-
+        } else if ($type == 'collect'){
+            if (esc_attr(get_option('monta_checkproductsonsku'))) {
+                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
+            }
+            else
+            {
+                return $api->getPickupOptions($bStockStatus, afhOnly: true);
+            }
         }
 
     }

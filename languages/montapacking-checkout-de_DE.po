@@ -134,3 +134,6 @@ msgid "Please enter a postal number, this is mandatory for this pick-up option"
 msgstr ""
 "Bitte geben Sie eine Postnummer an, diese ist für diese Abholoption zwingend "
 "erforderlich"
+
+msgid "Store Collect"
+msgstr "Abholung im Geschäft"
