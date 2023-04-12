@@ -178,7 +178,7 @@ class MontapackingShipping
     }
 
 
-    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false,$skus = array(), $afhOnly = false)
+    public function getPickupOptions($onstock = true, $mailbox = false, $mailboxfit = false, $trackingonly = false, $insurance = false, $skus = array(), $afhOnly = false)
     {
 
 

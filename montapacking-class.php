@@ -944,7 +944,7 @@ class Montapacking
             }
             else
             {
-                return $api->getPickupOptions($bStockStatus, afhOnly: true);
+                return $api->getPickupOptions($bStockStatus, false, false, false, false, Array(), true);
             }
         }
 
