@@ -139,5 +139,9 @@ msgstr "Winkel afhalen"
 
 msgid "Sustainably delivered"
 msgstr "Duurzaam bezorgd"
+msgstr "Winkel afhalen"
+
+msgid "Standard delivery"
+msgstr "Standaard levering"
 
 

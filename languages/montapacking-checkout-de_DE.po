@@ -140,3 +140,6 @@ msgstr "Abholung im Geschäft"
 
 msgid "Sustainably delivered"
 msgstr "Nachhaltig geliefert"
+
+msgid "Standard delivery"
+msgstr "Standard Lieferung"
