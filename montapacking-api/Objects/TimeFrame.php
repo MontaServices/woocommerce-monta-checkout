@@ -79,6 +79,7 @@ class MontaCheckout_TimeFrame
                     $option->Description,
                     $option->DisplayName,
                     $option->IsPreferred,
+                    $option->IsSustainable,
                     $option->IsMailbox,
                     $option->SellPrice,
                     $option->SellPriceCurrency,

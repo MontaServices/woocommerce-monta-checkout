@@ -137,4 +137,7 @@ msgstr "Vul alstublieft een postnummer in, dit is verplicht voor deze afhaalopti
 msgid "Store Collect"
 msgstr "Winkel afhalen"
 
+msgid "Sustainably delivered"
+msgstr "Duurzaam bezorgd"
+
 

@@ -1,5 +1,6 @@
 <script>
     var site_url = '<?php echo site_url();?>';
+    var sustainableDeliveryText = '<?php _e('Sustainably delivered', 'montapacking-checkout');?>';
 
     <?php /*
     jQuery(document).ready(function () {

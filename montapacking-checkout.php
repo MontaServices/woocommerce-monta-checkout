@@ -167,6 +167,7 @@ function montacheckout_enqueue_scripts()
         wp_enqueue_script('montapacking_checkout_plugin_handlebars', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-handlebars.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-storelocator.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_monta', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-shipping.js'), ['jquery'], date("h:i:s"));
+        wp_enqueue_script('montapacking_checkout_plugin_popper', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/popper.min.js'), date("h:i:s"));
     }
 }
 

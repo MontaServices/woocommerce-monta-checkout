@@ -308,9 +308,6 @@ class MontapackingShipping
             }
         }
 
-        $logger = $this->logger;
-        $context = array('source' => 'Monta Checkout');
-        $logger->critical($request, $context);
         if (count($skus)){
             foreach ($skus as $key => $value)
             {

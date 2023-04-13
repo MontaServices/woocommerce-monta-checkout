@@ -137,3 +137,6 @@ msgstr ""
 
 msgid "Store Collect"
 msgstr "Abholung im Geschäft"
+
+msgid "Sustainably delivered"
+msgstr "Nachhaltig geliefert"

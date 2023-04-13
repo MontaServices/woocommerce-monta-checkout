@@ -25,7 +25,7 @@ jQuery(document).ready(function() {
                 pickupLocator: null,
 
                 init: function () {
-
+                    window.tooltips = {}
                     $(document).ready(function () {
                         $("#billing_postcode").trigger("change");
                     });
@@ -532,7 +532,7 @@ jQuery(document).ready(function() {
                                 '            {.img}\n' +
                                 '        </div>\n\n' +
                                 '        <div class="information">\n' +
-                                '            {.name} {.time} <span>{.ships_on}</span>\n' +
+                                '            {.name} {.time} <span>{.ships_on}</span> {.is_sustainable}\n' +
                                 '        </div>\n' +
                                 '        <div class="pricemonta">\n' +
                                 '            {.price}\n' +
@@ -549,8 +549,18 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.type_text}/g, item.type_text);
                             html = html.replace(/{.ships_on}/g, item.ships_on);
 
+                            if(item.is_sustainable) {
+                                html = html.replace(/{.is_sustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
+                            } else {
+                                html = html.replace(/{.is_sustainable}/g, '');
+                            }
+
                             if (code !== 'TBQ') {
                                 shippers.append(html);
+                            }
+
+                            if(item.is_sustainable) {
+                                addTooltip('sustainable-' + realCode, 'sustainabletooltip-' + realCode);
                             }
 
                             $(".loadedLogo").on("error", function () {
@@ -854,3 +864,45 @@ jQuery(document).ready(function() {
         }
     });
 });
+
+function addTooltip(rootElementId, tooltipId){
+    const rootElement = document.querySelector('#' + rootElementId);
+    const tooltip = document.querySelector('#' + tooltipId);
+
+    if(window.tooltips[tooltipId] !== null || window.tooltips[tooltipId] !== undefined){
+        delete window.tooltips[tooltipId];
+    }
+    window.tooltips[tooltipId] = window.Popper.createPopper(rootElement, tooltip, {
+        placement: 'right',
+        modifiers: [
+        {
+            name: 'offset',
+            options: {
+            offset: [0, 8],
+            },
+        },
+        ],
+    });
+
+    const showEvents = ['mouseenter', 'focus'];
+    const hideEvents = ['mouseleave', 'blur'];
+    
+    showEvents.forEach((event) => {
+        rootElement.addEventListener(event, showTooltip);
+    });
+    
+    hideEvents.forEach((event) => {
+        rootElement.addEventListener(event, hideTooltip);
+    });
+}
+
+function showTooltip() {
+    let tooltip = document.getElementById(jQuery(this).attr('aria-describedby'));
+    tooltip.setAttribute('data-show', '');
+    window.tooltips[jQuery(this).attr('aria-describedby')].update();
+}
+
+function hideTooltip() {
+    let tooltip = document.getElementById(jQuery(this).attr('aria-describedby'));
+    tooltip.removeAttribute('data-show');
+}
