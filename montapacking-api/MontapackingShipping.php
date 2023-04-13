@@ -256,32 +256,63 @@ class MontapackingShipping
             $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products']);
         }
         ## Timeframes omzetten naar bruikbaar object
+        if(!$result){
+            $timeframes[] = $this->getFallbackTimeframe();
+        } else {
+            if (trim($this->address->postalcode) && (trim($this->address->housenumber) || trim($this->address->street))) {
 
-
-        if (trim($this->address->postalcode) && (trim($this->address->housenumber) || trim($this->address->street))) {
-
-            if (isset($result->Timeframes)) {
-
-                ## Shippers omzetten naar shipper object
-                foreach ($result->Timeframes as $timeframe) {
-
-                    $timeframes[] = new MontaCheckout_TimeFrame(
-                        $timeframe->From,
-                        $timeframe->To,
-                        $timeframe->TypeCode,
-                        $timeframe->TypeDescription,
-                        $timeframe->ShippingOptions,
-                        $timeframe->FromToTypeCode,
-                        $this->requesturl
-                    );
-
+                if (isset($result->Timeframes) && count($result->Timeframes) > 0) {
+    
+                    ## Shippers omzetten naar shipper object
+                    foreach ($result->Timeframes as $timeframe) {
+    
+                        $timeframes[] = new MontaCheckout_TimeFrame(
+                            $timeframe->From,
+                            $timeframe->To,
+                            $timeframe->TypeCode,
+                            $timeframe->TypeDescription,
+                            $timeframe->ShippingOptions,
+                            $timeframe->FromToTypeCode,
+                            $this->requesturl
+                        );
+    
+                    }
+    
+                } else {
+                    $timeframes[] = $this->getFallbackTimeframe();
                 }
-
             }
         }
-
         return $timeframes;
+    }
 
+    private function getFallbackTimeframe(){
+        $options = [new MontaCheckout_ShippingOption(
+            'Monta',
+            ['Monta'],
+            null,
+            null,
+            "Standard delivery",
+            "Standard delivery",
+            true,
+            false,
+            false,
+            esc_attr(get_option('monta_shippingcosts')),
+            'EUR',
+            null,
+            null,
+            null,
+            null
+        )];
+        return new MontaCheckout_TimeFrame(
+            null,
+            null,
+            'Monta',
+            'Monta',
+            $options,
+            'Unknown',
+            $this->requesturl
+        );
     }
 
     public function call($method, $send = null, $skus = array())

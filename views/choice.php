@@ -85,7 +85,7 @@
         <div class="monta-times-croppped">
 
             <label>
-                <div class="imglogo"></div>
+                <div id="imglogo" class="imglogo"></div>
 
                 <div class="information">
 
@@ -102,7 +102,7 @@
 
                     <div style="clear:both"></div>
 
-                    <a href="javascript:;"
+                    <a id="clickOtherOptions" href="javascript:;"
                        id="othersendmethod"><?php _e('Click here to choose another delivery option', 'montapacking-checkout'); ?></a>
 
                 </div>

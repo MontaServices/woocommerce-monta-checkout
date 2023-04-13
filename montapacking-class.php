@@ -206,7 +206,6 @@ class Montapacking
 
         ## Check of gekozen timeframe bestaat
         if (isset($items[$time])) {
-
             $method = null;
             $shipperCode = null;
 
@@ -583,14 +582,13 @@ class Montapacking
 
     public static function shipping_options()
     {
-
         $type = sanitize_post($_POST['montapacking']);
         $shipment = $type['shipment'];
 
         switch ($shipment['type']) {
             case 'delivery':
-
                 $frames = self::get_frames('delivery');
+
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
@@ -979,7 +977,7 @@ class Montapacking
         $items = array();
 
         $curr = '&euro;';
-
+        
         $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
 
         //create days
@@ -1026,7 +1024,6 @@ class Montapacking
                 if ($frame->type == 'Unknown') {
 
                     foreach ($frame->options as $onr => $option) {
-
                         $key = "NOTIMES";
                         $from = '';
 
@@ -1176,12 +1173,8 @@ class Montapacking
                 }
             }
             foreach ($frames as $nr => $frame) {
-
-
                 if ($frame->type == 'Unknown') {
-
                     foreach ($frame->options as $onr => $option) {
-
                         $key = "NOTIMES";
                         $desc = $option->description;
                         $ships_on = '';
@@ -1201,7 +1194,6 @@ class Montapacking
                             $key = strtotime(date("Y-m-d"));
                             $desc = 'Red je pakket';
                         }
-
 
                         $extras = null;
                         if (isset($option->extras)) {
@@ -1245,20 +1237,16 @@ class Montapacking
                                 $items[$key]->options[] = $options_object;
                             }
                         }
-
-
                     }
                 }
             }
         }
-
 
         $cleared_items = array();
         foreach ($items as $key => $item) {
             if (count($item->options) > 0) {
                 $cleared_items[$key] = $item;
             }
-
         }
         $items = $cleared_items;
 
@@ -1267,7 +1255,6 @@ class Montapacking
 
         //$_SESSION['montapacking-frames-test'] = $items;
         return $items;
-
     }
 
     public static function format_pickups($frames)

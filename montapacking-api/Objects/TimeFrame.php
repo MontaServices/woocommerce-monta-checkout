@@ -68,26 +68,45 @@ class MontaCheckout_TimeFrame
         $list = null;
 
         if (is_array($options)) {
-
+      
             foreach ($options as $onr => $option) {
-
-                $list[$onr] = new MontaCheckout_ShippingOption(
-                    $option->Code,
-                    $option->ShipperCodes,
-                    $option->ShipperOptionCodes,
-                    $option->ShipperOptionsWithValue,
-                    $option->Description,
-                    $option->DisplayName,
-                    $option->IsPreferred,
-                    $option->IsSustainable,
-                    $option->IsMailbox,
-                    $option->SellPrice,
-                    $option->SellPriceCurrency,
-                    $option->From,
-                    $option->To,
-                    $option->Options,
-                    $option->ShippingDeadline
-                );
+                if(get_debug_type($option) == "MontaCheckout_ShippingOption"){
+                    $list[$onr] = new MontaCheckout_ShippingOption(
+                        $option->code,
+                        $option->codes,
+                        $option->optionCodes,
+                        $option->optionsWithValue,
+                        $option->description,
+                        $option->displayname,
+                        $option->isPreferred,
+                        $option->isSustainable,
+                        $option->mailbox,
+                        $option->price,
+                        $option->currency,
+                        $option->from,
+                        $option->to,
+                        $option->extras,
+                        $option->date
+                    );
+                } else {
+                    $list[$onr] = new MontaCheckout_ShippingOption(
+                        $option->Code,
+                        $option->ShipperCodes,
+                        $option->ShipperOptionCodes,
+                        $option->ShipperOptionsWithValue,
+                        $option->Description,
+                        $option->DisplayName,
+                        $option->IsPreferred,
+                        $option->IsSustainable,
+                        $option->IsMailbox,
+                        $option->SellPrice,
+                        $option->SellPriceCurrency,
+                        $option->From,
+                        $option->To,
+                        $option->Options,
+                        $option->ShippingDeadline
+                    );
+                }               
 
             }
 

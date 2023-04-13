@@ -248,6 +248,7 @@ jQuery(document).ready(function() {
                                 // Frames tonen in lijst
 
                                 let hidedatebar = true;
+                                let fallbackShipper = false;
 
                                 let firstdaycounter = 0;
 
@@ -255,6 +256,10 @@ jQuery(document).ready(function() {
 
                                 monta_shipping.first_preferred = null;
                                 $.each(monta_shipping.frames, function (key, item) {
+                                    if(item.options[0].code === 'Monta'){
+                                        hidedatebar = true;
+                                        fallbackShipper = true;
+                                    }
                                     daysavailablecounter++;
                                     if(monta_shipping.first_preferred == null && item.options[0].is_preferred){
                                         monta_shipping.first_preferred = item;
@@ -305,13 +310,17 @@ jQuery(document).ready(function() {
                                         if (showhtml === true) {
                                             times.append(html);
                                         }
-
                                     }
-
                                 });
 
-                                if (hidedatebar === true && monta_shipping.first_preferred === null)
+                                if (hidedatebar === true && monta_shipping.first_preferred === null){
                                     $('.monta-times').addClass('monta-hide');
+                                }
+
+                                if(fallbackShipper){
+                                    document.getElementById('clickOtherOptions').classList.add('monta-hide');
+                                    document.getElementById('tabselector').classList.add('monta-hide');
+                                }
 
                                 // Select first option
                                 if(monta_shipping.first_preferred != null) {
@@ -564,7 +573,7 @@ jQuery(document).ready(function() {
                             }
 
                             $(".loadedLogo").on("error", function () {
-                                $(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/none.png");
+                                $(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png");
                             });
 
                         });
@@ -717,7 +726,7 @@ jQuery(document).ready(function() {
         }
 
         jQuery(".monta-times-croppped").find(".loadedLogo").on("error", function() {
-            jQuery(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/none.png");
+            jQuery(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png");
         });
     }
 
