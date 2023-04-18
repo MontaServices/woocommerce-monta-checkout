@@ -241,7 +241,7 @@ class MontapackingShipping
             'ProductsOnStock' => ($onstock) ? 'TRUE' : 'FALSE',
             'MaiboxShipperMandatory' => $mailbox,
             'TrackingMandatory' => $trackingonly,
-            'MaxNumberOfPickupPoints' => 0,
+            'MaxNumberOfPickupPoints' => 1,
             'InsuranceRequired' => $insurance,
             'ShipmentFitsThroughDutchMailbox' => $mailboxfit,
         ]);

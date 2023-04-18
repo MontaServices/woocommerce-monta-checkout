@@ -120,6 +120,7 @@ class MontaCheckout_PickupPoint
                     $option->Description,
                     $option->DisplayName,
                     $option->IsPreferred,
+                    $option->IsSustainable,
                     $option->IsMailbox,
                     $option->SellPrice,
                     $option->SellPriceCurrency,
