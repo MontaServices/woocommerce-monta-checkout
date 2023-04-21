@@ -102,7 +102,7 @@
 
                     <div style="clear:both"></div>
 
-                    <a id="clickOtherOptions" href="javascript:;"
+                    <a href="javascript:;"
                        id="othersendmethod"><?php _e('Click here to choose another delivery option', 'montapacking-checkout'); ?></a>
 
                 </div>

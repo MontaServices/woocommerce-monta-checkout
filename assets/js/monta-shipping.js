@@ -224,7 +224,6 @@ jQuery(document).ready(function() {
                         $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
-                            console.log(Object.keys(monta_shipping.frames).length);
                             if (checked === 'delivery' && Object.keys(monta_shipping.frames).length > 0) {
                                 // empty fields when pickup was already choosen
                                 $(".monta-pickup-fields").val("");
@@ -318,7 +317,7 @@ jQuery(document).ready(function() {
                                 }
 
                                 if(fallbackShipper){
-                                    document.getElementById('clickOtherOptions').classList.add('monta-hide');
+                                    document.getElementById('othersendmethod').classList.add('monta-hide');
                                     document.getElementById('tabselector').classList.add('monta-hide');
                                 }
 
@@ -360,7 +359,6 @@ jQuery(document).ready(function() {
                                 $(".monta-times-croppped-error-pickup").css("display", "block")
                             } else {
                                 $('#tabselector input[type=radio]:not(:checked)').click();
-                                $('#tabselector').addClass('monta-hide');
                             }
                             monta_shipping.storeLocatorDestroy();
                         }
