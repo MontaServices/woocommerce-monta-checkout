@@ -370,9 +370,9 @@ class MontapackingShipping
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-        $result = curl_exec($ch);
+        $curlresult = curl_exec($ch);
         curl_close($ch);
-        $result = json_decode($result);
+        $result = json_decode($curlresult);
 
         if ($this->debug) {
             echo '<pre>';
@@ -380,13 +380,18 @@ class MontapackingShipping
             echo '<pre>';
         }
 
-
         if (null === $result) {
-
             if (null !== $this->logger) {
-                $logger = $this->logger;
-                $context = array('source' => 'Monta Checkout');
-                $logger->critical("Webshop was unable to connect to Monta REST api. Retry #1 is starting in 1 seconds", $context);
+                if (curl_errno($ch)) {
+                    $error_msg = curl_error($ch);
+                    $logger = $this->logger;
+                    $context = array('source' => 'Monta Checkout');
+                    $logger->critical("Webshop was unable to connect to Monta REST api, retrying in 3 seconds. Please contact Monta: " . $error_msg, $context);
+                } else if(curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                    $logger = $this->logger;
+                    $context = array('source' => 'Monta Checkout');
+                    $logger->critical("Webshop was unable to connect to Monta REST api, retrying in 3 seconds. Please contact Monta, error code: " . curl_getinfo($ch, CURLINFO_HTTP_CODE), $context);
+                }
             }
 
             sleep(3);
@@ -400,15 +405,22 @@ class MontapackingShipping
             curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-            $result = curl_exec($ch);
+            $curlresult = curl_exec($ch);
             curl_close($ch);
-            $result = json_decode($result);
+            $result = json_decode($curlresult);
         }
 
         if (null !== $this->logger && null === $result) {
-            $logger = $this->logger;
-            $context = array('source' => 'Monta Checkout');
-            $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta", $context);
+            if (curl_errno($ch)) {
+                $error_msg = curl_error($ch);
+                $logger = $this->logger;
+                $context = array('source' => 'Monta Checkout');
+                $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta: " . $error_msg, $context);
+            } else if(curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                $logger = $this->logger;
+                $context = array('source' => 'Monta Checkout');
+                $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta, error code: " . curl_getinfo($ch, CURLINFO_HTTP_CODE), $context);
+            }
         }
 
         if (null !== $this->logger && $result->Warnings) {
