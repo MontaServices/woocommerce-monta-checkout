@@ -70,7 +70,7 @@ class MontaCheckout_TimeFrame
         if (is_array($options)) {
       
             foreach ($options as $onr => $option) {
-                if(get_debug_type($option) == "MontaCheckout_ShippingOption"){
+                if($option->code !== null){
                     $list[$onr] = new MontaCheckout_ShippingOption(
                         $option->code,
                         $option->codes,
