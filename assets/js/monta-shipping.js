@@ -758,7 +758,8 @@ jQuery(document).ready(function() {
                 'AFH': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/AFH.png', 32, 32],
                 'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLservicepunt.png', 32, 32],
                 'DHLFYPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLFYPickupPoint.png', 32, 32],
-                'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32]
+                'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32],
+                'GLSPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/GLSPickupPoint.png', 32, 32]
             },
             callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
                 monta_shipping.selectPickup(location, markerId);
