@@ -206,7 +206,6 @@ class Montapacking
 
         ## Check of gekozen timeframe bestaat
         if (isset($items[$time])) {
-
             $method = null;
             $shipperCode = null;
 
@@ -583,14 +582,13 @@ class Montapacking
 
     public static function shipping_options()
     {
-
         $type = sanitize_post($_POST['montapacking']);
         $shipment = $type['shipment'];
 
         switch ($shipment['type']) {
             case 'delivery':
-
                 $frames = self::get_frames('delivery');
+
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
@@ -979,7 +977,7 @@ class Montapacking
         $items = array();
 
         $curr = '&euro;';
-
+        
         $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
 
         //create days
@@ -1026,7 +1024,6 @@ class Montapacking
                 if ($frame->type == 'Unknown') {
 
                     foreach ($frame->options as $onr => $option) {
-
                         $key = "NOTIMES";
                         $from = '';
 
@@ -1102,6 +1099,7 @@ class Montapacking
                             'name' => $option->description . $evening,
                             'displayname' => $option->displayname . $evening,
                             'is_preferred' => $option->isPreferred,
+                            'is_sustainable' => $option->isSustainable,
                             'ships_on' => '',
                             'type' => 'deliverydate',
                             'type_text' => translate('delivered', 'montapacking-checkout'),
@@ -1111,9 +1109,10 @@ class Montapacking
                             'to' => date('H:i', strtotime($to . ' +1 hour')),
                             'extras' => $extras,
                             'request_url' => $frame->requesturl,
+                            'discount_percentage' => $option->discountPercentage
                         ];
 
-                        if ((time() + 3600) <= strtotime($option->date)) {
+                        if (isset($items[$key]) && (time() + 3600) <= strtotime($option->date)) {
                             $items[$key]->options[] = $options_object;
                         }
                     }
@@ -1148,6 +1147,7 @@ class Montapacking
                             'name' => $option->description,
                             'displayname' => $option->displayname,
                             'is_preferred' => $option->isPreferred,
+                            'is_sustainable' => $option->isSustainable,
                             'ships_on' => "(" . translate('ships on', 'montapacking-checkout') . " " . date("d-m-Y", strtotime($option->date)) . " " . translate('from the Netherlands', 'montapacking-checkout') . ")",
                             'type' => 'shippingdate',
                             'type_text' => translate('shipped', 'montapacking-checkout'),
@@ -1157,6 +1157,7 @@ class Montapacking
                             'to' => date('H:i', strtotime($to . ' +1 hour')),
                             'extras' => $extras,
                             'request_url' => $frame->requesturl,
+                            'discount_percentage' => $option->discountPercentage
                         ];
 
                         $allow = true;
@@ -1174,12 +1175,8 @@ class Montapacking
                 }
             }
             foreach ($frames as $nr => $frame) {
-
-
                 if ($frame->type == 'Unknown') {
-
                     foreach ($frame->options as $onr => $option) {
-
                         $key = "NOTIMES";
                         $desc = $option->description;
                         $ships_on = '';
@@ -1200,7 +1197,6 @@ class Montapacking
                             $desc = 'Red je pakket';
                         }
 
-
                         $extras = null;
                         if (isset($option->extras)) {
                             $extras = self::calculateExtras($option->extras, $curr);
@@ -1216,6 +1212,7 @@ class Montapacking
                             'name' => $desc,
                             'displayname' => $option->displayname,
                             'is_preferred' => $option->isPreferred,
+                            'is_sustainable' => $option->isSustainable,
                             'ships_on' => $ships_on,
                             'type' => $type,
                             'type_text' => translate($type_text, 'montapacking-checkout'),
@@ -1225,6 +1222,8 @@ class Montapacking
                             'to' => null,
                             'extras' => $extras,
                             'request_url' => $frame->requesturl,
+
+                            'discount_percentage' => $option->discountPercentage
                         ];
 
                         $allow = true;
@@ -1242,20 +1241,16 @@ class Montapacking
                                 $items[$key]->options[] = $options_object;
                             }
                         }
-
-
                     }
                 }
             }
         }
-
 
         $cleared_items = array();
         foreach ($items as $key => $item) {
             if (count($item->options) > 0) {
                 $cleared_items[$key] = $item;
             }
-
         }
         $items = $cleared_items;
 
@@ -1264,7 +1259,6 @@ class Montapacking
 
         //$_SESSION['montapacking-frames-test'] = $items;
         return $items;
-
     }
 
     public static function format_pickups($frames)
@@ -1326,14 +1320,15 @@ class Montapacking
                             'date' => date('d-m-Y', strtotime($option->date)),
                             'time' => (date('H:i', $frame->from != null && $frame->to != null && strtotime($frame->from)) != date('H:i', strtotime($frame->to))) ? date('H:i', strtotime($frame->from)) . '-' . date('H:i', strtotime($frame->to)) : '',
                             'description' => $option->description,
-                            'displayname' => $option->displayname,
+                            'displayname' => $option->displayname,  
                             'is_preferred' => $option->isPreferred,
+                            'is_sustainable' => $option->isSustainable,
                             'details' => $frame->details,
-                            'shipperOptionsWithValue' => $shipperOptions,
+                            'shipperOptionsWithValue' => $shipperOptions,    
                             'price' => number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
-                            'request_url' => $frame->requesturl
-                        ];
+                            'request_url' => $frame->requesturl 
+                        ]; 
 
                         ## Sorteer opties op laagste prijs
                         usort($items, function ($a, $b) {

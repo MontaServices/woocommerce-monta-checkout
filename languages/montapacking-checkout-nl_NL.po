@@ -27,12 +27,8 @@ msgstr "Selecteer een verzendmethode."
 msgid "Select a pickup location."
 msgstr "Selecteer een ophaalpunt."
 
-msgid ""
-"The shipment option(s) you choose are not available at this time, please "
-"select an other option."
-msgstr ""
-"De verzendoptie(s) die je probeert te kiezen zijn op dit moment niet "
-"toegankelijk, selecteer een andere optie."
+msgid "The shipment option(s) you choose are not available at this time, please select an other option."
+msgstr "De verzendoptie(s) die je probeert te kiezen zijn op dit moment niet toegankelijk, selecteer een andere optie."
 
 msgid "Shipping"
 msgstr "Verzenden"
@@ -121,7 +117,6 @@ msgstr "avondlevering"
 msgid "No deliveries available for the chosen delivery address"
 msgstr "Geen bezorgopties beschikbaar voor het gekozen adres"
 
-
 msgid "No pickups available for the chosen delivery address"
 msgstr "Geen ophaalpunten beschikbaar voor het gekozen adres"
 
@@ -136,5 +131,11 @@ msgstr "Vul alstublieft een postnummer in, dit is verplicht voor deze afhaalopti
 
 msgid "Store Collect"
 msgstr "Winkel afhalen"
+
+msgid "Sustainably delivered"
+msgstr "Duurzaam bezorgd"
+
+msgid "Standard delivery"
+msgstr "Standaard levering"
 
 

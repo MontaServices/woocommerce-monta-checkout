@@ -241,7 +241,7 @@ class MontapackingShipping
             'ProductsOnStock' => ($onstock) ? 'TRUE' : 'FALSE',
             'MaiboxShipperMandatory' => $mailbox,
             'TrackingMandatory' => $trackingonly,
-            'MaxNumberOfPickupPoints' => 0,
+            'MaxNumberOfPickupPoints' => 1,
             'InsuranceRequired' => $insurance,
             'ShipmentFitsThroughDutchMailbox' => $mailboxfit,
         ]);
@@ -256,32 +256,63 @@ class MontapackingShipping
             $result = $this->call('ShippingOptions', ['basic', 'shippers', 'order', 'address', 'products']);
         }
         ## Timeframes omzetten naar bruikbaar object
+        if(!$result){
+            $timeframes[] = $this->getFallbackTimeframe();
+        } else {
+            if (trim($this->address->postalcode) && (trim($this->address->housenumber) || trim($this->address->street))) {
 
-
-        if (trim($this->address->postalcode) && (trim($this->address->housenumber) || trim($this->address->street))) {
-
-            if (isset($result->Timeframes)) {
-
-                ## Shippers omzetten naar shipper object
-                foreach ($result->Timeframes as $timeframe) {
-
-                    $timeframes[] = new MontaCheckout_TimeFrame(
-                        $timeframe->From,
-                        $timeframe->To,
-                        $timeframe->TypeCode,
-                        $timeframe->TypeDescription,
-                        $timeframe->ShippingOptions,
-                        $timeframe->FromToTypeCode,
-                        $this->requesturl
-                    );
-
+                if (isset($result->Timeframes) && count($result->Timeframes) > 0) {
+    
+                    ## Shippers omzetten naar shipper object
+                    foreach ($result->Timeframes as $timeframe) {
+    
+                        $timeframes[] = new MontaCheckout_TimeFrame(
+                            $timeframe->From,
+                            $timeframe->To,
+                            $timeframe->TypeCode,
+                            $timeframe->TypeDescription,
+                            $timeframe->ShippingOptions,
+                            $timeframe->FromToTypeCode,
+                            $this->requesturl
+                        );
+    
+                    }
+    
+                } else {
+                    $timeframes[] = $this->getFallbackTimeframe();
                 }
-
             }
         }
-
         return $timeframes;
+    }
 
+    private function getFallbackTimeframe(){
+        $options = [new MontaCheckout_ShippingOption(
+            'Monta',
+            ['Monta'],
+            null,
+            null,
+            translate('Standard delivery', 'montapacking-checkout'),
+            translate('Standard delivery', 'montapacking-checkout'),
+            true,
+            false,
+            false,
+            esc_attr(get_option('monta_shippingcosts')),
+            'EUR',
+            null,
+            null,
+            null,
+            null
+        )];
+        return new MontaCheckout_TimeFrame(
+            null,
+            null,
+            'Monta',
+            'Monta',
+            $options,
+            'Unknown',
+            $this->requesturl
+        );
     }
 
     public function call($method, $send = null, $skus = array())
@@ -308,9 +339,6 @@ class MontapackingShipping
             }
         }
 
-        $logger = $this->logger;
-        $context = array('source' => 'Monta Checkout');
-        $logger->critical($request, $context);
         if (count($skus)){
             foreach ($skus as $key => $value)
             {
@@ -320,7 +348,7 @@ class MontapackingShipping
 
         $method = strtolower($method);
 
-        $url = "https://api.montapacking.nl/rest/v5/" . $method;
+        $url = "http://0e22-185-213-105-175.ngrok-free.app/" . $method; 
 
         //$this->debug = true;
         if ($this->debug) {
@@ -342,9 +370,9 @@ class MontapackingShipping
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-        $result = curl_exec($ch);
+        $curlresult = curl_exec($ch);
         curl_close($ch);
-        $result = json_decode($result);
+        $result = json_decode($curlresult);
 
         if ($this->debug) {
             echo '<pre>';
@@ -352,13 +380,18 @@ class MontapackingShipping
             echo '<pre>';
         }
 
-
         if (null === $result) {
-
             if (null !== $this->logger) {
-                $logger = $this->logger;
-                $context = array('source' => 'Monta Checkout');
-                $logger->critical("Webshop was unable to connect to Monta REST api. Retry #1 is starting in 1 seconds", $context);
+                if (curl_errno($ch)) {
+                    $error_msg = curl_error($ch);
+                    $logger = $this->logger;
+                    $context = array('source' => 'Monta Checkout');
+                    $logger->critical("Webshop was unable to connect to Monta REST api, retrying in 3 seconds. Please contact Monta: " . $error_msg, $context);
+                } else if(curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                    $logger = $this->logger;
+                    $context = array('source' => 'Monta Checkout');
+                    $logger->critical("Webshop was unable to connect to Monta REST api, retrying in 3 seconds. Please contact Monta, error code: " . curl_getinfo($ch, CURLINFO_HTTP_CODE), $context);
+                }
             }
 
             sleep(3);
@@ -372,15 +405,22 @@ class MontapackingShipping
             curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-            $result = curl_exec($ch);
+            $curlresult = curl_exec($ch);
             curl_close($ch);
-            $result = json_decode($result);
+            $result = json_decode($curlresult);
         }
 
         if (null !== $this->logger && null === $result) {
-            $logger = $this->logger;
-            $context = array('source' => 'Monta Checkout');
-            $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta", $context);
+            if (curl_errno($ch)) {
+                $error_msg = curl_error($ch);
+                $logger = $this->logger;
+                $context = array('source' => 'Monta Checkout');
+                $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta: " . $error_msg, $context);
+            } else if(curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
+                $logger = $this->logger;
+                $context = array('source' => 'Monta Checkout');
+                $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta, error code: " . curl_getinfo($ch, CURLINFO_HTTP_CODE), $context);
+            }
         }
 
         if (null !== $this->logger && $result->Warnings) {

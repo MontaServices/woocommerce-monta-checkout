@@ -12,7 +12,6 @@ class MontaCheckout_TimeFrame
     public $options = [];
     public $requesturl;
 
-
     public function __construct($from, $to, $code, $description, $options, $type, $requesturl = null)
     {
 
@@ -68,25 +67,47 @@ class MontaCheckout_TimeFrame
         $list = null;
 
         if (is_array($options)) {
-
+      
             foreach ($options as $onr => $option) {
-
-                $list[$onr] = new MontaCheckout_ShippingOption(
-                    $option->Code,
-                    $option->ShipperCodes,
-                    $option->ShipperOptionCodes,
-                    $option->ShipperOptionsWithValue,
-                    $option->Description,
-                    $option->DisplayName,
-                    $option->IsPreferred,
-                    $option->IsMailbox,
-                    $option->SellPrice,
-                    $option->SellPriceCurrency,
-                    $option->From,
-                    $option->To,
-                    $option->Options,
-                    $option->ShippingDeadline
-                );
+                if($option->code !== null){
+                    $list[$onr] = new MontaCheckout_ShippingOption(
+                        $option->code,
+                        $option->codes,
+                        $option->optionCodes,
+                        $option->optionsWithValue,
+                        $option->description,
+                        $option->discountPercentage,
+                        $option->displayname,
+                        $option->isPreferred,
+                        $option->isSustainable,
+                        $option->mailbox,
+                        $option->price,
+                        $option->currency,
+                        $option->from,
+                        $option->to,
+                        $option->extras,
+                        $option->date,
+                    );
+                } else {
+                    $list[$onr] = new MontaCheckout_ShippingOption(
+                        $option->Code,
+                        $option->ShipperCodes,
+                        $option->ShipperOptionCodes,
+                        $option->ShipperOptionsWithValue,
+                        $option->Description,
+                        $option->DiscountPercentage,
+                        $option->DisplayName,
+                        $option->IsPreferred,
+                        $option->IsSustainable,
+                        $option->IsMailbox,
+                        $option->SellPrice,
+                        $option->SellPriceCurrency,
+                        $option->From,
+                        $option->To,
+                        $option->Options,
+                        $option->ShippingDeadline
+                    );
+                }               
 
             }
 

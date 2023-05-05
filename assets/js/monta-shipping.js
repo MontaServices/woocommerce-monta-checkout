@@ -25,7 +25,7 @@ jQuery(document).ready(function() {
                 pickupLocator: null,
 
                 init: function () {
-
+                    window.tooltips = {}
                     $(document).ready(function () {
                         $("#billing_postcode").trigger("change");
                     });
@@ -224,8 +224,7 @@ jQuery(document).ready(function() {
                         $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
-
-                            if (checked === 'delivery') {
+                            if (checked === 'delivery' && Object.keys(monta_shipping.frames).length > 0) {
                                 // empty fields when pickup was already choosen
                                 $(".monta-pickup-fields").val("");
                                 //$("#initialPickupRadioDummy").removeAttribute("checked");
@@ -248,6 +247,7 @@ jQuery(document).ready(function() {
                                 // Frames tonen in lijst
 
                                 let hidedatebar = true;
+                                let fallbackShipper = false;
 
                                 let firstdaycounter = 0;
 
@@ -255,6 +255,10 @@ jQuery(document).ready(function() {
 
                                 monta_shipping.first_preferred = null;
                                 $.each(monta_shipping.frames, function (key, item) {
+                                    if(item.options[0].code === 'Monta'){
+                                        hidedatebar = true;
+                                        fallbackShipper = true;
+                                    }
                                     daysavailablecounter++;
                                     if(monta_shipping.first_preferred == null && item.options[0].is_preferred){
                                         monta_shipping.first_preferred = item;
@@ -280,6 +284,8 @@ jQuery(document).ready(function() {
                                     if (option !== null && option !== undefined) {
 
                                         let html = $('.monta-choice-template').html();
+                                        console.log("html " + html)
+
                                         html = html.replace(/{.id}/g, key);
                                         html = html.replace(/{.code}/g, (item.code !== null) ? item.code : '');
                                         html = html.replace(/{.day}/g, item.date);
@@ -287,6 +293,17 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.time}/g, item.time);
                                         html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
+
+                                        console.log("perc " + JSON.stringify(item))
+                                        console.log("option " + JSON.stringify(item.options))
+                                        console.log("item.discount_percentage    " + option.discount_percentage)
+
+                                        if(item.options.some(x=>x.discount_percentage > 0)){
+                                            var newelement = '<span class="discount_percentage" style="background:lightgreen;color:green;margin:auto;width:40%">-' + option.discount_percentage  + '%</span>';
+                                            html = html.replace(/{.korting}/g, newelement);
+                                        }else{
+                                            html = html.replace(/{.korting}/g, '');
+                                        }
 
                                         if(monta_shipping.first_preferred != null && monta_shipping.first_preferred.date === item.date){
                                             html = html.replace(/{.preferred}/g, true);
@@ -305,13 +322,17 @@ jQuery(document).ready(function() {
                                         if (showhtml === true) {
                                             times.append(html);
                                         }
-
                                     }
-
                                 });
 
-                                if (hidedatebar === true && monta_shipping.first_preferred === null)
+                                if (hidedatebar === true && monta_shipping.first_preferred === null){
                                     $('.monta-times').addClass('monta-hide');
+                                }
+
+                                if(fallbackShipper){
+                                    document.getElementById('othersendmethod').classList.add('monta-hide');
+                                    document.getElementById('tabselector').classList.add('monta-hide');
+                                }
 
                                 // Select first option
                                 if(monta_shipping.first_preferred != null) {
@@ -325,10 +346,11 @@ jQuery(document).ready(function() {
 
                                 monta_shipping.storeLocatorDestroy();
 
-                            } else {
+                            } else if(checked === 'delivery') {
+                                $('#tabselector input[type=radio]:not(:checked)').click();
+                                $('#tabselector').addClass('monta-hide');
 
                                 $('.monta-shipment-extras').removeClass('active');
-
                             }
 
                             updateDeliveryTextBlock();
@@ -350,7 +372,6 @@ jQuery(document).ready(function() {
                                 $(".monta-times-croppped-error-pickup").css("display", "block")
                             } else {
                                 $('#tabselector input[type=radio]:not(:checked)').click();
-                                $('#tabselector').addClass('monta-hide');
                             }
                             monta_shipping.storeLocatorDestroy();
                         }
@@ -499,7 +520,7 @@ jQuery(document).ready(function() {
                     const value = $(this).val();
                     const shippers = $('.monta-shipment-shipper');
                     const options = monta_shipping.frames[value].options;
-
+                    
                     // Empty shippers
                     shippers.html('');
 
@@ -532,9 +553,9 @@ jQuery(document).ready(function() {
                                 '            {.img}\n' +
                                 '        </div>\n\n' +
                                 '        <div class="information">\n' +
-                                '            {.name} {.time} <span>{.ships_on}</span>\n' +
+                                '            {.name} {.time} <span>{.ships_on}</span> {.is_sustainable}\n' +
                                 '        </div>\n' +
-                                '        <div class="pricemonta">\n' +
+                                '        <div class="pricemonta" {.style}>\n' +
                                 '            {.price}\n' +
                                 '        </div>\n' +
                                 '        <div class="clearboth"></div>\n\n' +
@@ -545,16 +566,36 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.preferred}/g, item.is_preferred);
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
+                            
+                            console.log("item disc " + JSON.stringify(item))
+                            if(item.discount_percentage > 0){
+                                console.log("item disc " + item.discount_percentage)
+                                html = html.replace(/{.style}/g, 'style="color:#25af25"');
+                            }
+
                             html = html.replace(/{.type}/g, item.type);
                             html = html.replace(/{.type_text}/g, item.type_text);
                             html = html.replace(/{.ships_on}/g, item.ships_on);
+
+                            // var price = html.getElementsByClassName("pricemonta");
+                            // console.log("price " + price)
+
+                            if(item.is_sustainable) {
+                                html = html.replace(/{.is_sustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
+                            } else {
+                                html = html.replace(/{.is_sustainable}/g, '');
+                            }                           
 
                             if (code !== 'TBQ') {
                                 shippers.append(html);
                             }
 
+                            if(item.is_sustainable) {
+                                addTooltip('sustainable-' + realCode, 'sustainabletooltip-' + realCode);
+                            }
+
                             $(".loadedLogo").on("error", function () {
-                                $(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/none.png");
+                                $(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png");
                             });
 
                         });
@@ -707,7 +748,7 @@ jQuery(document).ready(function() {
         }
 
         jQuery(".monta-times-croppped").find(".loadedLogo").on("error", function() {
-            jQuery(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/none.png");
+            jQuery(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png");
         });
     }
 
@@ -854,3 +895,45 @@ jQuery(document).ready(function() {
         }
     });
 });
+
+function addTooltip(rootElementId, tooltipId){
+    const rootElement = document.querySelector('#' + rootElementId);
+    const tooltip = document.querySelector('#' + tooltipId);
+
+    if(window.tooltips[tooltipId] !== null || window.tooltips[tooltipId] !== undefined){
+        delete window.tooltips[tooltipId];
+    }
+    window.tooltips[tooltipId] = window.Popper.createPopper(rootElement, tooltip, {
+        placement: 'right',
+        modifiers: [
+        {
+            name: 'offset',
+            options: {
+            offset: [0, 8],
+            },
+        },
+        ],
+    });
+
+    const showEvents = ['mouseenter', 'focus'];
+    const hideEvents = ['mouseleave', 'blur'];
+    
+    showEvents.forEach((event) => {
+        rootElement.addEventListener(event, showTooltip);
+    });
+    
+    hideEvents.forEach((event) => {
+        rootElement.addEventListener(event, hideTooltip);
+    });
+}
+
+function showTooltip() {
+    let tooltip = document.getElementById(jQuery(this).attr('aria-describedby'));
+    tooltip.setAttribute('data-show', '');
+    window.tooltips[jQuery(this).attr('aria-describedby')].update();
+}
+
+function hideTooltip() {
+    let tooltip = document.getElementById(jQuery(this).attr('aria-describedby'));
+    tooltip.removeAttribute('data-show');
+}

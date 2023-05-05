@@ -1,5 +1,6 @@
 <script>
     var site_url = '<?php echo site_url();?>';
+    var sustainableDeliveryText = '<?php _e('Sustainably delivered', 'montapacking-checkout');?>';
 
     <?php /*
     jQuery(document).ready(function () {
@@ -84,7 +85,7 @@
         <div class="monta-times-croppped">
 
             <label>
-                <div class="imglogo"></div>
+                <div id="imglogo" class="imglogo"></div>
 
                 <div class="information">
 
@@ -242,7 +243,7 @@
             <span>
                 <span class="dayname">{.dayname}</span>
 				<span class="day">{.day}</span>
-
+                {.korting} 
                 <!--<span class="description">{.description}</span>-->
 			</span>
         </label>

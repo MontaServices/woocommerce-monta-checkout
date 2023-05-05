@@ -11,6 +11,7 @@ class MontaCheckout_ShippingOption
     public $description;
     public $displayname;
     public $isPreferred;
+    public $isSustainable;
     public $mailbox;
     public $price;
     public $currency;
@@ -18,8 +19,9 @@ class MontaCheckout_ShippingOption
     public $to;
     public $extras;
     public $date;
+    public $discountPercentage;
 
-    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $displayname, $isPreferred, $mailbox, $price, $currency, $from, $to, $extras, $date)
+    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $discountPercentage, $displayname, $isPreferred, $isSustainable, $mailbox, $price, $currency, $from, $to, $extras, $date)
     {
 
         $override = esc_attr(get_option('monta_standardshipmentname'));;
@@ -35,6 +37,7 @@ class MontaCheckout_ShippingOption
         $this->setDescription($description);
         $this->setDisplayName($displayname);
         $this->setIspreferred($isPreferred);
+        $this->setIsSustainable($isSustainable);
         $this->setMailbox($mailbox);
         $this->setPrice($price);
         $this->setCurrency($currency);
@@ -42,7 +45,14 @@ class MontaCheckout_ShippingOption
         $this->setTo($to);
         $this->setExtras($extras);
         $this->setDate($date);
+        $this->setDiscountPercentage($discountPercentage);
 
+    }
+
+    public function setDiscountPercentage($discountPercentage)
+    {
+        $this->discountPercentage = $discountPercentage;
+        return $this;
     }
 
     public function setCode($code)
@@ -84,6 +94,12 @@ class MontaCheckout_ShippingOption
     public function setIsPreferred($isPreferred)
     {
         $this->isPreferred = $isPreferred;
+        return $this;
+    }
+
+    public function setIsSustainable($isSustainable)
+    {
+        $this->isSustainable = $isSustainable;
         return $this;
     }
 
