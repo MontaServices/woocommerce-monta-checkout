@@ -574,7 +574,7 @@ jQuery(document).ready(function() {
                                 html = html.replace(/{.is_sustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
                             } else {
                                 html = html.replace(/{.is_sustainable}/g, '');
-                            }                           
+                            }
 
                             if (code !== 'TBQ') {
                                 shippers.append(html);
@@ -771,7 +771,8 @@ jQuery(document).ready(function() {
                 'AFH': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/AFH.png', 32, 32],
                 'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLservicepunt.png', 32, 32],
                 'DHLFYPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLFYPickupPoint.png', 32, 32],
-                'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32]
+                'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32],
+                'GLSPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/GLSPickupPoint.png', 32, 32]
             },
             callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
                 monta_shipping.selectPickup(location, markerId);

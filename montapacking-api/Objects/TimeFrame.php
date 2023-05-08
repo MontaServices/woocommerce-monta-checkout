@@ -76,17 +76,17 @@ class MontaCheckout_TimeFrame
                         $option->optionCodes,
                         $option->optionsWithValue,
                         $option->description,
-                        $option->discountPercentage,
                         $option->displayname,
                         $option->isPreferred,
                         $option->isSustainable,
                         $option->mailbox,
                         $option->price,
+                        $option->discountPercentage,
                         $option->currency,
                         $option->from,
                         $option->to,
                         $option->extras,
-                        $option->date,
+                        $option->date
                     );
                 } else {
                     $list[$onr] = new MontaCheckout_ShippingOption(
@@ -95,12 +95,12 @@ class MontaCheckout_TimeFrame
                         $option->ShipperOptionCodes,
                         $option->ShipperOptionsWithValue,
                         $option->Description,
-                        $option->DiscountPercentage,
                         $option->DisplayName,
                         $option->IsPreferred,
                         $option->IsSustainable,
                         $option->IsMailbox,
                         $option->SellPrice,
+                        $option->DiscountPercentage,
                         $option->SellPriceCurrency,
                         $option->From,
                         $option->To,

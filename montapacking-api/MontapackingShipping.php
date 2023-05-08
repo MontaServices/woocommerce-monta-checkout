@@ -371,7 +371,6 @@ class MontapackingShipping
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
         $curlresult = curl_exec($ch);
-        curl_close($ch);
         $result = json_decode($curlresult);
 
         if ($this->debug) {
@@ -393,6 +392,7 @@ class MontapackingShipping
                     $logger->critical("Webshop was unable to connect to Monta REST api, retrying in 3 seconds. Please contact Monta, error code: " . curl_getinfo($ch, CURLINFO_HTTP_CODE), $context);
                 }
             }
+            curl_close($ch);
 
             sleep(3);
 
@@ -406,7 +406,6 @@ class MontapackingShipping
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
             $curlresult = curl_exec($ch);
-            curl_close($ch);
             $result = json_decode($curlresult);
         }
 
@@ -422,6 +421,7 @@ class MontapackingShipping
                 $logger->critical("Webshop was unable to connect to Monta REST api. Please contact Monta, error code: " . curl_getinfo($ch, CURLINFO_HTTP_CODE), $context);
             }
         }
+        curl_close($ch);
 
         if (null !== $this->logger && $result->Warnings) {
 

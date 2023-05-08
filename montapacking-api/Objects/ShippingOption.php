@@ -21,7 +21,7 @@ class MontaCheckout_ShippingOption
     public $date;
     public $discountPercentage;
 
-    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $discountPercentage, $displayname, $isPreferred, $isSustainable, $mailbox, $price, $currency, $from, $to, $extras, $date)
+    public function __construct($code, $codes, $optioncodes, $optionsWithValue, $description, $displayname, $isPreferred, $isSustainable, $mailbox, $price, $discountPercentage, $currency, $from, $to, $extras, $date)
     {
 
         $override = esc_attr(get_option('monta_standardshipmentname'));;
@@ -46,7 +46,6 @@ class MontaCheckout_ShippingOption
         $this->setExtras($extras);
         $this->setDate($date);
         $this->setDiscountPercentage($discountPercentage);
-
     }
 
     public function setDiscountPercentage($discountPercentage)
