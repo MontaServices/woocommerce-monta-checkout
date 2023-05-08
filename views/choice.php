@@ -244,7 +244,6 @@
                 <span class="dayname">{.dayname}</span>
 				<span class="day">{.day}</span>
                 {.korting} 
-                <!--<span class="description">{.description}</span>-->
 			</span>
         </label>
     </li>
