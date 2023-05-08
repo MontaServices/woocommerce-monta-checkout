@@ -284,7 +284,6 @@ jQuery(document).ready(function() {
                                     if (option !== null && option !== undefined) {
 
                                         let html = $('.monta-choice-template').html();
-                                        console.log("html " + html)
 
                                         html = html.replace(/{.id}/g, key);
                                         html = html.replace(/{.code}/g, (item.code !== null) ? item.code : '');
@@ -293,10 +292,6 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.time}/g, item.time);
                                         html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
-
-                                        console.log("perc " + JSON.stringify(item))
-                                        console.log("option " + JSON.stringify(item.options))
-                                        console.log("item.discount_percentage    " + option.discount_percentage)
 
                                         if(item.options.some(x=>x.discount_percentage > 0)){
                                             var newelement = '<span class="discount_percentage" style="background:lightgreen;color:green;margin:auto;width:40%">-' + option.discount_percentage  + '%</span>';
@@ -567,18 +562,13 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
                             
-                            console.log("item disc " + JSON.stringify(item))
                             if(item.discount_percentage > 0){
-                                console.log("item disc " + item.discount_percentage)
                                 html = html.replace(/{.style}/g, 'style="color:#25af25"');
                             }
 
                             html = html.replace(/{.type}/g, item.type);
                             html = html.replace(/{.type_text}/g, item.type_text);
                             html = html.replace(/{.ships_on}/g, item.ships_on);
-
-                            // var price = html.getElementsByClassName("pricemonta");
-                            // console.log("price " + price)
 
                             if(item.is_sustainable) {
                                 html = html.replace(/{.is_sustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
