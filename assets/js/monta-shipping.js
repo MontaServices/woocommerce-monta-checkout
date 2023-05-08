@@ -294,7 +294,7 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.price}/g, item.price);
 
                                         if(item.options.some(x=>x.discount_percentage > 0)){
-                                            var newelement = '<span class="discount_percentage" style="background:lightgreen;color:green;margin:auto;width:40%">-' + option.discount_percentage  + '%</span>';
+                                            var newelement = '<span class="discount-percentage">-' + option.discount_percentage  + '%</span>';
                                             html = html.replace(/{.korting}/g, newelement);
                                         }else{
                                             html = html.replace(/{.korting}/g, '');
@@ -515,7 +515,7 @@ jQuery(document).ready(function() {
                     const value = $(this).val();
                     const shippers = $('.monta-shipment-shipper');
                     const options = monta_shipping.frames[value].options;
-                    
+
                     // Empty shippers
                     shippers.html('');
 
@@ -550,7 +550,7 @@ jQuery(document).ready(function() {
                                 '        <div class="information">\n' +
                                 '            {.name} {.time} <span>{.ships_on}</span> {.is_sustainable}\n' +
                                 '        </div>\n' +
-                                '        <div class="pricemonta" {.style}>\n' +
+                                '        <div class="pricemonta{.class}" >\n' +
                                 '            {.price}\n' +
                                 '        </div>\n' +
                                 '        <div class="clearboth"></div>\n\n' +
@@ -562,9 +562,12 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
                             
+                            let discountclass = '';
                             if(item.discount_percentage > 0){
-                                html = html.replace(/{.style}/g, 'style="color:#25af25"');
+                                discountclass = "discount";
                             }
+
+                            html = html.replace(/{.class}/g, discountclass);
 
                             html = html.replace(/{.type}/g, item.type);
                             html = html.replace(/{.type_text}/g, item.type_text);

@@ -118,17 +118,17 @@ class MontaCheckout_PickupPoint
                     $option->ShipperOptionCodes,
                     $option->ShipperOptionsWithValue,
                     $option->Description,
-                    $option->DiscountPercentage,
                     $option->DisplayName,
                     $option->IsPreferred,
                     $option->IsSustainable,
                     $option->IsMailbox,
                     $option->SellPrice,
+                    $option->DiscountPercentage,
                     $option->SellPriceCurrency,
                     $option->From,
                     $option->To,
                     $option->Options,
-                    $option->ShippingDeadline,
+                    $option->ShippingDeadline
                 );
 
             }

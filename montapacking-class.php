@@ -1320,14 +1320,14 @@ class Montapacking
                             'date' => date('d-m-Y', strtotime($option->date)),
                             'time' => (date('H:i', $frame->from != null && $frame->to != null && strtotime($frame->from)) != date('H:i', strtotime($frame->to))) ? date('H:i', strtotime($frame->from)) . '-' . date('H:i', strtotime($frame->to)) : '',
                             'description' => $option->description,
-                            'displayname' => $option->displayname,  
+                            'displayname' => $option->displayname,
                             'is_preferred' => $option->isPreferred,
                             'is_sustainable' => $option->isSustainable,
                             'details' => $frame->details,
-                            'shipperOptionsWithValue' => $shipperOptions,    
+                            'shipperOptionsWithValue' => $shipperOptions,
                             'price' => number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
-                            'request_url' => $frame->requesturl 
+                            'request_url' => $frame->requesturl
                         ]; 
 
                         ## Sorteer opties op laagste prijs
