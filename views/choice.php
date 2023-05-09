@@ -243,7 +243,7 @@
             <span>
                 <span class="dayname">{.dayname}</span>
 				<span class="day">{.day}</span>
-                {.korting} 
+                {.korting}
 			</span>
         </label>
     </li>

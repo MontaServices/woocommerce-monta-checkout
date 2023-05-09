@@ -1222,7 +1222,6 @@ class Montapacking
                             'to' => null,
                             'extras' => $extras,
                             'request_url' => $frame->requesturl,
-
                             'discount_percentage' => $option->discountPercentage
                         ];
 
@@ -1328,7 +1327,7 @@ class Montapacking
                             'price' => number_format($option->price, 2, ',', ''),
                             'price_raw' => $option->price,
                             'request_url' => $frame->requesturl
-                        ]; 
+                        ];
 
                         ## Sorteer opties op laagste prijs
                         usort($items, function ($a, $b) {
