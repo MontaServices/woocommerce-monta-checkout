@@ -12,7 +12,6 @@ class MontaCheckout_TimeFrame
     public $options = [];
     public $requesturl;
 
-
     public function __construct($from, $to, $code, $description, $options, $type, $requesturl = null)
     {
 
@@ -82,6 +81,7 @@ class MontaCheckout_TimeFrame
                         $option->isSustainable,
                         $option->mailbox,
                         $option->price,
+                        $option->discountPercentage,
                         $option->currency,
                         $option->from,
                         $option->to,
@@ -100,6 +100,7 @@ class MontaCheckout_TimeFrame
                         $option->IsSustainable,
                         $option->IsMailbox,
                         $option->SellPrice,
+                        $option->DiscountPercentage,
                         $option->SellPriceCurrency,
                         $option->From,
                         $option->To,

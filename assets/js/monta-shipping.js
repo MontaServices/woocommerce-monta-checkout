@@ -284,6 +284,7 @@ jQuery(document).ready(function() {
                                     if (option !== null && option !== undefined) {
 
                                         let html = $('.monta-choice-template').html();
+
                                         html = html.replace(/{.id}/g, key);
                                         html = html.replace(/{.code}/g, (item.code !== null) ? item.code : '');
                                         html = html.replace(/{.day}/g, item.date);
@@ -291,6 +292,13 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.time}/g, item.time);
                                         html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
+
+                                        if(item.options.some(x=>x.discount_percentage > 0)){
+                                            var newelement = '<span class="discount-percentage">-' + option.discount_percentage  + '%</span>';
+                                            html = html.replace(/{.discount}/g, newelement);
+                                        }else{
+                                            html = html.replace(/{.discount}/g, '');
+                                        }
 
                                         if(monta_shipping.first_preferred != null && monta_shipping.first_preferred.date === item.date){
                                             html = html.replace(/{.preferred}/g, true);
@@ -542,7 +550,7 @@ jQuery(document).ready(function() {
                                 '        <div class="information">\n' +
                                 '            {.name} {.time} <span>{.ships_on}</span> {.is_sustainable}\n' +
                                 '        </div>\n' +
-                                '        <div class="pricemonta">\n' +
+                                '        <div class="pricemonta{.class}" >\n' +
                                 '            {.price}\n' +
                                 '        </div>\n' +
                                 '        <div class="clearboth"></div>\n\n' +
@@ -553,6 +561,14 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.preferred}/g, item.is_preferred);
                             html = html.replace(/{.time}/g, time);
                             html = html.replace(/{.price}/g, item.price);
+                            
+                            let discountclass = '';
+                            if(item.discount_percentage > 0){
+                                discountclass = "discount";
+                            }
+
+                            html = html.replace(/{.class}/g, discountclass);
+
                             html = html.replace(/{.type}/g, item.type);
                             html = html.replace(/{.type_text}/g, item.type_text);
                             html = html.replace(/{.ships_on}/g, item.ships_on);

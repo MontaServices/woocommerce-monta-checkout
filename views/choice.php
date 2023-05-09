@@ -243,8 +243,7 @@
             <span>
                 <span class="dayname">{.dayname}</span>
 				<span class="day">{.day}</span>
-
-                <!--<span class="description">{.description}</span>-->
+                {.discount}
 			</span>
         </label>
     </li>

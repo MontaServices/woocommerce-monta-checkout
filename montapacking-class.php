@@ -1109,6 +1109,7 @@ class Montapacking
                             'to' => date('H:i', strtotime($to . ' +1 hour')),
                             'extras' => $extras,
                             'request_url' => $frame->requesturl,
+                            'discount_percentage' => $option->discountPercentage
                         ];
 
                         if (isset($items[$key]) && (time() + 3600) <= strtotime($option->date)) {
@@ -1156,6 +1157,7 @@ class Montapacking
                             'to' => date('H:i', strtotime($to . ' +1 hour')),
                             'extras' => $extras,
                             'request_url' => $frame->requesturl,
+                            'discount_percentage' => $option->discountPercentage
                         ];
 
                         $allow = true;
@@ -1220,6 +1222,7 @@ class Montapacking
                             'to' => null,
                             'extras' => $extras,
                             'request_url' => $frame->requesturl,
+                            'discount_percentage' => $option->discountPercentage
                         ];
 
                         $allow = true;

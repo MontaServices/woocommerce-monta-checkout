@@ -122,7 +122,7 @@ body.monta-cover-open {
 .monta-times .toggle-left, .monta-times .toggle-right, .monta-times .montascroller {
     vertical-align: top;
     display: table-cell;
-    height: 60px;
+    height: 80px;
     width: 100%;
 }
 .monta-times .toggle-left, .monta-times .toggle-right {
@@ -145,13 +145,13 @@ body.monta-cover-open {
 .monta-times .montascroller .mover {
     overflow: hidden;
     position: relative;
-    height: 60px;
+    height: inherit;
     width: 100%;
 }
 .monta-times ul {
     position: absolute;
     width: 10000px;
-    height: 60px;
+    height: inherit;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -159,7 +159,7 @@ body.monta-cover-open {
 }
 .monta-times ul li {
     width: 110px;
-    height: 60px;
+    height: inherit;
     position: relative;
     display: inline-block;
     padding: 10px 15px;
@@ -276,6 +276,10 @@ body.monta-cover-open {
     text-align: right;
     margin-right: 10px;
     line-height:30px;
+}
+
+.pricemonta.discount {
+    color:#25af25; 
 }
 .monta-shipment-shipper label input:checked + span {
     background: #f5f5f5;
@@ -522,6 +526,12 @@ input[name=initialPickupPointRadio] {
 
 #PCPostNummer {
     display: none;
+}
+.discount-percentage {
+    background:lightgreen;
+    color:green;
+    margin:auto;
+    width:40%
 }
 
 .tooltip {
