@@ -295,9 +295,9 @@ jQuery(document).ready(function() {
 
                                         if(item.options.some(x=>x.discount_percentage > 0)){
                                             var newelement = '<span class="discount-percentage">-' + option.discount_percentage  + '%</span>';
-                                            html = html.replace(/{.korting}/g, newelement);
+                                            html = html.replace(/{.discount}/g, newelement);
                                         }else{
-                                            html = html.replace(/{.korting}/g, '');
+                                            html = html.replace(/{.discount}/g, '');
                                         }
 
                                         if(monta_shipping.first_preferred != null && monta_shipping.first_preferred.date === item.date){
