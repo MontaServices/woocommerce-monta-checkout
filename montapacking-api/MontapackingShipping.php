@@ -265,17 +265,17 @@ class MontapackingShipping
     
                     ## Shippers omzetten naar shipper object
                     foreach ($result->Timeframes as $timeframe) {
-    
-                        $timeframes[] = new MontaCheckout_TimeFrame(
-                            $timeframe->From,
-                            $timeframe->To,
-                            $timeframe->TypeCode,
-                            $timeframe->TypeDescription,
-                            $timeframe->ShippingOptions,
-                            $timeframe->FromToTypeCode,
-                            $this->requesturl
-                        );
-    
+                        if(!$timeframe->IsPickupPoint){
+                            $timeframes[] = new MontaCheckout_TimeFrame(
+                                $timeframe->From,
+                                $timeframe->To,
+                                $timeframe->TypeCode,
+                                $timeframe->TypeDescription,
+                                $timeframe->ShippingOptions,
+                                $timeframe->FromToTypeCode,
+                                $this->requesturl
+                            );
+                        }
                     }
     
                 } else {
@@ -302,7 +302,8 @@ class MontapackingShipping
             null,
             null,
             null,
-            null
+            null,
+            0
         )];
         return new MontaCheckout_TimeFrame(
             null,
