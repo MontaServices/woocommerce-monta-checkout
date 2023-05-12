@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.54
+ * Version: 1.55
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -37,6 +37,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_google_key');
     register_setting('montapacking-plugin-settings', 'monta_logerrors');
     register_setting('montapacking-plugin-settings', 'monta_pickupname');
+    register_setting('montapacking-plugin-settings', 'monta_shippingcosts_fallback_woocommerce');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts_start');
     register_setting('montapacking-plugin-settings', 'monta_leadingstock');
@@ -222,6 +223,15 @@ function montacheckout_render_settings()
                     <td><input required type="password" name="monta_password"
                                value="<?php echo esc_attr(get_option('monta_password')); ?>" size="50"/>
                         <br><i style="font-size:12px">The password of Monta REST API provided by Montapacking.</i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_shippingcosts_fallback_woocommerce">Use WooCommerce shipping costs as fallback *</label></th>
+                    <td>
+                        <input type="checkbox" name="monta_shippingcosts_fallback_woocommerce"
+                               value="1" <?php checked('1', get_option('monta_shippingcosts_fallback_woocommerce')); ?>/>
+                        <br><i style="font-size:12px">Use shipping costs set in WooCommerce settings instead of amount set below as fallback if API connection is unsuccessful.</i>
                     </td>
                 </tr>
 
