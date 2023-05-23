@@ -27,13 +27,11 @@ class MontaCheckout_Address
 
     }
 
-    public function setLongLat($key = null)
+	public function setLongLat($key = null)
     {
-
         if ($key != null && trim($key)) {
-
             // Get lat and long by address
-            $address = $this->street . ' ' . $this->housenumber . ' ' . $this->housenumberaddition . ', ' . $this->postalcode . ' ' . $this->countrycode . ''; // Google HQ
+            $address = $this->housenumber . ' ' . $this->housenumberaddition . ', ' . $this->postalcode . ' ' . $this->countrycode;
             $prepAddr = str_replace('  ', ' ', $address);
             $prepAddr = str_replace(' ', '+', $prepAddr);
 
@@ -51,10 +49,7 @@ class MontaCheckout_Address
 
             $this->longitude = $longitude;
             $this->latitude = $latitude;
-
         }
-
-
     }
 
     public function setStreet($street)

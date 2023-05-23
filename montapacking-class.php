@@ -2,8 +2,10 @@
 
 class Montapacking
 {
-    public static function shipping_package()
+    private static $WooCommerceShippingMethod = null;
+    public static function shipping_package($packages)
     {
+        self::$WooCommerceShippingMethod = self::getWooCommerceShippingMethod($packages[0]);
         return [];
     }
 
@@ -336,7 +338,6 @@ class Montapacking
                 'meta_data' => $rate->get_meta_data()
                 ));
 
-
             $order->add_item($item);
             $order->save();
 
@@ -370,14 +371,12 @@ class Montapacking
 
     public static function shipping_calculate()
     {
-
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
         }
 
         $price = self::get_shipping_total($data);
-
         $datapost = null;
         if (isset($_POST['post_data'])) {
             parse_str(sanitize_post($_POST['post_data']), $datapost);
@@ -919,15 +918,24 @@ class Montapacking
         } else {
             $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
+        do_action( 'woocommerce_cart_shipping_packages' );
 
         if ($type == 'delivery') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                return $api->getShippingOptions($bStockStatus, false, false, false, false, $skuArray);
+                $shippingOptions = $api->getShippingOptions($bStockStatus, false, false, false, false, $skuArray);
             }
             else
             {
-                return $api->getShippingOptions($bStockStatus);
+                $shippingOptions = $api->getShippingOptions($bStockStatus);
             }
+            if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
+                if ($shippingOptions != null && $shippingOptions[0]->code == 'Monta' && $shippingOptions[0]->description == 'Monta'){
+                    foreach ($shippingOptions[0]->options as $option) {
+                        $option->price = self::$WooCommerceShippingMethod['cost'];
+                    }
+                }
+            }
+            return $shippingOptions;
         } else if ($type == 'pickup') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
@@ -936,16 +944,13 @@ class Montapacking
             {
                 return $api->getPickupOptions($bStockStatus);
             }
-        } else if ($type == 'collect'){
+        } else if ($type == 'collect') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
-            }
-            else
-            {
-                return $api->getPickupOptions($bStockStatus, false, false, false, false, Array(), true);
+            } else {
+                return $api->getPickupOptions($bStockStatus, false, false, false, false, array(), true);
             }
         }
-
     }
 
     public static function calculateExtras($extra_values = null, $curr = '&euro;')
@@ -1428,6 +1433,60 @@ class Montapacking
             }
         }
         return false;
+    }
+
+    /**
+     * @param $package
+     * @return array|null
+     */
+    public static function getWooCommerceShippingMethod($package): ?array
+    {
+        if($package == ""){
+            $address = array();
+            $address['destination'] = Array();
+            $address['destination']['country'] = WC()->customer->get_shipping_country();
+            $address['destination']['state'] = WC()->customer->get_shipping_state();
+            $address['destination']['postcode'] = WC()->customer->get_shipping_postcode();
+            $shipping_zone = WC_Shipping_Zones::get_zone_matching_package($address);
+        } else {
+            $shipping_zone = WC_Shipping_Zones::get_zone_matching_package($package);
+        }
+        $chosenMethod = null;
+        foreach ($shipping_zone->get_shipping_methods(true) as $key => $class) {
+            // Method's ID and custom name
+            $item = [
+                'id' => $class->method_title,
+                'name' => $class->title,
+                'cost' => $class->instance_settings["cost"],
+                'requires' => $class->requires
+            ];
+
+            // If minimum amount is required
+            if (isset($class->min_amount) && $class->min_amount > 0) $item['minimum'] = (float)$class->min_amount;
+
+            if ($chosenMethod == null || ($chosenMethod['cost'] != null && (float)$chosenMethod['cost'] > (float)$item['cost'])) {
+                if (!isset($item['requires']) || $item["requires"] == "") {
+                    $chosenMethod = $item;
+                } else if ($item['requires'] == 'min_amount' && WC()->cart->get_cart_contents_total() >= (float)$item['minimum']) {
+                    $chosenMethod = $item;
+                } else if ($item['requires'] == 'both' || $item['requires'] == 'coupon') {
+                    $applied_coupons = WC()->cart->get_applied_coupons();
+                    $hasFreeShipping = false;
+                    foreach ($applied_coupons as $coupon_code) {
+                        $coupon = new WC_Coupon($coupon_code);
+                        if ($coupon->get_free_shipping()) {
+                            $hasFreeShipping = true;
+                        }
+                    }
+                    if ($hasFreeShipping) {
+                        if ($item['requires'] == 'coupon' || (WC()->cart->get_cart_contents_total() >= (float)$item['minimum'])) {
+                            $chosenMethod = $item;
+                        }
+                    }
+                }
+            }
+        }
+        return $chosenMethod;
     }
 
 }
