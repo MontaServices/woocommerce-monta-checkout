@@ -872,27 +872,28 @@ class Montapacking
 
         foreach ($items as $item => $values) {
             $product = wc_get_product($values['product_id']);
+            if($product->get_type() != "woosb"){
+                $sku = $product->get_sku();
+                $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
 
-            $sku = $product->get_sku();;
-            $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
+                if (trim($sku))
+                {
+                    $skuArray[$x] = array($sku, $quantity);
+                    $x++;
+                }
 
-            if (trim($sku))
-            {
-                $skuArray[$x] = array($sku, $quantity);
-                $x++;
-            }
+                $virtual = $product->get_virtual();
 
-            $virtual = $product->get_virtual();
+                if ($virtual) {
+                    $hasDigitalProducts = true;
+                } else {
+                    $hasPhysicalProducts = true;
 
-            if ($virtual) {
-                $hasDigitalProducts = true;
-            } else {
-                $hasPhysicalProducts = true;
+                    $stockstatus = $product->get_stock_status();
 
-                $stockstatus = $product->get_stock_status();
-
-                if ($stockstatus != 'instock') {
-                    $bAllProductsAvailableAtWooCommerce = false;
+                    if ($stockstatus != 'instock') {
+                        $bAllProductsAvailableAtWooCommerce = false;
+                    }
                 }
             }
         }
