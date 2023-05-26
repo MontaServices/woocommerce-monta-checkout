@@ -1469,7 +1469,7 @@ class Montapacking
                     $chosenMethod = $item;
                 } else if ($item['requires'] == 'min_amount' && WC()->cart->get_cart_contents_total() >= (float)$item['minimum']) {
                     $chosenMethod = $item;
-                } else if ($item['requires'] == 'both' || $item['requires'] == 'coupon') {
+                } else if ($item['requires'] == 'both' || $item['requires'] == 'coupon' || $item['requires'] == 'either') {
                     $applied_coupons = WC()->cart->get_applied_coupons();
                     $hasFreeShipping = false;
                     foreach ($applied_coupons as $coupon_code) {
@@ -1480,6 +1480,10 @@ class Montapacking
                     }
                     if ($hasFreeShipping) {
                         if ($item['requires'] == 'coupon' || (WC()->cart->get_cart_contents_total() >= (float)$item['minimum'])) {
+                            $chosenMethod = $item;
+                        }
+                    } else {
+                        if($item['requires'] == 'either' || (WC()->cart->get_cart_contents_total() >= (float)$item['minimum'])){
                             $chosenMethod = $item;
                         }
                     }
