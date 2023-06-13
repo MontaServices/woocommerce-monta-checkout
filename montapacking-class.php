@@ -160,6 +160,7 @@ class Montapacking
 
                 break;
             case 'pickup':
+            case 'collect':
                 $name = $order->get_billing_first_name()." ".$order->get_billing_last_name();
                 $pickup['name'] = $name;
 
@@ -327,8 +328,7 @@ class Montapacking
 
             $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
 
-
-            $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', $price - $tax, $tax, 'flat_rate');
+            $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', (double)$price - $tax, $tax, 'flat_rate');
 
             $item->set_props(array(
                 'method_title' => $rate->label,
