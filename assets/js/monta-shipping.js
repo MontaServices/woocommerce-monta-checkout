@@ -255,12 +255,12 @@ jQuery(document).ready(function() {
 
                                 monta_shipping.first_preferred = null;
                                 $.each(monta_shipping.frames, function (key, item) {
-                                    if(item.options[0].code === 'Monta'){
+                                    if(item.options.some((code) => code === 'Monta')){
                                         hidedatebar = true;
                                         fallbackShipper = true;
                                     }
                                     daysavailablecounter++;
-                                    if(monta_shipping.first_preferred == null && item.options[0].is_preferred){
+                                    if(monta_shipping.first_preferred == null && item.options.some(item => item.is_preferred)){
                                         monta_shipping.first_preferred = item;
                                     }
                                 });
@@ -541,8 +541,8 @@ jQuery(document).ready(function() {
                                 '        <span style="display:none" class="cropped_type_text">{.type_text}</span>\n' +
                                 '        <span style="display:none" class="cropped_type">{.type}</span>\n\n' +
                                 '        <span class="radiobutton">\n' +
-                                '            <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper">\n' +
-                                '            <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}" data-preferred="{.preferred}">\n' +
+                                '            <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper" data-preferred="{.preferred}">\n' +
+                                '            <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}">\n' +
                                 '        </span>\n\n' +
                                 '        <div class="image">\n' +
                                 '            {.img}\n' +
@@ -592,7 +592,11 @@ jQuery(document).ready(function() {
                             });
 
                         });
-                        shippers.find('input[type=radio]:first').prop('checked', true);
+                        if(monta_shipping.first_preferred !== null){
+                            shippers.find('input[type=radio][data-preferred=\'true\']:first').prop('checked', true);
+                        } else {
+                            shippers.find('input[type=radio]:first').prop('checked', true);
+                        }
 
                         monta_shipping.setShipper();
                     } else {
