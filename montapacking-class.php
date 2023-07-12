@@ -872,6 +872,9 @@ class Montapacking
 
         foreach ($items as $item => $values) {
             $product = wc_get_product($values['product_id']);
+            if($values['variation_id']){
+                $product = wc_get_product($values['variation_id']);
+            }
             if($product->get_type() != "woosb"){
                 $sku = $product->get_sku();
                 $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
