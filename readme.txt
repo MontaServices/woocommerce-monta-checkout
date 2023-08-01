@@ -4,7 +4,7 @@ Donate link:
 Tags: monta, checkout, woocommerce, extension, monta
 Requires at least: 4.0.1
 Tested up to: 6.1.1
-Stable tag: 1.56.1
+Stable tag: 1.57
 Requires PHP: 5.6
 License: GPLv3 or later License
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -55,9 +55,9 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
-#1.56.2
+#1.57
 
-* Fixed issue with wrong sku for variant products
+* Added Budbee Box support
 
 #1.56.1
 
