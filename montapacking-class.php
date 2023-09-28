@@ -358,7 +358,11 @@ class Montapacking
     }
 
     public static function shipping_total($wc_price = 0)
-    {
+    {        
+        if (did_filter('woocommerce_cart_get_total') >= 2) {
+            return $wc_price;
+        }
+        
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
