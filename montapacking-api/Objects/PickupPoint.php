@@ -59,7 +59,7 @@ class MontaCheckout_PickupPoint
 
             $arr = array();
             foreach ($times as $key => $values) {
-                if ($values->Day == $today) {
+                if (strtolower($values->Day) == strtolower($today)) {
                     foreach ($values->OpeningTimes as $timekey => $times) {
 
                         $array = array();

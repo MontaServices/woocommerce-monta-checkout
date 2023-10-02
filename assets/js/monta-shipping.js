@@ -779,6 +779,7 @@ jQuery(document).ready(function() {
                 'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLservicepunt.png', 32, 32],
                 'DHLFYPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLFYPickupPoint.png', 32, 32],
                 'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32],
+                'BudbeePickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/BudbeePickupPoint.png', 32, 32],
                 'GLSPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/GLSPickupPoint.png', 32, 32]
             },
             callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
