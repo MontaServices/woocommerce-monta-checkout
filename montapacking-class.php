@@ -266,15 +266,19 @@ class Montapacking
 
                 if (is_array($extras)) {
 
-                    if (!empty($method->optionCodes)) {
+//                    if (!empty($method->optionCodes)) {
+//
+//                        foreach ($method->optionCodes as $optionCode) {
+//
+//                            array_push($extras, $optionCode);
+//                        }
+//                    }
 
-                        foreach ($method->optionCodes as $optionCode) {
-
-                            array_push($extras, $optionCode);
-
-                        }
-
-                    }
+	                if (!empty($method->shipperCodes)) {
+		                foreach ($method->shipperCodes as $optionCode) {
+			                array_push($extras, $optionCode);
+		                }
+	                }
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
 
