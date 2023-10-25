@@ -1,0 +1,12 @@
+{
+    "name": "kevin/montapacking-checkout-woocommerce-extension",
+    "authors": [
+        {
+            "name": "Monta",
+            "email": "servicedesk@monta.nl"
+        }
+    ],
+    "require": {
+        "monta/checkout-api-wrapper": "^v1.9"
+    }
+}

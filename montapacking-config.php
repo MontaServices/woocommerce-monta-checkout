@@ -3,4 +3,5 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-include('montapacking-api/MontapackingShipping.php');
+
+require_once('vendor/autoload.php');

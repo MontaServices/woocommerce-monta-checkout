@@ -123,9 +123,6 @@ function filter_review_order_before_shipping($needs_shipping_address)
     do_action( 'woocommerce_review_order_before_shipping' );
 }
 
-
-
-
 function filter_woocommerce_cart_needs_shipping_address($needs_shipping_address)
 {
     $cart_needs_shipping_address = true;

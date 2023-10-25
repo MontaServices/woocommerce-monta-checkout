@@ -38,7 +38,9 @@ class Montapacking
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
-                    $items = self::format_frames($frames);
+//                    $items = self::format_frames($frames);
+	                $items = $frames['DeliveryOptions'];
+
                 }
 
                 break;
@@ -115,7 +117,6 @@ class Montapacking
                 $virtual = $product->get_virtual();
 
                 if ($virtual) {
-                    ;
                     $hasDigitalProducts = true;
                 } else {
                     $hasPhysicalProducts = true;
@@ -155,7 +156,9 @@ class Montapacking
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
-                    $items = self::format_frames($frames, $time);
+//                    $items = self::format_frames($frames, $time);
+
+                    $items = $frames['DeliveryOptions'];
                 }
 
                 break;
@@ -215,16 +218,12 @@ class Montapacking
             ## Check of timeframe opties heeft
             $frame = $items[$time];
             if (isset($frame->options)) {
-
                 ## Gekozen shipper ophalen
                 foreach ($frame->options as $option) {
-
                     if ($option->code == $shipper) {
-
-                        $shipperCode = implode(',', $option->codes);
-                        $method = $option;
+                        $shipperCodes = implode(',', $option->shipperCodes);
+	                    $method = $option;
                         break;
-
                     }
                 }
             }
@@ -233,12 +232,31 @@ class Montapacking
             if ($method !== null) {
 
                 ## Gekozen optie met datum en tijd toevoegen
-                $item->add_meta_data('Shipmentmethod', $shipperCode, true);
+                $item->add_meta_data('Shipmentmethod', $shipperCodes, true);
                 $item->add_meta_data('Delivery date', $frame->date, true);
 
+//                foreach($items[$time] as $item) {
+//                    $test123 = $item;
+//                    $test123 = $item;
+//                }
 
+//                $test = $items[$time];
+//                foreach($test->options as $selectedItem) {
+//                    $wheeee = $selectedItem;
+//
+//                    if($selectedItem->code == $method->code) {
+//                        $iteminquestion = $method->code;
+//
+//
+//                        $test1 = $selectedItem->from;
+//                        $test2 = $selectedItem->from;
+//                    }
+//
+//                }
+
+//                $time_check = $method->from . ' ' . $method->to;
                 $time_check = $method->from . ' ' . $method->to;
-                if ($time_check != '01:00 01:00' && trim($time_check) && $method->from != $method->to) {
+                if ($time_check != '00:00 00:00' && trim($time_check) && $method->from != $method->to) {
                     $item->add_meta_data('Delivery timeframe', $method->from . ' ' . $method->to, true);
                 }
 
@@ -279,9 +297,14 @@ class Montapacking
         }
 
 
-        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
+//        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
 
-        if (true !== $api->checkConnection()) {
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, '', 10);
+	    $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+
+
+//        if (true !== $api->checkConnection()) {
+	        if (false) {
             $arr = array();
             $arr[] = "Webshop was unable to connect to Montapacking REST api. Please contact Montapacking";
             $arr = implode("\n\r", $arr);
@@ -359,6 +382,10 @@ class Montapacking
 
     public static function shipping_total($wc_price = 0)
     {
+//        if (did_filter('woocommerce_cart_get_total') >= 4) {
+//            return $wc_price;
+//        }
+
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -471,6 +498,8 @@ class Montapacking
             }
 
             if (isset($monta['pickup'])) {
+                $whee = $monta['pickup'];
+                $test = $monta;
                 $pickup = $monta['pickup'];
             }
 
@@ -500,58 +529,65 @@ class Montapacking
             $frames = $_SESSION['montapacking-frames'];
             if (is_array($frames)) {
 
+                $tmp1 = $frames['DeliveryOptions'];
+                $tmp2 = $frames[$time];
 
                 ## Check of gekozen timeframe bestaat
-                if (isset($frames[$time])) {
+//                if (isset($frames[$time])) {
+                $frames = $frames['DeliveryOptions'];
+	            if (isset($frames)) {
 
                     $method = null;
 
                     ## Check of timeframe opties heeft
-                    $frame = $frames[$time];
-                    if (isset($frame->options)) {
+//                    $frame = $frames[$time];
+//                    if (isset($frame->options)) {
 
-                        ## Gekozen shipper ophalen
-                        foreach ($frame->options as $option) {
+                        foreach($frames as $frame) {
+                           $thisis = $shipper;
+                            foreach ($frame->options as $option) {
+	                            if ($option->code == $shipper) {
+		                            $method = $option;
+		                            break;
 
-                            if ($option->code == $shipper) {
-
-                                $method = $option;
-                                break;
-
+	                            }
                             }
-
                         }
 
-                    }
+                        ## Gekozen shipper ophalen
+//                        foreach ($frames->options as $option) {
+//
+//                            if ($option->code == $shipper) {
+//
+//                                $method = $option;
+//                                break;
+//
+//                            }
+//
+//                        }
+//                    }
 
                     ## Check of verzendmethode is gevonden
                     if ($method !== null) {
 
                         ## Basis prijs bepalen
-                        $price += $method->price_raw;
+                        $price += $method->price;
                         $isfound = true;
 
                         ## Eventuele extra's bijvoeren
                         if (is_array($extras)) {
 
-                            ## Extra's toeveogen
+                            ## Extra's toevoegen
                             foreach ($extras as $extra) {
-
-                                if (isset($method->extras[$extra])) {
-
-                                    ## Extra bedrag toevoegen
-                                    $price += $method->extras[$extra]->price_raw;
-
+                                foreach($method->deliveryOptions as $deliveryOption) {
+                                    if($extra == $deliveryOption->code) {
+	                                    $price += $deliveryOption->price;
+                                    }
                                 }
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
 
         } else if ($type == 'pickup') {
@@ -591,8 +627,11 @@ class Montapacking
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
-                    $items = self::format_frames($frames);
-                    if ($items !== null) {
+//                    $items = self::format_frames($frames);
+	                $items = $frames['DeliveryOptions'];
+	                $_SESSION['montapacking-frames'] = $frames;
+
+	                if ($items !== null) {
 
                         header('Content-Type: application/json');
                         echo json_encode([
@@ -627,8 +666,9 @@ class Montapacking
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
-                    $items = self::format_pickups($frames);
+//                    $items = self::format_pickups($frames);
                     #print_r($items);
+	                $items = $frames['PickupOptions'];
                     if ($items !== null) {
 
                         ## Get order location
@@ -716,9 +756,16 @@ class Montapacking
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
-                    $items = self::format_pickups($frames);
+//                    $items = self::format_pickups($frames);
                     #print_r($items);
-                    if ($items !== null) {
+	                $items = $frames['PickupOptions'];
+
+                    foreach($items as $storeCollector) {
+                        if($storeCollector->shipperCode == "AFH") {
+                            $items = [$storeCollector];
+                        }
+	                }
+	                if ($items !== null) {
 
                         ## Get order location
                         // Get lat and long by address
@@ -794,7 +841,6 @@ class Montapacking
                     //$logger = wc_get_logger();
                     //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
                     //$logger->notice('No pickups available for the chosen delivery address', $context);
-
                 }
 
                 break;
@@ -824,13 +870,26 @@ class Montapacking
             }
         }
 
+	    /**
+	     * @todo Make only one API call instead of multiple
+	     */
+
         if ($type == 'delivery') {
 
-            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
+//            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
+
+	        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, '', 10);
+	        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+
+
 
 
         } else if ($type == 'pickup' || $type == 'collect') {
-            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), esc_attr(get_option('monta_google_key')));
+//            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), esc_attr(get_option('monta_google_key')));
+
+	        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, '', 10);
+	        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+
         }
 
         ## Monta packing API aanroepen
@@ -877,6 +936,7 @@ class Montapacking
             }
             if($product->get_type() != "woosb"){
                 $sku = $product->get_sku();
+                $price = $product->get_price();
                 $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
 
                 if (trim($sku))
@@ -890,6 +950,9 @@ class Montapacking
                 if ($virtual) {
                     $hasDigitalProducts = true;
                 } else {
+
+	                $api->addProduct($sku, $quantity, price: $price);
+
                     $hasPhysicalProducts = true;
 
                     $stockstatus = $product->get_stock_status();
@@ -905,16 +968,16 @@ class Montapacking
             return null;
         }
 
-        $subtotal = (WC()->cart->get_subtotal() + WC()->cart->get_subtotal_tax());
+	    $subtotal = (WC()->cart->get_subtotal() + WC()->cart->get_subtotal_tax());
         $subtotal_ex = WC()->cart->get_subtotal_tax();
 
         $api->setOrder($subtotal, $subtotal_ex);
 
-        if (esc_attr(get_option('monta_logerrors'))) {
-            $logger = wc_get_logger();
-            $api->setLogger($logger);
-
-        }
+//        if (esc_attr(get_option('monta_logerrors'))) {
+//            $logger = wc_get_logger();
+//            $api->setLogger($logger);
+//
+//        }
 
         ## Type timeframes ophalen
         if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
@@ -923,14 +986,24 @@ class Montapacking
             $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
         do_action( 'woocommerce_cart_shipping_packages' );
+//	    do_action('woocommerce_package_rates');
 
+	    /**
+	     * Todo Kevin refactor this
+	     */
         if ($type == 'delivery') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 $shippingOptions = $api->getShippingOptions($bStockStatus, false, false, false, false, $skuArray);
+	            do_action( 'woocommerce_cart_shipping_packages' );
+//                do_action('woocommerce_package_rates');
+
             }
             else
             {
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
+	            do_action( 'woocommerce_cart_shipping_packages' );
+//	            do_action('woocommerce_package_rates');
+
             }
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                 if ($shippingOptions != null && $shippingOptions[0]->code == 'Monta' && $shippingOptions[0]->description == 'Monta'){
@@ -938,11 +1011,15 @@ class Montapacking
                         $option->price = self::$WooCommerceShippingMethod['cost'];
                     }
                 }
+	            do_action( 'woocommerce_cart_shipping_packages' );
+//	            do_action('woocommerce_package_rates');
+
             }
             return $shippingOptions;
         } else if ($type == 'pickup') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
+//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
+	            return $api->getShippingOptions($bStockStatus);
             }
             else
             {
@@ -950,324 +1027,326 @@ class Montapacking
             }
         } else if ($type == 'collect') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
+//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
+	            return $api->getShippingOptions($bStockStatus);
             } else {
-                return $api->getPickupOptions($bStockStatus, false, false, false, false, array(), true);
+//                return $api->getPickupOptions($bStockStatus, false, false, false, false, array(), true);
+	            return $api->getShippingOptions($bStockStatus);
             }
         }
     }
 
-    public static function calculateExtras($extra_values = null, $curr = '&euro;')
-    {
-        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
+//    public static function calculateExtras($extra_values = null, $curr = '&euro;')
+//    {
+//        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
+//
+//        $extras = null;
+//        if (count($extra_values) > 0) {
+//            foreach ($extra_values as $extra) {
+//                ## Extra optie toevoegen
+//                if ($freeShippingCouponCode) {
+//                    $extra->price = 0;
+//                }
+//
+//                $extras[$extra->code] = (object)[
+//                    'code' => $extra->code,
+//                    'name' => $extra->name,
+//                    'price' => $curr . ' ' . number_format($extra->price, 2, ',', ''),
+//                    'price_raw' => $extra->price,
+//                ];
+//            }
+//        }
+//
+//        return $extras;
+//    }
 
-        $extras = null;
-        if (count($extra_values) > 0) {
-            foreach ($extra_values as $extra) {
-                ## Extra optie toevoegen
-                if ($freeShippingCouponCode) {
-                    $extra->price = 0;
-                }
-
-                $extras[$extra->code] = (object)[
-                    'code' => $extra->code,
-                    'name' => $extra->name,
-                    'price' => $curr . ' ' . number_format($extra->price, 2, ',', ''),
-                    'price_raw' => $extra->price,
-                ];
-            }
-        }
-
-        return $extras;
-    }
-
-    public static function format_frames($frames)
-    {
-        $items = array();
-
-        $curr = '&euro;';
-        
-        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
-
-        //create days
-        if (is_array($frames) || is_object($frames)) {
-
-            foreach ($frames as $nr => $frame) {
-
-                if ($frame->type == 'ShippingDay') {
-
-                    foreach ($frame->options as $onr => $option) {
-                        $key = strtotime(date("Y-m-d", strtotime($option->date)));
-                        $from = date('d-m-Y', strtotime($option->date));
-
-                        if (!isset($items[$key])) {
-                            $items[$key] = (object)[
-                                'code' => $frame->code,
-                                'date' => $from,
-                                'datename' => translate(date("l", $key)),
-                                'description' => '',
-                                'options' => array(),
-                            ];
-                        }
-
-                    }
-                }
-
-                if ($frame->type == 'DeliveryDay') {
-
-                    $key = strtotime(date("Y-m-d", strtotime($frame->from)));
-                    $from = date('d-m-Y', strtotime($frame->from));
-
-                    if (!isset($items[$key])) {
-                        $items[$key] = (object)[
-                            'code' => $frame->code,
-                            'date' => $from,
-                            'datename' => translate(date("l", $key)),
-                            'description' => $frame->description,
-                            'options' => array(),
-                        ];
-                    }
-
-                }
-
-                if ($frame->type == 'Unknown') {
-
-                    foreach ($frame->options as $onr => $option) {
-                        $key = "NOTIMES";
-                        $from = '';
-
-                        if ($option->date != null && strtotime($option->date) > 0) {
-                            $key = strtotime(date("Y-m-d", strtotime($option->date)));
-                            $from = date('d-m-Y', strtotime($option->date));
-
-                        } elseif ($option->code == 'RED_ShippingDayUnknown') {
-                            $key = strtotime(date("Y-m-d"));
-                            $from = date('d-m-Y', time());
-                        }
-
-                        if (!isset($items[$key])) {
-
-                            $dateName = "";
-                            if($key != "NOTIMES")
-                            {
-                                $dateName = translate(date("l", $key));
-                            }
-
-                            $items[$key] = (object)[
-                                'code' => $frame->code,
-                                'date' => $from,
-                                'datename' => $dateName,
-                                'description' => $frame->description,
-                                'options' => array(),
-                            ];
-                        }
-                    }
-                }
-            }
-        }
-        ksort($items);
-
-
-        // sort options to days
-
-        if (is_array($frames) || is_object($frames)) {
-
-            foreach ($frames as $nr => $frame) {
-
-                if ($frame->from != '' && $frame->to != '') {
-
-                    $key = strtotime(date("Y-m-d", strtotime($frame->from)));
-
-                    foreach ($frame->options as $onr => $option) {
-                        $from = $option->from;
-                        $to = $option->to;
-
-                        $extras = null;
-                        if (isset($option->extras)) {
-                            $extras = self::calculateExtras($option->extras, $curr);
-                        }
-
-                        $evening = '';
-                        if (count($option->optioncodes)) {
-                            foreach ($option->optioncodes as $optioncode) {
-
-                                if ($optioncode == 'EveningDelivery') {
-                                    $evening = " (" . translate('evening delivery', 'montapacking-checkout') . ") ";
-                                }
-                            }
-                        }
-
-                        if ($freeShippingCouponCode) {
-                            $option->price = 0;
-                        }
-
-                        $options_object = (object)[
-                            'code' => $option->code,
-                            'codes' => $option->codes,
-                            'optionCodes' => $option->optioncodes,
-                            'name' => $option->description . $evening,
-                            'displayname' => $option->displayname . $evening,
-                            'is_preferred' => $option->isPreferred,
-                            'is_sustainable' => $option->isSustainable,
-                            'ships_on' => '',
-                            'type' => 'deliverydate',
-                            'type_text' => translate('delivered', 'montapacking-checkout'),
-                            'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
-                            'price_raw' => $option->price,
-                            'from' => date('H:i', strtotime($from . ' +1 hour')),
-                            'to' => date('H:i', strtotime($to . ' +1 hour')),
-                            'extras' => $extras,
-                            'request_url' => $frame->requesturl,
-                            'discount_percentage' => $option->discountPercentage
-                        ];
-
-                        if (isset($items[$key]) && (time() + 3600) <= strtotime($option->date)) {
-                            $items[$key]->options[] = $options_object;
-                        }
-                    }
-
-                }
-            }
-
-            foreach ($frames as $nr => $frame) {
-
-                if ($frame->type == 'ShippingDay') {
-
-                    foreach ($frame->options as $onr => $option) {
-
-                        $key = strtotime(date("Y-m-d", strtotime($option->date)));
-
-                        $from = $option->date;
-                        $to = $option->date;
-
-                        $extras = null;
-                        if (isset($option->extras)) {
-                            $extras = self::calculateExtras($option->extras, $curr);
-                        }
-
-                        if ($freeShippingCouponCode) {
-                            $option->price = 0;
-                        }
-
-                        $options_object = (object)[
-                            'code' => $option->code,
-                            'codes' => $option->codes,
-                            'optionCodes' => $option->optioncodes,
-                            'name' => $option->description,
-                            'displayname' => $option->displayname,
-                            'is_preferred' => $option->isPreferred,
-                            'is_sustainable' => $option->isSustainable,
-                            'ships_on' => "(" . translate('ships on', 'montapacking-checkout') . " " . date("d-m-Y", strtotime($option->date)) . " " . translate('from the Netherlands', 'montapacking-checkout') . ")",
-                            'type' => 'shippingdate',
-                            'type_text' => translate('shipped', 'montapacking-checkout'),
-                            'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
-                            'price_raw' => $option->price,
-                            'from' => date('H:i', strtotime($from . ' +1 hour')),
-                            'to' => date('H:i', strtotime($to . ' +1 hour')),
-                            'extras' => $extras,
-                            'request_url' => $frame->requesturl,
-                            'discount_percentage' => $option->discountPercentage
-                        ];
-
-                        $allow = true;
-                        if (date("Y-m-d", $key) == date("Y-m-d")) {
-                            $allow = false;
-                        }
-                        if (true === $allow) {
-
-                            if ((time() + 3600) <= strtotime($option->date)) {
-                                $items[$key]->options[] = $options_object;
-                            }
-                        }
-
-                    }
-                }
-            }
-            foreach ($frames as $nr => $frame) {
-                if ($frame->type == 'Unknown') {
-                    foreach ($frame->options as $onr => $option) {
-                        $key = "NOTIMES";
-                        $desc = $option->description;
-                        $ships_on = '';
-                        $type = 'deliverydate';
-                        $type_text = 'delivered';
-
-                        if ($option->date != null && strtotime($option->date) > 0) {
-                            $key = strtotime(date("Y-m-d", strtotime($option->date)));
-                            $desc = $option->description;
-                            $ships_on = "";
-                            $type = 'shippingdate';
-                            $type_text = 'shipped';
-                        } elseif ($option->code == 'RED_ShippingDayUnknown') {
-                            $key = strtotime(date("Y-m-d"));
-                            $desc = 'Red je pakket';
-                        } elseif ($option->code == 'Trunkrs_ShippingDayUnknown') {
-                            $key = strtotime(date("Y-m-d"));
-                            $desc = 'Red je pakket';
-                        }
-
-                        $extras = null;
-                        if (isset($option->extras)) {
-                            $extras = self::calculateExtras($option->extras, $curr);
-                        }
-
-                        if ($freeShippingCouponCode) {
-                            $option->price = 0;
-                        }
-
-                        $options_object = (object)[
-                            'codes' => $option->codes,
-                            'code' => $option->code,
-                            'name' => $desc,
-                            'displayname' => $option->displayname,
-                            'is_preferred' => $option->isPreferred,
-                            'is_sustainable' => $option->isSustainable,
-                            'ships_on' => $ships_on,
-                            'type' => $type,
-                            'type_text' => translate($type_text, 'montapacking-checkout'),
-                            'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
-                            'price_raw' => $option->price,
-                            'from' => null,
-                            'to' => null,
-                            'extras' => $extras,
-                            'request_url' => $frame->requesturl,
-                            'discount_percentage' => $option->discountPercentage
-                        ];
-
-                        $allow = true;
-                        if ($key != "NOTIMES" && date("Y-m-d", $key) == date("Y-m-d") && $frame->code != 'SameDayDelivery') {
-                            $allow = false;
-                        }
-
-                        if ($option->code == "MultipleShipper_ShippingDayUnknown")
-                        {
-                            $allow = true;
-                        }
-
-                        if (true === $allow) {
-                            if (((time() + 3600) <= strtotime($option->date)) || ($key == 'NOTIMES')) {
-                                $items[$key]->options[] = $options_object;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $cleared_items = array();
-        foreach ($items as $key => $item) {
-            if (count($item->options) > 0) {
-                $cleared_items[$key] = $item;
-            }
-        }
-        $items = $cleared_items;
-
-        ## Frames opslaan in sessie voor bepalen kosten
-        $_SESSION['montapacking-frames'] = $items;
-
-        //$_SESSION['montapacking-frames-test'] = $items;
-        return $items;
-    }
+//    public static function format_frames($frames)
+//    {
+//        $items = array();
+//
+//        $curr = '&euro;';
+//
+//        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
+//
+//        //create days
+//        if (is_array($frames) || is_object($frames)) {
+//
+//            foreach ($frames as $nr => $frame) {
+//
+//                if ($frame->type == 'ShippingDay') {
+//
+//                    foreach ($frame->options as $onr => $option) {
+//                        $key = strtotime(date("Y-m-d", strtotime($option->date)));
+//                        $from = date('d-m-Y', strtotime($option->date));
+//
+//                        if (!isset($items[$key])) {
+//                            $items[$key] = (object)[
+//                                'code' => $frame->code,
+//                                'date' => $from,
+//                                'datename' => translate(date("l", $key)),
+//                                'description' => '',
+//                                'options' => array(),
+//                            ];
+//                        }
+//
+//                    }
+//                }
+//
+//                if ($frame->type == 'DeliveryDay') {
+//
+//                    $key = strtotime(date("Y-m-d", strtotime($frame->from)));
+//                    $from = date('d-m-Y', strtotime($frame->from));
+//
+//                    if (!isset($items[$key])) {
+//                        $items[$key] = (object)[
+//                            'code' => $frame->code,
+//                            'date' => $from,
+//                            'datename' => translate(date("l", $key)),
+//                            'description' => $frame->description,
+//                            'options' => array(),
+//                        ];
+//                    }
+//
+//                }
+//
+//                if ($frame->type == 'Unknown') {
+//
+//                    foreach ($frame->options as $onr => $option) {
+//                        $key = "NOTIMES";
+//                        $from = '';
+//
+//                        if ($option->date != null && strtotime($option->date) > 0) {
+//                            $key = strtotime(date("Y-m-d", strtotime($option->date)));
+//                            $from = date('d-m-Y', strtotime($option->date));
+//
+//                        } elseif ($option->code == 'RED_ShippingDayUnknown') {
+//                            $key = strtotime(date("Y-m-d"));
+//                            $from = date('d-m-Y', time());
+//                        }
+//
+//                        if (!isset($items[$key])) {
+//
+//                            $dateName = "";
+//                            if($key != "NOTIMES")
+//                            {
+//                                $dateName = translate(date("l", $key));
+//                            }
+//
+//                            $items[$key] = (object)[
+//                                'code' => $frame->code,
+//                                'date' => $from,
+//                                'datename' => $dateName,
+//                                'description' => $frame->description,
+//                                'options' => array(),
+//                            ];
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        ksort($items);
+//
+//
+//        // sort options to days
+//
+//        if (is_array($frames) || is_object($frames)) {
+//
+//            foreach ($frames as $nr => $frame) {
+//
+//                if ($frame->from != '' && $frame->to != '') {
+//
+//                    $key = strtotime(date("Y-m-d", strtotime($frame->from)));
+//
+//                    foreach ($frame->options as $onr => $option) {
+//                        $from = $option->from;
+//                        $to = $option->to;
+//
+//                        $extras = null;
+//                        if (isset($option->extras)) {
+//                            $extras = self::calculateExtras($option->extras, $curr);
+//                        }
+//
+//                        $evening = '';
+//                        if (count($option->optioncodes)) {
+//                            foreach ($option->optioncodes as $optioncode) {
+//
+//                                if ($optioncode == 'EveningDelivery') {
+//                                    $evening = " (" . translate('evening delivery', 'montapacking-checkout') . ") ";
+//                                }
+//                            }
+//                        }
+//
+//                        if ($freeShippingCouponCode) {
+//                            $option->price = 0;
+//                        }
+//
+//                        $options_object = (object)[
+//                            'code' => $option->code,
+//                            'codes' => $option->codes,
+//                            'optionCodes' => $option->optioncodes,
+//                            'name' => $option->description . $evening,
+//                            'displayname' => $option->displayname . $evening,
+//                            'is_preferred' => $option->isPreferred,
+//                            'is_sustainable' => $option->isSustainable,
+//                            'ships_on' => '',
+//                            'type' => 'deliverydate',
+//                            'type_text' => translate('delivered', 'montapacking-checkout'),
+//                            'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
+//                            'price_raw' => $option->price,
+//                            'from' => date('H:i', strtotime($from . ' +1 hour')),
+//                            'to' => date('H:i', strtotime($to . ' +1 hour')),
+//                            'extras' => $extras,
+//                            'request_url' => $frame->requesturl,
+//                            'discount_percentage' => $option->discountPercentage
+//                        ];
+//
+//                        if (isset($items[$key]) && (time() + 3600) <= strtotime($option->date)) {
+//                            $items[$key]->options[] = $options_object;
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+//            foreach ($frames as $nr => $frame) {
+//
+//                if ($frame->type == 'ShippingDay') {
+//
+//                    foreach ($frame->options as $onr => $option) {
+//
+//                        $key = strtotime(date("Y-m-d", strtotime($option->date)));
+//
+//                        $from = $option->date;
+//                        $to = $option->date;
+//
+//                        $extras = null;
+//                        if (isset($option->extras)) {
+//                            $extras = self::calculateExtras($option->extras, $curr);
+//                        }
+//
+//                        if ($freeShippingCouponCode) {
+//                            $option->price = 0;
+//                        }
+//
+//                        $options_object = (object)[
+//                            'code' => $option->code,
+//                            'codes' => $option->codes,
+//                            'optionCodes' => $option->optioncodes,
+//                            'name' => $option->description,
+//                            'displayname' => $option->displayname,
+//                            'is_preferred' => $option->isPreferred,
+//                            'is_sustainable' => $option->isSustainable,
+//                            'ships_on' => "(" . translate('ships on', 'montapacking-checkout') . " " . date("d-m-Y", strtotime($option->date)) . " " . translate('from the Netherlands', 'montapacking-checkout') . ")",
+//                            'type' => 'shippingdate',
+//                            'type_text' => translate('shipped', 'montapacking-checkout'),
+//                            'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
+//                            'price_raw' => $option->price,
+//                            'from' => date('H:i', strtotime($from . ' +1 hour')),
+//                            'to' => date('H:i', strtotime($to . ' +1 hour')),
+//                            'extras' => $extras,
+//                            'request_url' => $frame->requesturl,
+//                            'discount_percentage' => $option->discountPercentage
+//                        ];
+//
+//                        $allow = true;
+//                        if (date("Y-m-d", $key) == date("Y-m-d")) {
+//                            $allow = false;
+//                        }
+//                        if (true === $allow) {
+//
+//                            if ((time() + 3600) <= strtotime($option->date)) {
+//                                $items[$key]->options[] = $options_object;
+//                            }
+//                        }
+//
+//                    }
+//                }
+//            }
+//            foreach ($frames as $nr => $frame) {
+//                if ($frame->type == 'Unknown') {
+//                    foreach ($frame->options as $onr => $option) {
+//                        $key = "NOTIMES";
+//                        $desc = $option->description;
+//                        $ships_on = '';
+//                        $type = 'deliverydate';
+//                        $type_text = 'delivered';
+//
+//                        if ($option->date != null && strtotime($option->date) > 0) {
+//                            $key = strtotime(date("Y-m-d", strtotime($option->date)));
+//                            $desc = $option->description;
+//                            $ships_on = "";
+//                            $type = 'shippingdate';
+//                            $type_text = 'shipped';
+//                        } elseif ($option->code == 'RED_ShippingDayUnknown') {
+//                            $key = strtotime(date("Y-m-d"));
+//                            $desc = 'Red je pakket';
+//                        } elseif ($option->code == 'Trunkrs_ShippingDayUnknown') {
+//                            $key = strtotime(date("Y-m-d"));
+//                            $desc = 'Red je pakket';
+//                        }
+//
+//                        $extras = null;
+//                        if (isset($option->extras)) {
+//                            $extras = self::calculateExtras($option->extras, $curr);
+//                        }
+//
+//                        if ($freeShippingCouponCode) {
+//                            $option->price = 0;
+//                        }
+//
+//                        $options_object = (object)[
+//                            'codes' => $option->codes,
+//                            'code' => $option->code,
+//                            'name' => $desc,
+//                            'displayname' => $option->displayname,
+//                            'is_preferred' => $option->isPreferred,
+//                            'is_sustainable' => $option->isSustainable,
+//                            'ships_on' => $ships_on,
+//                            'type' => $type,
+//                            'type_text' => translate($type_text, 'montapacking-checkout'),
+//                            'price' => $curr . ' ' . number_format($option->price, 2, ',', ''),
+//                            'price_raw' => $option->price,
+//                            'from' => null,
+//                            'to' => null,
+//                            'extras' => $extras,
+//                            'request_url' => $frame->requesturl,
+//                            'discount_percentage' => $option->discountPercentage
+//                        ];
+//
+//                        $allow = true;
+//                        if ($key != "NOTIMES" && date("Y-m-d", $key) == date("Y-m-d") && $frame->code != 'SameDayDelivery') {
+//                            $allow = false;
+//                        }
+//
+//                        if ($option->code == "MultipleShipper_ShippingDayUnknown")
+//                        {
+//                            $allow = true;
+//                        }
+//
+//                        if (true === $allow) {
+//                            if (((time() + 3600) <= strtotime($option->date)) || ($key == 'NOTIMES')) {
+//                                $items[$key]->options[] = $options_object;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        $cleared_items = array();
+//        foreach ($items as $key => $item) {
+//            if (count($item->options) > 0) {
+//                $cleared_items[$key] = $item;
+//            }
+//        }
+//        $items = $cleared_items;
+//
+//        ## Frames opslaan in sessie voor bepalen kosten
+//        $_SESSION['montapacking-frames'] = $items;
+//
+//        //$_SESSION['montapacking-frames-test'] = $items;
+//        return $items;
+//    }
 
     public static function format_pickups($frames)
     {

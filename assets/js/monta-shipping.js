@@ -221,7 +221,14 @@ jQuery(document).ready(function() {
 
                     monta_shipping.updateDeliveries(function (success, result) {
 
-                        $(".monta-times-cropped-error").css("display", "none");
+                    if(result?.frames?.length > 0) {
+                        if(result.frames[0].date == null) {
+                            console.log('hello world, should hide', result.frames[0].date)
+                            $(".monta-times").css("display", "none")
+                        }
+                    }
+
+                    $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
                             if (checked === 'delivery' && Object.keys(monta_shipping.frames).length > 0) {
@@ -260,7 +267,7 @@ jQuery(document).ready(function() {
                                         fallbackShipper = true;
                                     }
                                     daysavailablecounter++;
-                                    if(monta_shipping.first_preferred == null && item.options.some(item => item.is_preferred)){
+                                    if(monta_shipping.first_preferred == null && item.options.some(item => item.isPreferred)){
                                         monta_shipping.first_preferred = item;
                                     }
                                 });
@@ -288,13 +295,13 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.id}/g, key);
                                         html = html.replace(/{.code}/g, (item.code !== null) ? item.code : '');
                                         html = html.replace(/{.day}/g, item.date);
-                                        html = html.replace(/{.dayname}/g, item.datename);
+                                        html = html.replace(/{.dayname}/g, item.day);
                                         html = html.replace(/{.time}/g, item.time);
                                         html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
 
-                                        if(item.options.some(x=>x.discount_percentage > 0)){
-                                            var newelement = '<span class="discount-percentage">-' + option.discount_percentage  + '%</span>';
+                                        if(item.options.some(x=>x.discountPercentage > 0)){
+                                            var newelement = '<span class="discount-percentage">-' + option.discountPercentage  + '%</span>';
                                             html = html.replace(/{.discount}/g, newelement);
                                         }else{
                                             html = html.replace(/{.discount}/g, '');
@@ -431,20 +438,20 @@ jQuery(document).ready(function() {
                     if (monta_shipping.pickup_selected !== null) {
                         //initialPickupPointRadio
                         const loc = monta_shipping.pickup_selected;
+// console.log('loc', loc)
+//                         const n = loc.raw.shipperOptionsWithValue.includes("_packStation");
+//                         const m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
+//
+//                         if (n && !m) {
+//                             $("#PCPostNummer").css("display", "block");
+//                             $("#PCPostNummer input").removeAttr("disabled");
+//
+//                         } else {
+//                             $("#PCPostNummer").css("display", "none");
+//                             $("#PCPostNummer input").attr("disabled", "disabled");
+//                         }
 
-                        const n = loc.raw.shipperOptionsWithValue.includes("_packStation");
-                        const m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
-
-                        if (n && !m) {
-                            $("#PCPostNummer").css("display", "block");
-                            $("#PCPostNummer input").removeAttr("disabled");
-
-                        } else {
-                            $("#PCPostNummer").css("display", "none");
-                            $("#PCPostNummer input").attr("disabled", "disabled");
-                        }
-
-                        const imageUrl = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + loc.raw.code + ".png";
+                        const imageUrl = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + loc.raw.shipperCode + ".png";
 
                         let html = '';
                         html += '<div class="loadedimage"><img src="' + imageUrl + '" style="width:30px;"></div>';
@@ -488,7 +495,7 @@ jQuery(document).ready(function() {
                         $('.monta-pickup-input-postal').val(loc.postal);
                         $('.monta-pickup-input-city').val(loc.city);
                         $('.monta-pickup-input-country').val(loc.country);
-                        $('.monta-pickup-input-price').val(loc.price_raw);
+                        $('.monta-pickup-input-price').val(loc.price);
 
                         $('.monta-select-pickup').on('click', function () {
                             $('body').removeClass('monta-cover-open');
@@ -548,7 +555,7 @@ jQuery(document).ready(function() {
                                 '            {.img}\n' +
                                 '        </div>\n\n' +
                                 '        <div class="information">\n' +
-                                '            {.name} {.time} <span>{.ships_on}</span> {.is_sustainable}\n' +
+                                '            {.name} {.isSustainable}\n' +
                                 '        </div>\n' +
                                 '        <div class="pricemonta{.class}" >\n' +
                                 '            {.price}\n' +
@@ -556,12 +563,12 @@ jQuery(document).ready(function() {
                                 '        <div class="clearboth"></div>\n\n' +
                                 '    </label>';
                             html = html.replace(/{.code}/g, realCode);
-                            html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + code + '.png">');
-                            html = html.replace(/{.name}/g, item.displayname);
-                            html = html.replace(/{.preferred}/g, item.is_preferred);
+                            html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.shipperCodes[0] + '.png">');
+                            html = html.replace(/{.name}/g, item.displayName);
+                            html = html.replace(/{.preferred}/g, item.isPreferred);
                             html = html.replace(/{.time}/g, time);
-                            html = html.replace(/{.price}/g, item.price);
-                            
+                            html = html.replace(/{.price}/g, item.priceFormatted);
+
                             let discountclass = '';
                             if(item.discount_percentage > 0){
                                 discountclass = "discount";
@@ -570,20 +577,20 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.class}/g, discountclass);
 
                             html = html.replace(/{.type}/g, item.type);
-                            html = html.replace(/{.type_text}/g, item.type_text);
+                            html = html.replace(/{.type_text}/g, item.displayName);
                             html = html.replace(/{.ships_on}/g, item.ships_on);
 
-                            if(item.is_sustainable) {
-                                html = html.replace(/{.is_sustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
+                            if(item.isSustainable) {
+                                html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
                             } else {
-                                html = html.replace(/{.is_sustainable}/g, '');
+                                html = html.replace(/{.isSustainable}/g, '');
                             }
 
                             if (code !== 'TBQ') {
                                 shippers.append(html);
                             }
 
-                            if(item.is_sustainable) {
+                            if(item.isSustainable) {
                                 addTooltip('sustainable-' + realCode, 'sustainabletooltip-' + realCode);
                             }
 
@@ -616,7 +623,7 @@ jQuery(document).ready(function() {
                         const realCode = item.code;
 
                         if (realCode === shipper) {
-                            options = item.extras;
+                            options = item.deliveryOptions;
                             return false;
                         }
                     });
@@ -627,15 +634,10 @@ jQuery(document).ready(function() {
                         extras.html('');
                         $.each(options, function (key, item) {
 
-                            let code = '';
-                            $.each(item.codes, function (key, item) {
-                                code += ((code !== '') ? ',' : '') + item;
-                            });
-
                             let html = $('.monta-extra-template').html();
                             html = html.replace(/{.code}/g, item.code);
-                            html = html.replace(/{.name}/g, item.name);
-                            html = html.replace(/{.price}/g, item.price);
+                            html = html.replace(/{.name}/g, item.description);
+                            html = html.replace(/{.price}/g, item.priceFormatted);
 
                             extras.append(html);
                         });
@@ -834,7 +836,7 @@ jQuery(document).ready(function() {
         let markers = [];
         //document.getElementById('category-filters').innerHTML = "";
         jQuery.each(pickups, function (key, item) {
-            const openingtimes = JSON.parse(item.details.openingtimes);
+            const openingtimes = item.openingTimes;
             const allopeningtimes = [];
             for (let k in openingtimes) {
                 const times = openingtimes[k];
@@ -847,29 +849,29 @@ jQuery(document).ready(function() {
 
             markers.push({
                 'id': '1',
-                'code': item.code + '_' + item.details.code,
+                'code': item.code + '_' + item.code,
                 'shippingOptions': item.shipperOptionsWithValue,
-                'category': item.code,
-                'name': item.details.name,
-                'lat': item.details.lat,
-                'lng': item.details.lng,
-                'street': item.details.street,
-                'houseNumber': item.details.houseNumber,
-                'city': item.details.place,
-                'postal': item.details.zipcode,
-                'country': item.details.country,
+                'category': item.shipperCode,
+                'name': item.displayName,
+                'lat': item.latitude,
+                'lng': item.longitude,
+                'street': item.street,
+                'houseNumber': item.houseNumber,
+                'city': item.city,
+                'postal': item.postalCode,
+                'country': item.countryCode,
                 'description': item.description,
-                'displayname': item.displayname,
-                'distance': item.details.distance / 1000,
+                'displayname': item.company,
+                'distance': item.distanceMeters / 1000,
                 'price': item.price,
-                'openingtimes': allopeningtimes,
-                'image': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.code + ".png",
-                'price_raw': item.price_raw,
+                'openingtimes': allopeningtimes[0],
+                'image': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.shipperCode + ".png",
+                'price_raw': item.price,
                 'raw': item
             });
 
-            if (jQuery('.cat-' + item.code + '').length === 0) {
-                jQuery('#category-filters').append('<li class="cat-' + item.code + '"><label><input class="monta-shipper-filter" type="checkbox" checked="checked" name="category" value="' + item.code + '"> ' + item.displayname + '</label></li>');
+            if (jQuery('.cat-' + item.shipperCode + '').length === 0) {
+                jQuery('#category-filters').append('<li class="cat-' + item.shipperCode + '"><label><input class="monta-shipper-filter" type="checkbox" checked="checked" name="category" value="' + item.shipperCode + '"> ' + item.displayName + '</label></li>');
             }
         });
         return markers;
@@ -916,11 +918,11 @@ function addTooltip(rootElementId, tooltipId){
 
     const showEvents = ['mouseenter', 'focus'];
     const hideEvents = ['mouseleave', 'blur'];
-    
+
     showEvents.forEach((event) => {
         rootElement.addEventListener(event, showTooltip);
     });
-    
+
     hideEvents.forEach((event) => {
         rootElement.addEventListener(event, hideTooltip);
     });

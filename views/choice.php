@@ -92,13 +92,13 @@
                     <span class="delivery-time"><?php _e('Delivery time and date', 'montapacking-checkout'); ?></span>
                     <span class="send-time"><?php _e('Send date', 'montapacking-checkout'); ?></span>
 
-                    <span class="deliveryinfo deliveryinformation"><?php _e('Your order will be', 'montapacking-checkout'); ?> <strong
-                                class="shippingtype"></strong> <?php _e('with', 'montapacking-checkout'); ?> <strong
-                                class="shipper"></strong></span>
-                    <span class="deliveryinfo dateinformation"><?php _e('on', 'montapacking-checkout'); ?> <strong
-                                class="date"></strong></span>
-                    <span class="deliveryinfo timeinformation"> <?php _e('between', 'montapacking-checkout'); ?> <strong
-                                class="datetime"></strong></span>
+                    <span class="deliveryinfo deliveryinformation">
+                        <?php _e('Your order will be delivered with', 'montapacking-checkout'); ?>
+                        <strong class="shippingtype"></strong>
+                    </span>
+
+
+
 
                     <div style="clear:both"></div>
 
