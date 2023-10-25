@@ -995,15 +995,11 @@ class Montapacking
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 $shippingOptions = $api->getShippingOptions($bStockStatus, false, false, false, false, $skuArray);
 	            do_action( 'woocommerce_cart_shipping_packages' );
-//                do_action('woocommerce_package_rates');
-
             }
             else
             {
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
 	            do_action( 'woocommerce_cart_shipping_packages' );
-//	            do_action('woocommerce_package_rates');
-
             }
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                 if ($shippingOptions != null && $shippingOptions[0]->code == 'Monta' && $shippingOptions[0]->description == 'Monta'){
@@ -1011,9 +1007,8 @@ class Montapacking
                         $option->price = self::$WooCommerceShippingMethod['cost'];
                     }
                 }
-	            do_action( 'woocommerce_cart_shipping_packages' );
-//	            do_action('woocommerce_package_rates');
 
+	            do_action( 'woocommerce_cart_shipping_packages' );
             }
             return $shippingOptions;
         } else if ($type == 'pickup') {
