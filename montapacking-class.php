@@ -1011,7 +1011,8 @@ class Montapacking
             }
             else
             {
-                return $api->getPickupOptions($bStockStatus);
+//                return $api->getPickupOptions($bStockStatus);
+	            return $api->getShippingOptions($bStockStatus);
             }
         } else if ($type == 'collect') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
