@@ -223,7 +223,7 @@ jQuery(document).ready(function() {
 
                     if(result?.frames?.length > 0) {
                         if(result.frames[0].date == null) {
-                            console.log('hello world, should hide', result.frames[0].date)
+                            // console.log('should hide', result.frames[0].date)
                             $(".monta-times").css("display", "none")
                         }
                     }

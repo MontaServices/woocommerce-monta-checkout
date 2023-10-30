@@ -302,8 +302,8 @@ class Montapacking
 
 
 //        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
-
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, '', 10);
+//$helloworld = esc_attr(get_option('monta_google_key'));
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10);
 	    $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 
 
@@ -532,9 +532,6 @@ class Montapacking
             ## Timeframes uit sessie ophalen
             $frames = $_SESSION['montapacking-frames'];
             if (is_array($frames)) {
-
-                $tmp1 = $frames['DeliveryOptions'];
-                $tmp2 = $frames[$time];
 
                 ## Check of gekozen timeframe bestaat
 //                if (isset($frames[$time])) {
@@ -874,19 +871,12 @@ class Montapacking
             }
         }
 
+	    $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), 2);
         if ($type == 'delivery') {
-
-//            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
-
-	        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), '', 2);
 	        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 
         } else if ($type == 'pickup' || $type == 'collect') {
-//            $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), esc_attr(get_option('monta_google_key')));
-
-	        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, '', 10);
 	        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
-
         }
 
         ## Monta packing API aanroepen
