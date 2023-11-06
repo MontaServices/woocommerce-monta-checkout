@@ -99,7 +99,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     add_action('wp_ajax_nopriv_monta_shipping_options', array('montapacking', 'shipping_options'));
 
     ## Init session usage#
-    add_action('init', 'montacheckout_register_session');
+//    add_action('init', 'montacheckout_register_session');
 
     //add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
     add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);

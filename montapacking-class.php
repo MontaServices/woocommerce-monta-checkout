@@ -530,7 +530,7 @@ class Montapacking
         if ($type == 'delivery') {
 
             ## Timeframes uit sessie ophalen
-            $frames = $_SESSION['montapacking-frames'];
+	        $frames = WC()->session->get('montapacking-frames');
             if (is_array($frames)) {
 
                 ## Check of gekozen timeframe bestaat
@@ -630,7 +630,7 @@ class Montapacking
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames);
 	                $items = $frames['DeliveryOptions'];
-	                $_SESSION['montapacking-frames'] = $frames;
+	                WC()->session->set('montapacking-frames' , $frames );
 
 	                if ($items !== null) {
 
@@ -968,14 +968,14 @@ class Montapacking
 
         ## Type timeframes ophalen
         if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
-            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+	        $bStockStatus = $bAllProductsAvailableAtWooCommerce;
         } else {
-            $bStockStatus = $bAllProductsAvailableAtMontapacking;
+	        $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
         do_action( 'woocommerce_cart_shipping_packages' );
 
         if ($type == 'delivery') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
+	        if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
 	            do_action( 'woocommerce_cart_shipping_packages' );
             }
