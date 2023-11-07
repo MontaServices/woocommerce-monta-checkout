@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.56.2
+
+* Fix shipping costs when using multiple plugin  
+
 #1.56.1
 
 * Fixed incidentally selecting wrong preferred shipper time
