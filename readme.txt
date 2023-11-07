@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.2
+
+* Fix shipping costs when using multiple plugins 
+
 #1.58.1
 
 * Replaced PHP $_SESSION to WC()->Session
