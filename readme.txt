@@ -4,7 +4,7 @@ Donate link:
 Tags: monta, checkout, woocommerce, extension, monta
 Requires at least: 4.0.1
 Tested up to: 6.1.1
-Stable tag: 1.58.4
+Stable tag: 1.58.5
 Requires PHP: 8.0
 License: GPLv3 or later License
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.5
+
+* Small bugfix pickuppoints  
+
 #1.58.4
 
 * Small version upgrade for Wordpress Plugin Store
@@ -65,7 +69,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 #1.58.2
 
-* Fix shipping costs when using multiple plugins 
+* Fix shipping costs when using multiple plugins
 
 #1.58.1
 
