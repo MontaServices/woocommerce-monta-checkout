@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.6
+
+* Bugfix datepicker for null date 
+
 #1.58.5
 
 * Small bugfix pickuppoints  
