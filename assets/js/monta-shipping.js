@@ -491,7 +491,7 @@ jQuery(document).ready(function() {
                         $('.monta-pickup-input-code').val(loc.code);
                         $('.monta-pickup-input-shipper').val(loc.category);
                         $('.monta-pickup-input-shippingOptions').val(loc.shippingOptions);
-                        $('.monta-pickup-input-company').val(loc.name);
+                        $('.monta-pickup-input-company').val(loc.displayname);
                         $('.monta-pickup-input-street').val(loc.street);
                         $('.monta-pickup-input-houseNumber').val(loc.houseNumber);
                         $('.monta-pickup-input-description').val(loc.description);
