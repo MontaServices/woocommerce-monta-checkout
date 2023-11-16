@@ -273,6 +273,10 @@ jQuery(document).ready(function() {
                                 });
 
                                 $.each(monta_shipping.frames, function (key, item) {
+                                    if(item.date == null && monta_shipping.frames.length > 1){
+                                        return;
+                                    }
+
                                     if (item.date !== "") {
                                         hidedatebar = false;
                                     }
