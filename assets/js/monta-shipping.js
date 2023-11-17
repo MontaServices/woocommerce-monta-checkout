@@ -221,7 +221,7 @@ jQuery(document).ready(function() {
 
                     monta_shipping.updateDeliveries(function (success, result) {
 
-                    if(result?.frames?.length > 0) {
+                    if(result?.frames?.length == 1) {
                         if(result.frames[0].date == null) {
                             // console.log('should hide', result.frames[0].date)
                             $(".monta-times").css("display", "none")
