@@ -442,7 +442,6 @@ jQuery(document).ready(function() {
                     if (monta_shipping.pickup_selected !== null) {
                         //initialPickupPointRadio
                         const loc = monta_shipping.pickup_selected;
-// console.log('loc', loc)
 //                         const n = loc.raw.shipperOptionsWithValue.includes("_packStation");
 //                         const m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
 //
@@ -487,8 +486,7 @@ jQuery(document).ready(function() {
                         }
 
                         $('.monta-shipment-pickup').addClass('active');
-
-                        $('.monta-pickup-input-code').val(loc.code);
+                        $('.monta-pickup-input-code').val(loc.raw.code);
                         $('.monta-pickup-input-shipper').val(loc.category);
                         $('.monta-pickup-input-shippingOptions').val(loc.shippingOptions);
                         $('.monta-pickup-input-company').val(loc.displayname);
@@ -911,12 +909,12 @@ function addTooltip(rootElementId, tooltipId){
     window.tooltips[tooltipId] = window.Popper.createPopper(rootElement, tooltip, {
         placement: 'right',
         modifiers: [
-        {
-            name: 'offset',
-            options: {
-            offset: [0, 8],
+            {
+                name: 'offset',
+                options: {
+                    offset: [0, 8],
+                },
             },
-        },
         ],
     });
 
