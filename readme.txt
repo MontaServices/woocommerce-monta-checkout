@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.10
+
+* Fixed blocked pickuppoint issue in rare occasions
+
 #1.58.9
 
 * Bugfixes
