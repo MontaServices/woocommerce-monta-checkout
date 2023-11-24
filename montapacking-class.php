@@ -761,6 +761,17 @@ class Montapacking
                     #print_r($items);
 	                $items = $frames['PickupOptions'];
 
+                    $arrayWithAFH = array_filter($items, function ($element){
+                        if (isset($element->shipperCode) && $element->shipperCode == 'AFH') {
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    if(sizeof($arrayWithAFH) == 0){
+                        $items = null;
+                    }
+
                     foreach($items as $storeCollector) {
                         if($storeCollector->shipperCode == "AFH") {
                             $items = [$storeCollector];
