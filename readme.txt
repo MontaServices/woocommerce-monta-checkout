@@ -57,7 +57,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 #1.58.12
 
-* Updated vendor
+* Fixed pickup points inside store collect list  
 
 #1.58.11
 
