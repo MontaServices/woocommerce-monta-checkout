@@ -675,7 +675,7 @@ class Montapacking
 
                         $items = array_filter($items, function ($element){
                             if (isset($element->shipperCode) && $element->shipperCode == 'AFH') {
-                                return true;
+                                return false;
                             }
                             return true;
                         });
