@@ -670,7 +670,15 @@ class Montapacking
 //                    $items = self::format_pickups($frames);
                     #print_r($items);
 	                $items = $frames['PickupOptions'];
+                    
                     if ($items !== null) {
+
+                        $items = array_filter($items, function ($element){
+                            if (isset($element->shipperCode) && $element->shipperCode == 'AFH') {
+                                return false;
+                            }
+                            return true;
+                        });
 
                         ## Get order location
                         // Get lat and long by address
@@ -760,6 +768,17 @@ class Montapacking
 //                    $items = self::format_pickups($frames);
                     #print_r($items);
 	                $items = $frames['PickupOptions'];
+
+                    $arrayWithAFH = array_filter($items, function ($element){
+                        if (isset($element->shipperCode) && $element->shipperCode == 'AFH') {
+                            return true;
+                        }
+                        return false; 
+                    });
+
+                    if(sizeof($arrayWithAFH) == 0){
+                        $items = null;
+                    }
 
                     foreach($items as $storeCollector) {
                         if($storeCollector->shipperCode == "AFH") {
