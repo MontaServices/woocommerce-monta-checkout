@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.13
+
+* Fixed user other postcode in pickup points modal 
+
 #1.58.12
 
 * Fixed pickup points inside store collect list  
