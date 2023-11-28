@@ -410,16 +410,17 @@ jQuery(document).ready(function() {
                     document.getElementById('montapacking-search-zipcode-button').addEventListener('click', (e) => {
                         let zipcode = document.getElementById('montapacking-search-zipcode').value;
                         if (zipcode.length > 0) {
-                            let data = $('form.checkout').serializeArray();
-                            data.push({name: "ship_to_different_address", value: 1});
-                            data.push({name: "action", value: "monta_shipping_options"});
+                            let data = $('form.checkout').serialize();
 
-                            data.find(input => input.name === 'shipping_address_1').value = "";
-                            data.find(input => input.name === 'shipping_address_2').value = "";
-                            data.find(input => input.name === 'shipping_city').value = "";
-                            data.find(input => input.name === 'shipping_postcode').value = zipcode;
+                            data += '&action=monta_shipping_options';
+                            data += '&ship_to_different_address=1';
+                            data += '&shipping_address_1=""';
+                            data += '&shipping_address_2=""';
+                            data += '&shipping_city=""';
 
-                            $.post(ajax_url, $.param(data)).done(function (result) {
+                            data += '&shipping_postcode=' + zipcode;  
+
+                            $.post(ajax_url, data).done(function (result) {
                                 if (result.success) {
                                     if (result.pickups !== undefined) {
                                         monta_shipping.pickups = result.pickups;
