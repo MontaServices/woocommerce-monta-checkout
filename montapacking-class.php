@@ -672,14 +672,7 @@ class Montapacking
 	                $items = $frames['PickupOptions'];
                     
                     if ($items !== null) {
-
-                        $items = array_filter($items, function ($element){
-                            if (isset($element->shipperCode) && $element->shipperCode == 'AFH') {
-                                return false;
-                            }
-                            return true;
-                        });
-
+                        
                         ## Get order location
                         // Get lat and long by address
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
