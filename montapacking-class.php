@@ -672,7 +672,6 @@ class Montapacking
 	                $items = $frames['PickupOptions'];
                     
                     if ($items !== null) {
-                        
                         ## Get order location
                         // Get lat and long by address
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
