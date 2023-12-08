@@ -10,7 +10,7 @@ final class StackTest extends TestCase
 {
     public function testPushAndPop(): void
     {
-        $settings = new Settings('Demoshop.nl', 'wilco@montapacking.nl', '', true, 10, 'AIzaSyDc1ruiAmgYhuU6d925mrPCaBsyMAHT0LI', 2);
+        $settings = new Settings('Demoshop.nl', 'wilco@montapacking.nl', '', true, 10, '', 2);
 
         $api = new MontapackingShipping($settings, 'nl-NL');
 
