@@ -298,7 +298,7 @@ jQuery(document).ready(function() {
 
                                         html = html.replace(/{.id}/g, key);
                                         html = html.replace(/{.code}/g, (item.code !== null) ? item.code : '');
-                                        html = html.replace(/{.day}/g, item.date);
+                                        html = html.replace(/{.day}/g, item.dateOnlyFormatted);
                                         html = html.replace(/{.dayname}/g, item.day);
                                         html = html.replace(/{.time}/g, item.time);
                                         html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
