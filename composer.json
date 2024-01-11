@@ -7,12 +7,14 @@
         }
     ],
     "require": {
-        "monta/checkout-api-wrapper": "^v1.12"
+        "monta/checkout-api-wrapper": "^v1.12",
+        "vlucas/phpdotenv": "^5.6"        
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
         "codeception/module-phpbrowser": "*",
         "codeception/module-asserts": "*",
-        "codeception/module-webdriver": "^3.2"
+        "codeception/module-webdriver": "^3.2",
+        "phpunit/phpunit": "^9.6"
     }
 }
