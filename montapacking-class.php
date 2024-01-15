@@ -460,6 +460,17 @@ class Montapacking
 
         $items = $woocommerce->cart->get_cart();
 
+        // verzendkosten op 0 zetten
+        // dit is voor de instelling 'sta gratis verzending toe' bij waardebonnen, zodat nu verzendprijs dan ook werkelijk op 0 wordt gezet
+        // dan hoef je de prijs verder ook niet meer te berekenen   
+        $applied_coupons = WC()->cart->get_applied_coupons();
+        foreach( $applied_coupons as $coupon_code ){
+            $coupon = new WC_Coupon($coupon_code);
+            if($coupon->get_free_shipping()){
+               return 0;
+            }
+        }
+
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
         foreach ($items as $item => $values) {
