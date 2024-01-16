@@ -602,7 +602,7 @@ class Montapacking
                 }
             }
 
-        } else if ($type == 'pickup') {
+        } else if ($type == 'pickup' || $type == 'collect' ) {
             $price = $pickup['price'];
             $isfound = true;
         }
