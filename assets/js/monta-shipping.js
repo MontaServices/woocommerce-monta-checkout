@@ -631,7 +631,7 @@ jQuery(document).ready(function() {
                         }
                     });
 
-                    if (options !== undefined && options !== null) {
+                    if (options !== undefined && options !== null && options.length > 0) {
                         $('.monta-shipment-extras').addClass('active');
 
                         extras.html('');
