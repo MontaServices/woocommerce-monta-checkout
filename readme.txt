@@ -57,7 +57,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 #1.58.17
 
-* Fixed store collect set shipping costs   
+* Fixed store collect set shipping costs and fixed to prevent 'extra options' text from being shown incorrectly
 
 #1.58.16
 
