@@ -1,4 +1,13 @@
 {
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../../checkout-api-wrapper",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
     "name": "kevin/montapacking-checkout-woocommerce-extension",
     "authors": [
         {
@@ -7,7 +16,7 @@
         }
     ],
     "require": {
-        "monta/checkout-api-wrapper": "^v1.12"
+        "monta/checkout-api-wrapper": "@dev"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
