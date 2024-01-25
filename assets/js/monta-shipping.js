@@ -839,7 +839,6 @@ jQuery(document).ready(function() {
         let markers = [];
         //document.getElementById('category-filters').innerHTML = "";
         jQuery.each(pickups, function (key, item) {
-            console.log('pikcupppps', item);
             const openingtimes = item.openingTimes;
             const allopeningtimes = [];
             for (let k in openingtimes) {
