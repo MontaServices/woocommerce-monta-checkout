@@ -763,31 +763,11 @@ class Montapacking
                 break;
             case 'collect':
 
-                #echo '<pre>';
                 $frames = self::get_frames('collect');
                 if ($frames !== null) {
+	                $items = $frames['StoreLocation'];
+	                $items = [$items];
 
-                    ## Frames naar handige array zetten
-//                    $items = self::format_pickups($frames);
-                    #print_r($items);
-	                $items = $frames['PickupOptions'];
-
-                    $arrayWithAFH = array_filter($items, function ($element){
-                        if (isset($element->shipperCode) && $element->shipperCode == 'AFH') {
-                            return true;
-                        }
-                        return false; 
-                    });
-
-                    if(sizeof($arrayWithAFH) == 0){
-                        $items = null;
-                    }
-
-                    foreach($items as $storeCollector) {
-                        if($storeCollector->shipperCode == "AFH") {
-                            $items = [$storeCollector];
-                        }
-	                }
 	                if ($items !== null) {
 
                         ## Get order location

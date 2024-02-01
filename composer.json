@@ -7,7 +7,7 @@
         }
     ],
     "require": {
-        "monta/checkout-api-wrapper": "^v1.12"
+        "monta/checkout-api-wrapper": "^v1.13"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
