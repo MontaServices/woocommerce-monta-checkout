@@ -5,7 +5,10 @@ class Montapacking
     private static $WooCommerceShippingMethod = null;
     public static function shipping_package($packages)
     {
-        self::$WooCommerceShippingMethod = self::getWooCommerceShippingMethod($packages[0]);
+        if(isset($packages[0])) {
+            self::$WooCommerceShippingMethod = self::getWooCommerceShippingMethod($packages[0]);
+        }
+
         return [];
     }
 
@@ -987,7 +990,7 @@ class Montapacking
 	            do_action( 'woocommerce_cart_shipping_packages' );
             }
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
-                if ($shippingOptions != null && $shippingOptions[0]->code == 'Monta' && $shippingOptions[0]->description == 'Monta'){
+                if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta'){
                     foreach ($shippingOptions[0]->options as $option) {
                         $option->price = self::$WooCommerceShippingMethod['cost'];
                     }
