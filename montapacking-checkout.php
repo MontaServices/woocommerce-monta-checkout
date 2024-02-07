@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.19
+ * Version: 1.58.20
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -46,11 +46,6 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
     register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
     register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
-
-
-
-
-
 });
 
 // Include installed Language packs
@@ -59,64 +54,67 @@ load_plugin_textdomain('montapacking-checkout', false, dirname(plugin_basename(_
 $plugin = plugin_basename(__FILE__);
 add_filter("plugin_action_links_$plugin", 'montacheckout_plugin_add_settings_link');
 
+add_action('wp_loaded', 'montacheckout_init');
 
-## Check of we in woocommerce zijn
-if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+function montacheckout_init()
+{
+    ## Check of we in woocommerce zijn
+    if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 
-    ## Standaard woocommerce verzending uitschakelen
-    add_filter('woocommerce_shipping_calculator_enable_postcode', false);
-    add_filter('woocommerce_shipping_calculator_enable_city', false);
+        ## Standaard woocommerce verzending uitschakelen
+        add_filter('woocommerce_shipping_calculator_enable_postcode', false);
+        add_filter('woocommerce_shipping_calculator_enable_city', false);
 
-    ## Shipping form in checkout plaatsen
-    add_action('woocommerce_before_order_notes', array('montapacking', 'shipping'), 10);
+        ## Shipping form in checkout plaatsen
+        add_action('woocommerce_before_order_notes', array('montapacking', 'shipping'), 10);
 
-    ## Shipping package toevoegen
-    add_action('woocommerce_cart_shipping_packages', array('montapacking', 'shipping_package'), 10);
+        ## Shipping package toevoegen
+        add_action('woocommerce_cart_shipping_packages', array('montapacking', 'shipping_package'), 10);
 
-    ## Shipping cost calculation
-    add_action('woocommerce_package_rates', array('montapacking', 'shipping_calculate'), 10);
+        ## Shipping cost calculation
+        add_action('woocommerce_package_rates', array('montapacking', 'shipping_calculate'), 10);
 
-    ## Shipping cost calculation
-    add_action('woocommerce_review_order_before_shipping', array('montapacking', 'shipping_calculate'), 10);
-    add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), 10, 1);
-    add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), 10, 1);
+        ## Shipping cost calculation
+        add_action('woocommerce_review_order_before_shipping', array('montapacking', 'shipping_calculate'), 10);
+        add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), 10, 1);
+        add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), 10, 1);
 
-    ## Shipping cost calculation
-    update_option('woocommerce_enable_shipping_calc', 'no');
-    update_option('woocommerce_shipping_cost_requires_address', 'no');
+        ## Shipping cost calculation
+        update_option('woocommerce_enable_shipping_calc', 'no');
+        update_option('woocommerce_shipping_cost_requires_address', 'no');
 
-    ## Validation rules
-    add_action('woocommerce_after_checkout_validation', array('montapacking', 'checkout_validate'), 10, 2);
+        ## Validation rules
+        add_action('woocommerce_after_checkout_validation', array('montapacking', 'checkout_validate'), 10, 2);
 
-    ## Shipment data opslaan bij order
-    add_action('woocommerce_checkout_create_order', array('montapacking', 'checkout_store'), 10, 2);
+        ## Shipment data opslaan bij order
+        add_action('woocommerce_checkout_create_order', array('montapacking', 'checkout_store'), 10, 2);
 
-    // CSS/JS scripts registreren
-    add_action('wp_enqueue_scripts', 'montacheckout_enqueue_scripts');
+        // CSS/JS scripts registreren
+        add_action('wp_enqueue_scripts', 'montacheckout_enqueue_scripts');
 
-    ## Ajax actions
-    add_action('wp_ajax_monta_shipping_options', array('montapacking', 'shipping_options'));
-    add_action('wp_ajax_nopriv_monta_shipping_options', array('montapacking', 'shipping_options'));
+        ## Ajax actions
+        add_action('wp_ajax_monta_shipping_options', array('montapacking', 'shipping_options'));
+        add_action('wp_ajax_nopriv_monta_shipping_options', array('montapacking', 'shipping_options'));
 
-    ## Init session usage#
-//    add_action('init', 'montacheckout_register_session');
+        ## Init session usage#
+        // add_action('init', 'montacheckout_register_session');
 
-    //add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
-    add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
+        //add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
+        add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
-    add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
-    add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1 );
-    add_action( 'woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping' );
-    add_action("woocommerce_removed_coupon", 'updatecheckout');
-    add_action("woocommerce_applied_coupon", 'updatecheckout');
-
-
-} else {
-
-    add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
-    add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);
-    add_action('woocommerce_package_rates', 'overrule_package_rates', 20, 2);
+        add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
+        add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1 );
+        add_action( 'woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping' );
+        add_action("woocommerce_removed_coupon", 'updatecheckout');
+        add_action("woocommerce_applied_coupon", 'updatecheckout');
+    } else {
+        add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
+        add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);
+        add_action('woocommerce_package_rates', 'overrule_package_rates', 20, 2);
+    }
 }
+
+
 
 function filter_review_order_before_shipping($needs_shipping_address)
 {
