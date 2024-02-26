@@ -354,7 +354,7 @@ jQuery(document).ready(function() {
 
                             } else if(checked === 'delivery') {
                                 $('#tabselector input[type=radio]:not(:checked)').click();
-                                $('#tabselector').addClass('monta-hide');
+                                // $('#tabselector').addClass('monta-hide');
 
                                 $('.monta-shipment-extras').removeClass('active');
                             }
