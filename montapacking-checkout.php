@@ -321,7 +321,7 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_show_seperate_shipping_email_and_phone_fields">Shipping phone number and email</label></th>
                     <td><input type="checkbox" name="monta_show_seperate_shipping_email_and_phone_fields"
                                value="1" <?php checked('1', get_option('monta_show_seperate_shipping_email_and_phone_fields')); ?>/>
-                        <br><i style="font-size:12px">Show separate fields shipping phone number and email</i>
+                        <br><i style="font-size:12px">Show separate fields for shipping phone number and email</i>
                     </td>
                 </tr>
 
