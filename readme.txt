@@ -57,7 +57,8 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 #1.58.22
 
-* Fixed issue where price would not be added correctly
+* Added hook for shipping_calculate html output
+
 
 #1.58.21
 

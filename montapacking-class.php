@@ -403,6 +403,30 @@ class Montapacking
         return $wc_price + $price;
     }
 
+    public function shipping_calculate_html_output($price, $selectedoption)
+    {
+    ?>
+        <tr>
+            <th><?php _e('Shipping', 'woocommerce'); ?> </th>
+            <?php
+            if ($price == 0 && false == $selectedoption) {
+                ?>
+                <td><?php _e('Choose a shipping method', 'montapacking-checkout'); ?></td>
+                <?php
+            } else if ($price > 0) {
+                ?>
+                <td>&euro; <?php echo number_format($price, 2, ',', ''); ?></td>
+                <?php
+            } else if ($price == 0) {
+                ?>
+                <td><?php echo translate('Free of charge', 'montapacking-checkout') ?></td>
+                <?php
+            }
+            ?>
+        </tr>
+    <?php
+    }
+
     public static function shipping_calculate()
     {
         $data = null;
@@ -433,28 +457,7 @@ class Montapacking
             }
         }
 
-
-        ?>
-        <tr>
-            <th><?php _e('Shipping', 'woocommerce'); ?> </th>
-            <?php
-            if ($price == 0 && false == $selectedoption) {
-                ?>
-                <td><?php _e('Choose a shipping method', 'montapacking-checkout'); ?></td>
-                <?php
-            } else if ($price > 0) {
-                ?>
-                <td>&euro; <?php echo number_format($price, 2, ',', ''); ?></td>
-                <?php
-            } else if ($price == 0) {
-                ?>
-                <td><?php echo translate('Free of charge', 'montapacking-checkout') ?></td>
-                <?php
-            }
-            ?>
-        </tr>
-        <?php
-
+        do_action(' monta_shipping_calculate_html_output', $price, $selectedoption);
     }
 
     public static function get_shipping_total($data = null)
