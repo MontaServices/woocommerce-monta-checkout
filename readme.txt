@@ -59,6 +59,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 * Added hook for shipping_calculate html output
 
+
 #1.58.21
 
 * Made it possible to only show pickup points without having delivery options enabled in the MontaPortal
