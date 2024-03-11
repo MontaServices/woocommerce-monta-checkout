@@ -1,5 +1,5 @@
-jQuery(document).ready(function() {
-    jQuery(function($) {
+jQuery(document).ready(function () {
+    jQuery(function ($) {
 
         try {
 
@@ -60,6 +60,9 @@ jQuery(document).ready(function() {
                     this.$checkout_form.on('click', '.monta-times input[type=radio]', this.setTimeframe);
                     this.$checkout_form.on('click', '.monta-shipment-shipper input[type=radio]', this.setShipper);
                     this.$checkout_form.on('click', '.monta-shipment-extras input[type=checkbox]', this.updateWooCheckout);
+
+                    $("#shipping_phone").val("")
+                    $("#shipping_email").val("")
 
                     this.updateSlider();
 
@@ -221,14 +224,14 @@ jQuery(document).ready(function() {
 
                     monta_shipping.updateDeliveries(function (success, result) {
 
-                    if(result?.frames?.length == 1) {
-                        if(result.frames[0].date == null) {
-                            // console.log('should hide', result.frames[0].date)
-                            $(".monta-times").css("display", "none")
+                        if (result?.frames?.length == 1) {
+                            if (result.frames[0].date == null) {
+                                // console.log('should hide', result.frames[0].date)
+                                $(".monta-times").css("display", "none")
+                            }
                         }
-                    }
 
-                    $(".monta-times-cropped-error").css("display", "none");
+                        $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
                             if (checked === 'delivery' && Object.keys(monta_shipping.frames).length > 0) {
@@ -262,18 +265,18 @@ jQuery(document).ready(function() {
 
                                 monta_shipping.first_preferred = null;
                                 $.each(monta_shipping.frames, function (key, item) {
-                                    if(item.options.some((code) => code === 'Monta')){
+                                    if (item.options.some((code) => code === 'Monta')) {
                                         hidedatebar = true;
                                         fallbackShipper = true;
                                     }
                                     daysavailablecounter++;
-                                    if(monta_shipping.first_preferred == null && item.options.some(item => item.isPreferred)){
+                                    if (monta_shipping.first_preferred == null && item.options.some(item => item.isPreferred)) {
                                         monta_shipping.first_preferred = item;
                                     }
                                 });
 
                                 $.each(monta_shipping.frames, function (key, item) {
-                                    if(item.date == null && monta_shipping.frames.length > 1){
+                                    if (item.date == null && monta_shipping.frames.length > 1) {
                                         return;
                                     }
 
@@ -304,14 +307,14 @@ jQuery(document).ready(function() {
                                         html = html.replace(/{.description}/g, (item.displayname !== null) ? item.displayname : (item.description !== null) ? item.description : '');
                                         html = html.replace(/{.price}/g, item.price);
 
-                                        if(item.options.some(x=>x.discountPercentage > 0)){
-                                            var newelement = '<span class="discount-percentage">-' + option.discountPercentage  + '%</span>';
+                                        if (item.options.some(x => x.discountPercentage > 0)) {
+                                            var newelement = '<span class="discount-percentage">-' + option.discountPercentage + '%</span>';
                                             html = html.replace(/{.discount}/g, newelement);
-                                        }else{
+                                        } else {
                                             html = html.replace(/{.discount}/g, '');
                                         }
 
-                                        if(monta_shipping.first_preferred != null && monta_shipping.first_preferred.date === item.date){
+                                        if (monta_shipping.first_preferred != null && monta_shipping.first_preferred.date === item.date) {
                                             html = html.replace(/{.preferred}/g, true);
                                         }
 
@@ -331,17 +334,17 @@ jQuery(document).ready(function() {
                                     }
                                 });
 
-                                if (hidedatebar === true && monta_shipping.first_preferred === null){
+                                if (hidedatebar === true && monta_shipping.first_preferred === null) {
                                     $('.monta-times').addClass('monta-hide');
                                 }
 
-                                if(fallbackShipper){
+                                if (fallbackShipper) {
                                     document.getElementById('othersendmethod').classList.add('monta-hide');
                                     document.getElementById('tabselector').classList.add('monta-hide');
                                 }
 
                                 // Select first option
-                                if(monta_shipping.first_preferred != null) {
+                                if (monta_shipping.first_preferred != null) {
                                     mover.find('input[type=radio][data-preferred=\'true\']:not(.sameday):first').prop('checked', true).click();
                                 } else {
                                     mover.find('input[type=radio]:not(.sameday):first').prop('checked', true).click();
@@ -352,7 +355,7 @@ jQuery(document).ready(function() {
 
                                 monta_shipping.storeLocatorDestroy();
 
-                            } else if(checked === 'delivery') {
+                            } else if (checked === 'delivery') {
                                 $('#tabselector input[type=radio]:not(:checked)').click();
                                 // $('#tabselector').addClass('monta-hide');
 
@@ -418,7 +421,7 @@ jQuery(document).ready(function() {
                             data += '&shipping_address_2=""';
                             data += '&shipping_city=""';
 
-                            data += '&shipping_postcode=' + zipcode;  
+                            data += '&shipping_postcode=' + zipcode;
 
                             $.post(ajax_url, data).done(function (result) {
                                 if (result.success) {
@@ -573,7 +576,7 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.price}/g, item.priceFormatted);
 
                             let discountclass = '';
-                            if(item.discount_percentage > 0){
+                            if (item.discount_percentage > 0) {
                                 discountclass = "discount";
                             }
 
@@ -583,7 +586,7 @@ jQuery(document).ready(function() {
                             html = html.replace(/{.type_text}/g, item.displayName);
                             html = html.replace(/{.ships_on}/g, item.ships_on);
 
-                            if(item.isSustainable) {
+                            if (item.isSustainable) {
                                 html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
                             } else {
                                 html = html.replace(/{.isSustainable}/g, '');
@@ -593,7 +596,7 @@ jQuery(document).ready(function() {
                                 shippers.append(html);
                             }
 
-                            if(item.isSustainable) {
+                            if (item.isSustainable) {
                                 addTooltip('sustainable-' + realCode, 'sustainabletooltip-' + realCode);
                             }
 
@@ -602,7 +605,7 @@ jQuery(document).ready(function() {
                             });
 
                         });
-                        if(monta_shipping.first_preferred !== null){
+                        if (monta_shipping.first_preferred !== null) {
                             shippers.find('input[type=radio][data-preferred=\'true\']:first').prop('checked', true);
                         } else {
                             shippers.find('input[type=radio]:first').prop('checked', true);
@@ -706,15 +709,16 @@ jQuery(document).ready(function() {
                 },
             };
 
-            jQuery("#ship-to-different-address-checkbox").on("change",function (event){
-                if(!event.target.checked) {
+            jQuery("#ship-to-different-address-checkbox").on('change', function (event) {
+                if (!event.target.checked) {
                     jQuery("#shipping_phone").val("")
                     jQuery("#shipping_email").val("")
                 }
             })
 
             monta_shipping.init();
-        } catch (e) {}
+        } catch (e) {
+        }
     });
 
     function updateDeliveryTextBlock() {
@@ -757,7 +761,7 @@ jQuery(document).ready(function() {
             jQuery(".timeinformation").css("display", "block");
         }
 
-        jQuery(".monta-times-croppped").find(".loadedLogo").on("error", function() {
+        jQuery(".monta-times-croppped").find(".loadedLogo").on("error", function () {
             jQuery(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png");
         });
     }
@@ -805,7 +809,7 @@ jQuery(document).ready(function() {
                 runListTrim(monta_shipping);
             },
             callbackNotify: function (error) {
-                $('#monta-stores').storeLocator('mapping',{ lat: defaultLat, lng: defaultLng });
+                $('#monta-stores').storeLocator('mapping', {lat: defaultLat, lng: defaultLng});
                 document.getElementsByClassName('monta-more-pickup-points')[0].style.display = 'none';
             }
         };
@@ -813,7 +817,7 @@ jQuery(document).ready(function() {
         runListTrim(monta_shipping);
     }
 
-    function runListTrim(monta_shipping){
+    function runListTrim(monta_shipping) {
         const liExists = setInterval(function () {
             if ($("#initialPickupsList").length) {
 
@@ -888,16 +892,16 @@ jQuery(document).ready(function() {
         return markers;
     }
 
-    jQuery("input.montapackingshipmentshipper, input.montapackingshipmenttime ").on("change", function() {
+    jQuery("input.montapackingshipmentshipper, input.montapackingshipmenttime ").on("change", function () {
         updateDeliveryTextBlock();
     });
 
-    jQuery('body').on('click', 'input.montapackingshipmentshipper', function() {
+    jQuery('body').on('click', 'input.montapackingshipmentshipper', function () {
         jQuery('.montapackingshipmentshipper').parents('label').removeClass("checked");
         jQuery(this).parents('label').addClass("checked");
     });
 
-    jQuery('body').on('click', '#othersendmethod', function() {
+    jQuery('body').on('click', '#othersendmethod', function () {
         if (jQuery(".monta-times-croppped").css('display') === 'block') {
             jQuery(".monta-times-croppped").css('display', "none");
             jQuery(".monta-times-extended").css('display', "block");
@@ -908,11 +912,11 @@ jQuery(document).ready(function() {
     });
 });
 
-function addTooltip(rootElementId, tooltipId){
+function addTooltip(rootElementId, tooltipId) {
     const rootElement = document.querySelector('#' + rootElementId);
     const tooltip = document.querySelector('#' + tooltipId);
 
-    if(window.tooltips[tooltipId] !== null || window.tooltips[tooltipId] !== undefined){
+    if (window.tooltips[tooltipId] !== null || window.tooltips[tooltipId] !== undefined) {
         delete window.tooltips[tooltipId];
     }
     window.tooltips[tooltipId] = window.Popper.createPopper(rootElement, tooltip, {
