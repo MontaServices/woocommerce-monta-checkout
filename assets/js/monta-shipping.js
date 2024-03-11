@@ -705,6 +705,14 @@ jQuery(document).ready(function() {
                     $('.monta-options input[value=delivery]').prop('checked', false);
                 },
             };
+
+            jQuery("#ship-to-different-address-checkbox").on("change",function (event){
+                if(!event.target.checked) {
+                    jQuery("#shipping_phone").val("")
+                    jQuery("#shipping_email").val("")
+                }
+            })
+
             monta_shipping.init();
         } catch (e) {}
     });

@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.23
+
+* Made it possible to show extra fields for shipping phone and mailadres for shipping to other address  
+
 #1.58.22
 
 * Added hook for shipping_calculate html output

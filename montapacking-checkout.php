@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.22
+ * Version: 1.58.23
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -46,6 +46,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
     register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
     register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
+    register_setting('montapacking-plugin-settings', 'monta_show_seperate_shipping_email_and_phone_fields');
 });
 
 // Include installed Language packs
@@ -316,6 +317,14 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
 
+                <tr>
+                    <th scope="row"><label for="monta_show_seperate_shipping_email_and_phone_fields">Shipping phone number and email</label></th>
+                    <td><input type="checkbox" name="monta_show_seperate_shipping_email_and_phone_fields"
+                               value="1" <?php checked('1', get_option('monta_show_seperate_shipping_email_and_phone_fields')); ?>/>
+                        <br><i style="font-size:12px">Show separate fields shipping phone number and email</i>
+                    </td>
+                </tr>
+
             </table>
 
             <h1>Google API Settings</h1>
@@ -333,6 +342,40 @@ function montacheckout_render_settings()
         </form>
     </div>
     <?php
+}
+
+if(esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))) {
+    add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
+    add_action('woocommerce_admin_order_data_after_shipping_address', 'ts_shipping_phone_checkout_display');
+}
+
+function ts_shipping_phone_checkout( $fields ) {
+    $fields['shipping']['shipping_phone'] = array(
+        'label' => 'Phone',
+        'type' => 'tel',
+        'required' => false,
+        'class' => array( 'form-row-wide' ),
+        'validate' => array( 'phone' ),
+        'autocomplete' => 'tel',
+        'priority' => 25,
+    );
+
+    $fields['shipping']['shipping_email'] = array(
+        'label' => 'Email',
+        'type' => 'email',
+        'required' => false,
+        'class' => array( 'form-row-wide' ),
+        'validate' => array( 'email' ),
+        'autocomplete' => 'email',
+        'priority' => 26,
+    );
+
+    return $fields;
+}
+
+function ts_shipping_phone_checkout_display( $order ){
+    echo '<p><b>Shipping Phone:</b> ' . get_post_meta( $order->get_id(), '_shipping_phone', true ) . '</p>';
+    echo '<p><b>Shipping Email:</b> ' . get_post_meta( $order->get_id(), '_shipping_email', true ) . '</p>';
 }
 
 function filter_woocommerce_order_shipping_method($html, $instance)
