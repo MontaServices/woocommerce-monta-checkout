@@ -42,7 +42,7 @@ class Montapacking
 
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames);
-                    $items = $frames['DeliveryOptions'];
+                        $items = $frames['DeliveryOptions'];
 
                 }
 
@@ -225,7 +225,7 @@ class Montapacking
                 foreach ($frame->options as $option) {
                     if ($option->code == $shipper) {
                         $shipperCodes = implode(',', $option->shipperCodes);
-                        $method = $option;
+                            $method = $option;
                         break;
                     }
                 }
@@ -277,11 +277,11 @@ class Montapacking
 //                        }
 //                    }
 
-                    if (!empty($method->shipperCodes)) {
-                        foreach ($method->shipperCodes as $optionCode) {
-                            array_push($extras, $optionCode);
+                        if (!empty($method->shipperCodes)) {
+                            foreach ($method->shipperCodes as $optionCode) {
+                                array_push($extras, $optionCode);
+                            }
                         }
-                    }
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
 
@@ -319,11 +319,11 @@ class Montapacking
 //        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
 //$helloworld = esc_attr(get_option('monta_google_key'));
         $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10);
-        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 
 
 //        if (true !== $api->checkConnection()) {
-            if (false) {
+                if (false) {
             $arr = array();
             $arr[] = "Webshop was unable to connect to Montapacking REST api. Please contact Montapacking";
             $arr = implode("\n\r", $arr);
@@ -480,7 +480,7 @@ class Montapacking
 
         // verzendkosten op 0 zetten
         // dit is voor de instelling 'sta gratis verzending toe' bij waardebonnen, zodat nu verzendprijs dan ook werkelijk op 0 wordt gezet
-        // dan hoef je de prijs verder ook niet meer te berekenen
+        // dan hoef je de prijs verder ook niet meer te berekenen   
         $applied_coupons = WC()->cart->get_applied_coupons();
         foreach( $applied_coupons as $coupon_code ){
             $coupon = new WC_Coupon($coupon_code);
@@ -658,10 +658,10 @@ class Montapacking
 
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames);
-                    $items = $frames['DeliveryOptions'];
-                    WC()->session->set('montapacking-frames' , $frames );
+                        $items = $frames['DeliveryOptions'];
+                        WC()->session->set('montapacking-frames' , $frames );
 
-                    if ($items !== null) {
+                        if ($items !== null) {
 
                         header('Content-Type: application/json');
                         echo json_encode([
@@ -698,7 +698,7 @@ class Montapacking
                     ## Frames naar handige array zetten
 //                    $items = self::format_pickups($frames);
                     #print_r($items);
-                    $items = $frames['PickupOptions'];
+                        $items = $frames['PickupOptions'];
                     
                     if ($items !== null) {
                         ## Get order location
@@ -783,10 +783,10 @@ class Montapacking
 
                 $frames = self::get_frames('collect');
                 if ($frames !== null) {
-                    $items = $frames['StoreLocation'];
-                    $items = [$items];
+                        $items = $frames['StoreLocation'];
+                        $items = [$items];
 
-                    if ($items !== null) {
+                        if ($items !== null) {
 
                         ## Get order location
                         // Get lat and long by address
@@ -891,12 +891,12 @@ class Montapacking
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), 2);
+            $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), 2);
         if ($type == 'delivery') {
-            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+                $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 
         } else if ($type == 'pickup' || $type == 'collect') {
-            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+                $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
         }
 
         ## Monta packing API aanroepen
@@ -958,7 +958,7 @@ class Montapacking
                     $hasDigitalProducts = true;
                 } else {
 
-                    $api->addProduct($sku, $quantity, price: $price);
+                        $api->addProduct($sku, $quantity, price: $price);
 
                     $hasPhysicalProducts = true;
 
@@ -975,7 +975,7 @@ class Montapacking
             return null;
         }
 
-        $subtotal = (WC()->cart->get_subtotal() + WC()->cart->get_subtotal_tax());
+            $subtotal = (WC()->cart->get_subtotal() + WC()->cart->get_subtotal_tax());
         $subtotal_ex = WC()->cart->get_subtotal_tax();
 
         $api->setOrder($subtotal, $subtotal_ex);
@@ -988,21 +988,21 @@ class Montapacking
 
         ## Type timeframes ophalen
         if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
-            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+                $bStockStatus = $bAllProductsAvailableAtWooCommerce;
         } else {
-            $bStockStatus = $bAllProductsAvailableAtMontapacking;
+                $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
         do_action( 'woocommerce_cart_shipping_packages' );
 
         if ($type == 'delivery') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
+                if (esc_attr(get_option('monta_checkproductsonsku'))) {
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action( 'woocommerce_cart_shipping_packages' );
+                    do_action( 'woocommerce_cart_shipping_packages' );
             }
             else
             {
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action( 'woocommerce_cart_shipping_packages' );
+                    do_action( 'woocommerce_cart_shipping_packages' );
             }
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                 if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta'){
@@ -1011,26 +1011,26 @@ class Montapacking
                     }
                 }
 
-                do_action( 'woocommerce_cart_shipping_packages' );
+                    do_action( 'woocommerce_cart_shipping_packages' );
             }
             return $shippingOptions;
         } else if ($type == 'pickup') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
 //                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
-                return $api->getShippingOptions($bStockStatus);
+                    return $api->getShippingOptions($bStockStatus);
             }
             else
             {
 //                return $api->getPickupOptions($bStockStatus);
-                return $api->getShippingOptions($bStockStatus);
+                    return $api->getShippingOptions($bStockStatus);
             }
         } else if ($type == 'collect') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
 //                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
-                return $api->getShippingOptions($bStockStatus);
+                    return $api->getShippingOptions($bStockStatus);
             } else {
 //                return $api->getPickupOptions($bStockStatus, false, false, false, false, array(), true);
-                return $api->getShippingOptions($bStockStatus);
+                    return $api->getShippingOptions($bStockStatus);
             }
         }
     }
