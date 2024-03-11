@@ -301,11 +301,11 @@ class Montapacking
                 $shipping_phone = WC()->checkout->get_value('shipping_phone');
                 $shipping_email = WC()->checkout->get_value('shipping_email');
                 if (esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))){
-                    if (isset($shipping_phone)) {
+                    if (isset($shipping_phone) && trim($shipping_phone) != "") {
                         $item->add_meta_data('shipping_phone', $shipping_phone, true);
                     }
 
-                    if (isset($shipping_email)) {
+                    if (isset($shipping_email) && trim($shipping_email) != "") {
                         $item->add_meta_data('shipping_email', $shipping_email, true);
                     }
                 }
