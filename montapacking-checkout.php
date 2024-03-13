@@ -317,11 +317,11 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_role_no_shipping_with_discount">API Key</label></th>
+                    <th scope="row"><label for="monta_role_no_shipping_with_discount">Exclude shipping discount</label></th>
                     <td><input type="text" name="monta_role_no_shipping_with_discount"
                                value="<?php echo esc_attr(get_option('monta_role_no_shipping_with_discount')); ?>"
                                size="50"/>
-                        <br><i style="font-size:12px">Role for no shipping with discount</i>
+                        <br><i style="font-size:12px">Role for which you want to exclude shipping discounts</i>
                     </td>
                 </tr>
 
