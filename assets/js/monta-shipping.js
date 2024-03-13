@@ -709,10 +709,10 @@ jQuery(document).ready(function () {
                 },
             };
 
-            jQuery("#ship-to-different-address-checkbox").on('change', function (event) {
+            $("#ship-to-different-address-checkbox").on('change', function (event) {
                 if (!event.target.checked) {
-                    jQuery("#shipping_phone").val("")
-                    jQuery("#shipping_email").val("")
+                    $("#shipping_phone").val("")
+                    $("#shipping_email").val("")
                 }
             })
 

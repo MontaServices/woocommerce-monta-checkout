@@ -104,12 +104,17 @@ function montacheckout_init()
         add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
         add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
-        add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1 );
-        add_action( 'woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping' );
+        add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1);
+        add_action('woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping');
         add_action("woocommerce_removed_coupon", 'updatecheckout');
         add_action("woocommerce_applied_coupon", 'updatecheckout');
+        add_action('monta_shipping_calculate_html_output', array('montapacking', 'shipping_calculate_html_output'));
 
-        add_action('monta_shipping_calculate_html_output', 'shipping_calculate_html_output', 10, 2);
+        if (esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))) {
+            add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
+            add_action('woocommerce_admin_order_data_after_shipping_address', 'ts_shipping_phone_checkout_display');
+        }
+
     } else {
         add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
         add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);
@@ -121,7 +126,7 @@ function montacheckout_init()
 
 function filter_review_order_before_shipping($needs_shipping_address)
 {
-    do_action( 'woocommerce_review_order_before_shipping' );
+    do_action('woocommerce_review_order_before_shipping');
 }
 
 function filter_woocommerce_cart_needs_shipping_address($needs_shipping_address)
@@ -180,6 +185,37 @@ function montacheckout_register_session()
 function montacheckout_init_menu()
 {
     add_submenu_page('options-general.php', 'Montapacking', 'Montapacking', 'manage_options', 'montapacking-settings', 'montacheckout_render_settings');
+}
+
+function ts_shipping_phone_checkout($fields)
+{
+    $fields['shipping']['shipping_phone'] = array(
+        'label' => 'Phone',
+        'type' => 'tel',
+        'required' => false,
+        'class' => array('form-row-wide'),
+        'validate' => array('phone'),
+        'autocomplete' => 'tel',
+        'priority' => 25,
+    );
+
+    $fields['shipping']['shipping_email'] = array(
+        'label' => 'Email',
+        'type' => 'email',
+        'required' => false,
+        'class' => array('form-row-wide'),
+        'validate' => array('email'),
+        'autocomplete' => 'email',
+        'priority' => 26,
+    );
+
+    return $fields;
+}
+
+function ts_shipping_phone_checkout_display($order)
+{
+    echo '<p><b>Shipping Phone:</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
+    echo '<p><b>Shipping Email:</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
 }
 
 function montacheckout_render_settings()
@@ -268,7 +304,7 @@ function montacheckout_render_settings()
                     <td><input type="checkbox" name="monta_logerrors"
                                value="1" <?php checked('1', get_option('monta_logerrors')); ?>/>
                         <br><i style="font-size:12px">Turn on logs which are shown <a
-                                    href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a>.</i>
+                                href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a>.</i>
                     </td>
                 </tr>
 
@@ -292,8 +328,8 @@ function montacheckout_render_settings()
                 <tr>
                     <th scope="row"><label for="monta_max_pickuppoints">Max pickup points *</label></th>
                     <td>
-                        <input required type="number" name="monta_max_pickuppoints" step="1" min="1" max="10"
-                               value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')) ; ?>" size="5"/>
+                        <input required type="number" name="monta_max_pickuppoints" step="1" min="1" max="10" size="5"
+                               value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')); ?>"/>
                         <br><i style="font-size:12px">The number of pickupoints shown in the overview view</i>
                     </td>
                     </td>
@@ -344,39 +380,6 @@ function montacheckout_render_settings()
     <?php
 }
 
-if(esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))) {
-    add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
-    add_action('woocommerce_admin_order_data_after_shipping_address', 'ts_shipping_phone_checkout_display');
-}
-
-function ts_shipping_phone_checkout( $fields ) {
-    $fields['shipping']['shipping_phone'] = array(
-        'label' => 'Phone',
-        'type' => 'tel',
-        'required' => false,
-        'class' => array( 'form-row-wide' ),
-        'validate' => array( 'phone' ),
-        'autocomplete' => 'tel',
-        'priority' => 25,
-    );
-
-    $fields['shipping']['shipping_email'] = array(
-        'label' => 'Email',
-        'type' => 'email',
-        'required' => false,
-        'class' => array( 'form-row-wide' ),
-        'validate' => array( 'email' ),
-        'autocomplete' => 'email',
-        'priority' => 26,
-    );
-
-    return $fields;
-}
-
-function ts_shipping_phone_checkout_display( $order ){
-    echo '<p><b>Shipping Phone:</b> ' . get_post_meta( $order->get_id(), '_shipping_phone', true ) . '</p>';
-    echo '<p><b>Shipping Email:</b> ' . get_post_meta( $order->get_id(), '_shipping_email', true ) . '</p>';
-}
 
 function filter_woocommerce_order_shipping_method($html, $instance)
 {
