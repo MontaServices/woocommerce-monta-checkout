@@ -55,6 +55,14 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.26
+
+* Made it possible to ignore shipping discount for logged in user with a specific role 
+
+#1.58.25
+
+* Made it possible to show extra fields for shipping phone and mailadres for shipping to other address  
+
 #1.58.24
 
 * Fixed issue where total shipping cost field would not be displayed before the checkout has been completed when calling the custom hook
