@@ -189,7 +189,7 @@ function montacheckout_init_menu()
 function ts_shipping_phone_checkout($fields)
 {
     $fields['shipping']['shipping_phone'] = array(
-        'label' => 'Phone',
+        'label' => __('Email', 'montapacking-checkout'),
         'type' => 'tel',
         'required' => false,
         'class' => array('form-row-wide'),
@@ -199,7 +199,7 @@ function ts_shipping_phone_checkout($fields)
     );
 
     $fields['shipping']['shipping_email'] = array(
-        'label' => 'Email',
+        'label' => __('Phone', 'montapacking-checkout'),
         'type' => 'email',
         'required' => false,
         'class' => array('form-row-wide'),
@@ -213,8 +213,8 @@ function ts_shipping_phone_checkout($fields)
 
 function ts_shipping_phone_checkout_display($order)
 {
-    echo '<p><b>Shipping Phone:</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
-    echo '<p><b>Shipping Email:</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
+    echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
+    echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
 }
 
 function montacheckout_render_settings()
