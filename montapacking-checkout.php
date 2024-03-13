@@ -316,6 +316,15 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
 
+                <tr>
+                    <th scope="row"><label for="monta_role_no_shipping_with_discount">API Key</label></th>
+                    <td><input type="text" name="monta_role_no_shipping_with_discount"
+                               value="<?php echo esc_attr(get_option('monta_role_no_shipping_with_discount')); ?>"
+                               size="50"/>
+                        <br><i style="font-size:12px">Role for no shipping with discount</i>
+                    </td>
+                </tr>
+
             </table>
 
             <h1>Google API Settings</h1>
