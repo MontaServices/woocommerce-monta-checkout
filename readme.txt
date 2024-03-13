@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.24
+
+* Fixed issue where total shipping cost field would not be displayed before the checkout has been completed when calling the custom hook
+
 #1.58.23
 
 * Fixed issue where price would not be added correctly
