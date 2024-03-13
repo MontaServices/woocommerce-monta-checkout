@@ -403,29 +403,30 @@ class Montapacking
         return $wc_price + $price;
     }
 
-    public function shipping_calculate_html_output($price, $selectedoption)
+    public static function shipping_calculate_html_output($data)
     {
-    ?>
+        ?>
         <tr>
             <th><?php _e('Shipping', 'woocommerce'); ?> </th>
             <?php
-            if ($price == 0 && false == $selectedoption) {
+            if ($data['price'] == 0 && $data['selectedOption'] == false) {
                 ?>
                 <td><?php _e('Choose a shipping method', 'montapacking-checkout'); ?></td>
                 <?php
-            } else if ($price > 0) {
+            } else if ($data['price'] > 0) {
                 ?>
-                <td>&euro; <?php echo number_format($price, 2, ',', ''); ?></td>
+                <td>&euro; <?php echo number_format($data['price'], 2, ',', ''); ?></td>
                 <?php
-            } else if ($price == 0) {
+            } else if ($data['price'] == 0) {
                 ?>
                 <td><?php echo translate('Free of charge', 'montapacking-checkout') ?></td>
                 <?php
             }
             ?>
         </tr>
-    <?php
+        <?php
     }
+
 
     public static function shipping_calculate()
     {
@@ -440,24 +441,24 @@ class Montapacking
             parse_str(sanitize_post($_POST['post_data']), $datapost);
         }
 
-        $selectedoption = false;
+        $selectedOption = false;
 
 
         if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'delivery') {
 
             if (isset($datapost['montapacking']['shipment']['shipper'])) {
-                $selectedoption = true;
+                $selectedOption = true;
             }
 
         }
 
         if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'pickup') {
             if (isset($datapost['montapacking']['pickup']['code']) && trim($datapost['montapacking']['pickup']['code'])) {
-                $selectedoption = true;
+                $selectedOption = true;
             }
         }
 
-        do_action(' monta_shipping_calculate_html_output', $price, $selectedoption);
+        do_action('monta_shipping_calculate_html_output', ['price' => $price, 'selectedOption' => $selectedOption]);
     }
 
     public static function get_shipping_total($data = null)
