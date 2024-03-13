@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.23
+ * Version: 1.58.25
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -114,7 +114,6 @@ function montacheckout_init()
             add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
             add_action('woocommerce_admin_order_data_after_shipping_address', 'ts_shipping_phone_checkout_display');
         }
-
     } else {
         add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
         add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);

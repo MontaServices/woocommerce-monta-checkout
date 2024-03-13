@@ -55,9 +55,13 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
-#1.58.24
+#1.58.25
 
 * Made it possible to show extra fields for shipping phone and mailadres for shipping to other address  
+
+#1.58.24
+
+* Fixed issue where total shipping cost field would not be displayed before the checkout has been completed when calling the custom hook
 
 #1.58.23
 
