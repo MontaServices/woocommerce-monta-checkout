@@ -57,7 +57,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 #1.58.26
 
-* Made it possible to ignore shipping discount for logged in user with a specific role 
+* Made it possible to exclude shipping discount for logged in user with a specific role 
 
 #1.58.25
 
