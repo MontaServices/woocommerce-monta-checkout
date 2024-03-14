@@ -224,14 +224,14 @@ jQuery(document).ready(function () {
 
                     monta_shipping.updateDeliveries(function (success, result) {
 
-                    if (result?.frames?.length == 1) {
-                        if (result.frames[0].date == null) {
-                            // console.log('should hide', result.frames[0].date)
-                            $(".monta-times").css("display", "none")
+                        if (result?.frames?.length == 1) {
+                            if (result.frames[0].date == null) {
+                                // console.log('should hide', result.frames[0].date)
+                                $(".monta-times").css("display", "none")
+                            }
                         }
-                    }
 
-                    $(".monta-times-cropped-error").css("display", "none");
+                        $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
                             if (checked === 'delivery' && Object.keys(monta_shipping.frames).length > 0) {
