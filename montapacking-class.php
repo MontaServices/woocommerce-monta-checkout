@@ -893,11 +893,11 @@ class Montapacking
         }
 
         $excludeShippingDiscount = false;
-        if (esc_attr(get_option('monta_role_to_exclude_discounted_shipping')) != "") {
+        if (esc_attr(get_option('monta_exclude_discounted_shipping_for_role')) != "") {
             if (is_user_logged_in()) {
                 $user = wp_get_current_user();
                 $roles = $user->roles;
-                $role = esc_attr(get_option('monta_role_to_exclude_discounted_shipping'));
+                $role = esc_attr(get_option('monta_exclude_discounted_shipping_for_role'));
                 if (in_array($role, $roles)) {
                     $excludeShippingDiscount = true;
                 }

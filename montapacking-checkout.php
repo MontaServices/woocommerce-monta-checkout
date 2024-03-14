@@ -47,7 +47,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
     register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
     register_setting('montapacking-plugin-settings', 'monta_show_seperate_shipping_email_and_phone_fields');
-    register_setting('montapacking-plugin-settings', 'monta_role_to_exclude_discounted_shipping');
+    register_setting('montapacking-plugin-settings', 'monta_exclude_discounted_shipping_for_role');
 });
 
 // Include installed Language packs
@@ -376,10 +376,11 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_role_to_exclude_discounted_shipping">Exclude shipping discount</label>
+                    <th scope="row"><label for="monta_exclude_discounted_shipping_for_role">Exclude shipping
+                            discount</label>
                     </th>
-                    <td><input type="text" name="monta_role_to_exclude_discounted_shipping"
-                               value="<?php echo esc_attr(get_option('monta_role_to_exclude_discounted_shipping')); ?>"
+                    <td><input type="text" name="monta_exclude_discounted_shipping_for_role"
+                               value="<?php echo esc_attr(get_option('monta_exclude_discounted_shipping_for_role')); ?>"
                                size="50"/>
                         <br><i style="font-size:12px">Role for which you want to exclude shipping discounts</i>
                     </td>
