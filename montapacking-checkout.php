@@ -46,6 +46,8 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
     register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
     register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
+    register_setting('montapacking-plugin-settings', 'monta_show_seperate_shipping_email_and_phone_fields');
+    register_setting('montapacking-plugin-settings', 'monta_role_to_exclude_discounted_shipping');
 });
 
 // Include installed Language packs
@@ -103,12 +105,16 @@ function montacheckout_init()
         add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
         add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
-        add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1 );
-        add_action( 'woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping' );
+        add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1);
+        add_action('woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping');
         add_action("woocommerce_removed_coupon", 'updatecheckout');
         add_action("woocommerce_applied_coupon", 'updatecheckout');
-
         add_action('monta_shipping_calculate_html_output', array('montapacking', 'shipping_calculate_html_output'));
+
+        if (esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))) {
+            add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
+            add_action('woocommerce_admin_order_data_after_shipping_address', 'ts_shipping_phone_checkout_display');
+        }
     } else {
         add_action('woocommerce_checkout_create_order', 'checkout_create_order', 20, 2);
         add_action('woocommerce_before_checkout_form', 'before_checkout_form', 20, 2);
@@ -117,10 +123,9 @@ function montacheckout_init()
 }
 
 
-
 function filter_review_order_before_shipping($needs_shipping_address)
 {
-    do_action( 'woocommerce_review_order_before_shipping' );
+    do_action('woocommerce_review_order_before_shipping');
 }
 
 function filter_woocommerce_cart_needs_shipping_address($needs_shipping_address)
@@ -181,6 +186,45 @@ function montacheckout_init_menu()
     add_submenu_page('options-general.php', 'Montapacking', 'Montapacking', 'manage_options', 'montapacking-settings', 'montacheckout_render_settings');
 }
 
+function ts_shipping_phone_checkout($fields)
+{
+    $fields['shipping']['shipping_phone'] = array(
+        'label' => __('Email', 'montapacking-checkout'),
+        'type' => 'tel',
+        'required' => false,
+        'class' => array('form-row-wide'),
+        'validate' => array('phone'),
+        'autocomplete' => 'tel',
+        'priority' => 25,
+    );
+
+    $fields['shipping']['shipping_email'] = array(
+        'label' => __('Phone', 'montapacking-checkout'),
+        'type' => 'email',
+        'required' => false,
+        'class' => array('form-row-wide'),
+        'validate' => array('email'),
+        'autocomplete' => 'email',
+        'priority' => 26,
+    );
+
+    return $fields;
+}
+
+function ts_shipping_phone_checkout_display($order)
+{
+    $shippingphone = get_post_meta($order->get_id(), '_shipping_phone', true);
+    $shippingemail = get_post_meta($order->get_id(), '_shipping_email', true);
+
+    if (isset($shippingphone) && trim($shippingphone) != "") {
+        echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
+    }
+
+    if (isset($shippingemail) && trim($shippingemail) != "") {
+        echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
+    }
+}
+
 function montacheckout_render_settings()
 {
     // Check that the user is allowed to update options
@@ -203,7 +247,8 @@ function montacheckout_render_settings()
                     <td><input required type="text" name="monta_shop"
                                value="<?php echo esc_attr(get_option('monta_shop')); ?>" size="50"/>
                         <br><i style="font-size:12px">The name of the webshop in Monta Portal. Name can be found <a
-                                    target="_new" href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a>.</i>
+                                target="_new"
+                                href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a>.</i>
                     </td>
                 </tr>
 
@@ -224,11 +269,13 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_shippingcosts_fallback_woocommerce">Use WooCommerce shipping costs as fallback *</label></th>
+                    <th scope="row"><label for="monta_shippingcosts_fallback_woocommerce">Use WooCommerce shipping costs
+                            as fallback *</label></th>
                     <td>
                         <input type="checkbox" name="monta_shippingcosts_fallback_woocommerce"
                                value="1" <?php checked('1', get_option('monta_shippingcosts_fallback_woocommerce')); ?>/>
-                        <br><i style="font-size:12px">Use shipping costs set in WooCommerce settings instead of amount set below as fallback if API connection is unsuccessful.</i>
+                        <br><i style="font-size:12px">Use shipping costs set in WooCommerce settings instead of amount
+                            set below as fallback if API connection is unsuccessful.</i>
                     </td>
                 </tr>
 
@@ -258,7 +305,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_checkproductsonsku">Check products on SKU</label></th>
                     <td><input type="checkbox" name="monta_checkproductsonsku"
                                value="1" <?php checked('1', get_option('monta_checkproductsonsku')); ?>/>
-                        <br><i style="font-size:12px">If this option is active, the stock, sizes and weights of the SKUs are checked with the data known in the Montaportal.</i>
+                        <br><i style="font-size:12px">If this option is active, the stock, sizes and weights of the SKUs
+                            are checked with the data known in the Montaportal.</i>
                     </td>
                 </tr>
 
@@ -267,7 +315,7 @@ function montacheckout_render_settings()
                     <td><input type="checkbox" name="monta_logerrors"
                                value="1" <?php checked('1', get_option('monta_logerrors')); ?>/>
                         <br><i style="font-size:12px">Turn on logs which are shown <a
-                                    href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a>.</i>
+                                href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a>.</i>
                     </td>
                 </tr>
 
@@ -291,8 +339,8 @@ function montacheckout_render_settings()
                 <tr>
                     <th scope="row"><label for="monta_max_pickuppoints">Max pickup points *</label></th>
                     <td>
-                        <input required type="number" name="monta_max_pickuppoints" step="1" min="1" max="10"
-                               value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')) ; ?>" size="5"/>
+                        <input required type="number" name="monta_max_pickuppoints" step="1" min="1" max="10" size="5"
+                               value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')); ?>"/>
                         <br><i style="font-size:12px">The number of pickupoints shown in the overview view</i>
                     </td>
                     </td>
@@ -304,7 +352,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_pickupname">Pickup name</label></th>
                     <td><input type="text" name="monta_pickupname"
                                value="<?php echo esc_attr(get_option('monta_pickupname')); ?>" size="50"/>
-                        <br><i style="font-size:12px">In some situations you want to change the company name of the option 'AFH'. Here you can override this name.</i>
+                        <br><i style="font-size:12px">In some situations you want to change the company name of the
+                            option 'AFH'. Here you can override this name.</i>
                     </td>
                 </tr>
 
@@ -312,14 +361,25 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_standardshipmentname">Standard shipment name</label></th>
                     <td><input type="text" name="monta_standardshipmentname"
                                value="<?php echo esc_attr(get_option('monta_standardshipmentname')); ?>" size="50"/>
-                        <br><i style="font-size:12px">We have a standard shipment option in the Montaportal. Here you can override this name.</i>
+                        <br><i style="font-size:12px">We have a standard shipment option in the Montaportal. Here you
+                            can override this name.</i>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_role_no_shipping_with_discount">Exclude shipping discount</label></th>
-                    <td><input type="text" name="monta_role_no_shipping_with_discount"
-                               value="<?php echo esc_attr(get_option('monta_role_no_shipping_with_discount')); ?>"
+                    <th scope="row"><label for="monta_show_seperate_shipping_email_and_phone_fields">Shipping phone
+                            number and email</label></th>
+                    <td><input type="checkbox" name="monta_show_seperate_shipping_email_and_phone_fields"
+                               value="1" <?php checked('1', get_option('monta_show_seperate_shipping_email_and_phone_fields')); ?>/>
+                        <br><i style="font-size:12px">Show separate fields for shipping phone number and email</i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_role_to_exclude_discounted_shipping">Exclude shipping discount</label>
+                    </th>
+                    <td><input type="text" name="monta_role_to_exclude_discounted_shipping"
+                               value="<?php echo esc_attr(get_option('monta_role_to_exclude_discounted_shipping')); ?>"
                                size="50"/>
                         <br><i style="font-size:12px">Role for which you want to exclude shipping discounts</i>
                     </td>
@@ -333,7 +393,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_google_key">API Key</label></th>
                     <td><input type="text" name="monta_google_key"
                                value="<?php echo esc_attr(get_option('monta_google_key')); ?>" size="50"/>
-                        <br><i style="font-size:12px">A Google API key is required if you want to make use of the world map. A Google key can be created
+                        <br><i style="font-size:12px">A Google API key is required if you want to make use of the world
+                            map. A Google key can be created
                             <a target="_new" href="https://console.cloud.google.com/">here</a>.</i>
                     </td>
                 </tr>
@@ -343,6 +404,7 @@ function montacheckout_render_settings()
     </div>
     <?php
 }
+
 
 function filter_woocommerce_order_shipping_method($html, $instance)
 {
