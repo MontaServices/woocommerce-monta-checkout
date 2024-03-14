@@ -213,8 +213,16 @@ function ts_shipping_phone_checkout($fields)
 
 function ts_shipping_phone_checkout_display($order)
 {
-    echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
-    echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
+    $shippingphone = get_post_meta($order->get_id(), '_shipping_phone', true);
+    $shippingemail = get_post_meta($order->get_id(), '_shipping_email', true);
+
+    if (isset($shippingphone) && trim($shippingphone) != "") {
+        echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
+    }
+
+    if (isset($shippingemail) && trim($shippingemail) != "") {
+        echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
+    }
 }
 
 function montacheckout_render_settings()
