@@ -427,7 +427,7 @@ class Montapacking
                 <?php
             } else if ($data['price'] > 0) {
                 ?>
-                <td>&euro; <?php echo number_format($data['price'], 2, ',', ''); ?></td>
+                <td><?=wc_price($data['price'])?></td>
                 <?php
             } else if ($data['price'] == 0) {
                 ?>

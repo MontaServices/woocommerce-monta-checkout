@@ -171,6 +171,19 @@ function montacheckout_enqueue_scripts()
         wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-storelocator.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_monta', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-shipping.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_popper', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/popper.min.js'), date("h:i:s"));
+        wp_enqueue_script( 'wc-price-js', plugin_dir_url( __FILE__ ) . 'assets/js/wc_price.js', array( 'jquery' ), '1.0', false );
+
+        $wc_store_object = array(
+            'html' => false,
+            'currency_symbol' => get_woocommerce_currency_symbol(get_woocommerce_currency()),
+            'currency_position' => get_option('woocommerce_currency_pos', true),
+            'decimal_separator' => wc_get_price_decimal_separator(),
+            'currency_format_trim_zeros' => wc_get_price_thousand_separator(),
+            'currency_format_num_decimals' => wc_get_price_decimals(),
+            'price_format' => get_woocommerce_price_format(),
+        );
+
+        wp_add_inline_script( 'wc-price-js', ' var wc_settings_args=' . wp_json_encode( $wc_store_object ) . ';' );
     }
 }
 
