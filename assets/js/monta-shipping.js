@@ -573,7 +573,7 @@ jQuery(document).ready(function () {
                             html = html.replace(/{.name}/g, item.displayName);
                             html = html.replace(/{.preferred}/g, item.isPreferred);
                             html = html.replace(/{.time}/g, time);
-                            html = html.replace(/{.price}/g, item.priceFormatted);
+                            html = html.replace(/{.price}/g, wc_price(item.price, wc_settings_args));
 
                             let discountclass = '';
                             if (item.discount_percentage > 0) {
@@ -643,7 +643,7 @@ jQuery(document).ready(function () {
                             let html = $('.monta-extra-template').html();
                             html = html.replace(/{.code}/g, item.code);
                             html = html.replace(/{.name}/g, item.description);
-                            html = html.replace(/{.price}/g, item.priceFormatted);
+                            html = html.replace(/{.price}/g, wc_price(item.price, wc_settings_args));
 
                             extras.append(html);
                         });
@@ -862,6 +862,12 @@ jQuery(document).ready(function () {
 
             allopeningtimes.join(" / ");
 
+            function unescapeHtml(html) {
+                var txt = document.createElement("textarea");
+                txt.innerHTML = html;
+                return txt.value;
+            }
+
             markers.push({
                 'id': '1',
                 'code': item.code + '_' + item.code,
@@ -878,7 +884,7 @@ jQuery(document).ready(function () {
                 'description': item.description,
                 'displayname': item.company,
                 'distance': item.distanceMeters / 1000,
-                'price': item.price,
+                'price': unescapeHtml(wc_price(item.price, wc_settings_args)),
                 'openingtimes': allopeningtimes[0],
                 'image': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.shipperCode + ".png",
                 'price_raw': item.price,
