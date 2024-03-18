@@ -34,7 +34,7 @@ function wc_price(price, wc_settings_args) {
         formatted_price = formatted_symbol + ' ' + formatted_price;
     } else if ('right_space' === default_args.currency_position) {
         formatted_price = formatted_price + ' ' + formatted_symbol;
-    }console.log('remove this', formatted_price)
+    }
     formatted_price = default_args.html ? '<span class="woocommerce-Price-amount amount">' + formatted_price + '</span>' : formatted_price;
     return formatted_price;
 }
