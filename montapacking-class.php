@@ -892,7 +892,19 @@ class Montapacking
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), 2);
+        $excludeShippingDiscount = false;
+        if (esc_attr(get_option('monta_exclude_discounted_shipping_for_role')) != "") {
+            if (is_user_logged_in()) {
+                $user = wp_get_current_user();
+                $roles = $user->roles;
+                $role = esc_attr(get_option('monta_exclude_discounted_shipping_for_role'));
+                if (in_array($role, $roles)) {
+                    $excludeShippingDiscount = true;
+                }
+            }
+        }
+
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), 2, excludeShippingDiscount: $excludeShippingDiscount);
         if ($type == 'delivery') {
             $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 

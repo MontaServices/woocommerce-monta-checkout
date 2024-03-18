@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.26
+ * Version: 1.58.27
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -47,6 +47,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_standardshipmentname');
     register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
     register_setting('montapacking-plugin-settings', 'monta_show_seperate_shipping_email_and_phone_fields');
+    register_setting('montapacking-plugin-settings', 'monta_exclude_discounted_shipping_for_role');
 });
 
 // Include installed Language packs
@@ -120,7 +121,6 @@ function montacheckout_init()
         add_action('woocommerce_package_rates', 'overrule_package_rates', 20, 2);
     }
 }
-
 
 
 function filter_review_order_before_shipping($needs_shipping_address)
@@ -247,7 +247,8 @@ function montacheckout_render_settings()
                     <td><input required type="text" name="monta_shop"
                                value="<?php echo esc_attr(get_option('monta_shop')); ?>" size="50"/>
                         <br><i style="font-size:12px">The name of the webshop in Monta Portal. Name can be found <a
-                                    target="_new" href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a>.</i>
+                                target="_new"
+                                href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a>.</i>
                     </td>
                 </tr>
 
@@ -268,11 +269,13 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_shippingcosts_fallback_woocommerce">Use WooCommerce shipping costs as fallback *</label></th>
+                    <th scope="row"><label for="monta_shippingcosts_fallback_woocommerce">Use WooCommerce shipping costs
+                            as fallback *</label></th>
                     <td>
                         <input type="checkbox" name="monta_shippingcosts_fallback_woocommerce"
                                value="1" <?php checked('1', get_option('monta_shippingcosts_fallback_woocommerce')); ?>/>
-                        <br><i style="font-size:12px">Use shipping costs set in WooCommerce settings instead of amount set below as fallback if API connection is unsuccessful.</i>
+                        <br><i style="font-size:12px">Use shipping costs set in WooCommerce settings instead of amount
+                            set below as fallback if API connection is unsuccessful.</i>
                     </td>
                 </tr>
 
@@ -302,7 +305,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_checkproductsonsku">Check products on SKU</label></th>
                     <td><input type="checkbox" name="monta_checkproductsonsku"
                                value="1" <?php checked('1', get_option('monta_checkproductsonsku')); ?>/>
-                        <br><i style="font-size:12px">If this option is active, the stock, sizes and weights of the SKUs are checked with the data known in the Montaportal.</i>
+                        <br><i style="font-size:12px">If this option is active, the stock, sizes and weights of the SKUs
+                            are checked with the data known in the Montaportal.</i>
                     </td>
                 </tr>
 
@@ -348,7 +352,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_pickupname">Pickup name</label></th>
                     <td><input type="text" name="monta_pickupname"
                                value="<?php echo esc_attr(get_option('monta_pickupname')); ?>" size="50"/>
-                        <br><i style="font-size:12px">In some situations you want to change the company name of the option 'AFH'. Here you can override this name.</i>
+                        <br><i style="font-size:12px">In some situations you want to change the company name of the
+                            option 'AFH'. Here you can override this name.</i>
                     </td>
                 </tr>
 
@@ -356,15 +361,28 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_standardshipmentname">Standard shipment name</label></th>
                     <td><input type="text" name="monta_standardshipmentname"
                                value="<?php echo esc_attr(get_option('monta_standardshipmentname')); ?>" size="50"/>
-                        <br><i style="font-size:12px">We have a standard shipment option in the Montaportal. Here you can override this name.</i>
+                        <br><i style="font-size:12px">We have a standard shipment option in the Montaportal. Here you
+                            can override this name.</i>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="monta_show_seperate_shipping_email_and_phone_fields">Shipping phone number and email</label></th>
+                    <th scope="row"><label for="monta_show_seperate_shipping_email_and_phone_fields">Shipping phone
+                            number and email</label></th>
                     <td><input type="checkbox" name="monta_show_seperate_shipping_email_and_phone_fields"
                                value="1" <?php checked('1', get_option('monta_show_seperate_shipping_email_and_phone_fields')); ?>/>
                         <br><i style="font-size:12px">Show separate fields for shipping phone number and email</i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_exclude_discounted_shipping_for_role">Exclude shipping
+                            discount</label>
+                    </th>
+                    <td><input type="text" name="monta_exclude_discounted_shipping_for_role"
+                               value="<?php echo esc_attr(get_option('monta_exclude_discounted_shipping_for_role')); ?>"
+                               size="50"/>
+                        <br><i style="font-size:12px">Role for which you want to exclude shipping discounts</i>
                     </td>
                 </tr>
 
@@ -376,7 +394,8 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_google_key">API Key</label></th>
                     <td><input type="text" name="monta_google_key"
                                value="<?php echo esc_attr(get_option('monta_google_key')); ?>" size="50"/>
-                        <br><i style="font-size:12px">A Google API key is required if you want to make use of the world map. A Google key can be created
+                        <br><i style="font-size:12px">A Google API key is required if you want to make use of the world
+                            map. A Google key can be created
                             <a target="_new" href="https://console.cloud.google.com/">here</a>.</i>
                     </td>
                 </tr>
