@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.26
+ * Version: 1.58.27
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -190,21 +190,21 @@ function ts_shipping_phone_checkout($fields)
 {
     $fields['shipping']['shipping_phone'] = array(
         'label' => __('Email', 'montapacking-checkout'),
-        'type' => 'tel',
-        'required' => false,
-        'class' => array('form-row-wide'),
-        'validate' => array('phone'),
-        'autocomplete' => 'tel',
-        'priority' => 25,
-    );
-
-    $fields['shipping']['shipping_email'] = array(
-        'label' => __('Phone', 'montapacking-checkout'),
         'type' => 'email',
         'required' => false,
         'class' => array('form-row-wide'),
         'validate' => array('email'),
         'autocomplete' => 'email',
+        'priority' => 25,
+    );
+
+    $fields['shipping']['shipping_email'] = array(
+        'label' => __('Phone', 'montapacking-checkout'),
+        'type' => 'tel',
+        'required' => false,
+        'class' => array('form-row-wide'),
+        'validate' => array('tel'),
+        'autocomplete' => 'tel',
         'priority' => 26,
     );
 
