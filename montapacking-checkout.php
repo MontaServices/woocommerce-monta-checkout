@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.28
+ * Version: 1.58.29
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -201,7 +201,7 @@ function montacheckout_init_menu()
 
 function ts_shipping_phone_checkout($fields)
 {
-    $fields['shipping']['shipping_phone'] = array(
+    $fields['shipping']['shipping_email'] = array(
         'label' => __('Email', 'montapacking-checkout'),
         'type' => 'email',
         'required' => false,
@@ -211,7 +211,7 @@ function ts_shipping_phone_checkout($fields)
         'priority' => 25,
     );
 
-    $fields['shipping']['shipping_email'] = array(
+    $fields['shipping']['shipping_phone'] = array(
         'label' => __('Phone', 'montapacking-checkout'),
         'type' => 'tel',
         'required' => false,
