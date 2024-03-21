@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.29
+ * Version: 1.58.30
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -229,12 +229,12 @@ function ts_shipping_phone_checkout_display($order)
     $shippingphone = get_post_meta($order->get_id(), '_shipping_phone', true);
     $shippingemail = get_post_meta($order->get_id(), '_shipping_email', true);
 
-    if (isset($shippingphone) && trim($shippingphone) != "") {
-        echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
+    if (isset($shippingemail) && trim($shippingemail) != "") {
+        echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
     }
 
-    if (isset($shippingemail) && trim($shippingemail) != "") {
-        echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
+    if (isset($shippingphone) && trim($shippingphone) != "") {
+        echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
     }
 }
 
