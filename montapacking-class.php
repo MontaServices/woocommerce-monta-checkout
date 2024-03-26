@@ -455,22 +455,33 @@ class Montapacking
 
         $selectedOption = false;
 
-
         if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'delivery') {
 
             if (isset($datapost['montapacking']['shipment']['shipper'])) {
                 $selectedOption = true;
             }
-
         }
 
-        if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'pickup') {
+        if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'pickup' || $datapost['montapacking']['shipment']['type'] == 'collect') {
             if (isset($datapost['montapacking']['pickup']['code']) && trim($datapost['montapacking']['pickup']['code'])) {
                 $selectedOption = true;
             }
         }
 
         do_action('monta_shipping_calculate_html_output', ['price' => $price, 'selectedOption' => $selectedOption]);
+    }
+
+    public static function stringCurrencyToFloat($money)
+    {
+        $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
+        $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
+
+        $separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
+
+        $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
+        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
+
+        return (float) str_replace(',', '.', $removedThousandSeparator);
     }
 
     public static function get_shipping_total($data = null)
@@ -530,14 +541,9 @@ class Montapacking
             if (isset($monta['shipment'])) {
                 $shipment = $monta['shipment'];
             }
-
             if (isset($monta['pickup'])) {
-                $whee = $monta['pickup'];
-                $test = $monta;
                 $pickup = $monta['pickup'];
             }
-
-
             if (isset($shipment['type'])) {
                 $type = $shipment['type'];
             }
@@ -550,8 +556,6 @@ class Montapacking
             if (isset($shipment['extras'])) {
                 $extras = $shipment['extras'];
             }
-
-
         }
 
         ## Check by type
@@ -642,7 +646,7 @@ class Montapacking
         }
 
 
-        return $price;
+        return self::stringCurrencyToFloat($price);
 
     }
 
