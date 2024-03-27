@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.31
+ * Version: 1.58.32
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -26,6 +26,13 @@ include('montapacking-class.php');
 if (esc_attr(get_option('monta_logerrors'))) {
     define('WC_LOG_HANDLER', 'WC_Log_Handler_DB');
 }
+// Declare WooCommerce HPOS compatibility
+add_action('before_woocommerce_init', function(){
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+    }
+});
+
 
 ## Add config actions
 add_action('admin_menu', 'montacheckout_init_menu');
@@ -226,15 +233,17 @@ function ts_shipping_phone_checkout($fields)
 
 function ts_shipping_phone_checkout_display($order)
 {
-    $shippingphone = get_post_meta($order->get_id(), '_shipping_phone', true);
-    $shippingemail = get_post_meta($order->get_id(), '_shipping_email', true);
+    $order = wc_get_order($order->get_id());
+
+    $shippingphone = $order->get_meta('_shipping_phone', true);
+    $shippingemail = $order->get_meta('_shipping_email', true);
 
     if (isset($shippingemail) && trim($shippingemail) != "") {
-        echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
+        echo '<p><b>' . __('Email', 'montapacking-checkout') . '</b> ' . $order->get_meta('_shipping_email', true) . '</p>';
     }
 
     if (isset($shippingphone) && trim($shippingphone) != "") {
-        echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
+        echo '<p><b>' . __('Phone', 'montapacking-checkout') . '</b> ' . $order->get_meta('_shipping_phone', true) . '</p>';
     }
 }
 
