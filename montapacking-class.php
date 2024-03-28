@@ -270,12 +270,14 @@ class Montapacking
                 if (is_array($extras)) {
 
 //                    if (!empty($method->optionCodes)) {
-//
 //                        foreach ($method->optionCodes as $optionCode) {
-//
 //                            array_push($extras, $optionCode);
 //                        }
 //                    }
+
+                    if(is_string($method->optionCodes)) {
+                        array_push($extras, $method->optionCodes);
+                    }
 
                     if (!empty($method->shipperCodes)) {
                         foreach ($method->shipperCodes as $optionCode) {
@@ -288,11 +290,13 @@ class Montapacking
                 } else if (!empty($method->optionCodes)) {
 
                     $extras = array();
-
-                    foreach ($method->optionCodes as $optionCode) {
-
-                        array_push($extras, $optionCode);
+                    if(is_string($method->optionCodes)) {
+                        array_push($extras, $method->optionCodes);
                     }
+
+//                    foreach ($method->optionCodes as $optionCode) {
+//                        array_push($extras, $optionCode);
+//                    }
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
 
@@ -316,8 +320,6 @@ class Montapacking
         }
 
 
-//        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
-//$helloworld = esc_attr(get_option('monta_google_key'));
         $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10);
         $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 
