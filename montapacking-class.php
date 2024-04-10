@@ -464,7 +464,7 @@ class Montapacking
             }
         }
 
-        if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'pickup' || $datapost['montapacking']['shipment']['type'] == 'collect') {
+        if (isset($datapost['montapacking']['shipment']['type']) && isset($datapost['montapacking']['shipment']['type']) == 'pickup' || isset($datapost['montapacking']['shipment']['type']) == 'collect') {
             if (isset($datapost['montapacking']['pickup']['code']) && trim($datapost['montapacking']['pickup']['code'])) {
                 $selectedOption = true;
             }
@@ -1148,8 +1148,8 @@ class Montapacking
             $item = [
                 'id' => $class->method_title,
                 'name' => $class->title,
-                'cost' => $class->instance_settings["cost"],
-                'requires' => $class->requires
+                'cost' => !empty($class->instance_settings["cost"]) ? $class->instance_settings["cost"] : 0,
+                'requires' => !empty($class->requires) ? $class->requires : null
             ];
 
             // If minimum amount is required

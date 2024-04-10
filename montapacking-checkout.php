@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.33
+ * Version: 1.58.34
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -70,6 +70,9 @@ function montacheckout_init()
     ## Check of we in woocommerce zijn
     if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 
+//        remove_action( 'woocommerce_cart_totals_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
+//        remove_action( 'woocommerce_review_order_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
+
         ## Standaard woocommerce verzending uitschakelen
         add_filter('woocommerce_shipping_calculator_enable_postcode', false);
         add_filter('woocommerce_shipping_calculator_enable_city', false);
@@ -128,7 +131,6 @@ function montacheckout_init()
         add_action('woocommerce_package_rates', 'overrule_package_rates', 20, 2);
     }
 }
-
 
 function filter_review_order_before_shipping($needs_shipping_address)
 {
