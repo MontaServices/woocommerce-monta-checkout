@@ -403,9 +403,10 @@ class Montapacking
 
     public static function shipping_total($wc_price = 0)
     {
-        if (did_filter('woocommerce_cart_get_total') == 5) {
-            return $wc_price;
-        }
+        // Comment this out for now, since its not needed if the shipping cost are not calculated double
+//        if (did_filter('woocommerce_cart_get_total')) {
+//            return $wc_price;
+//        }
 
         $data = null;
         if (isset($_POST['montapacking'])) {
