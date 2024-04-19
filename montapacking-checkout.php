@@ -61,7 +61,7 @@ add_filter("plugin_action_links_$plugin", 'montacheckout_plugin_add_settings_lin
 
 
 ## Check of we in woocommerce zijn
-if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+if (is_plugin_active('woocommerce/woocommerce.php')) {
 
     ## Standaard woocommerce verzending uitschakelen
     add_filter('woocommerce_shipping_calculator_enable_postcode', false);
