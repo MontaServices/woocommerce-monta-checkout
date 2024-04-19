@@ -21,6 +21,8 @@ jQuery(document).ready(function () {
                 pickup_default: null,
                 pickup_selected: null,
                 first_preferred: null,
+                standard_shipper: null,
+                standard_shipper_set : false,
 
                 pickupLocator: null,
 
@@ -59,6 +61,7 @@ jQuery(document).ready(function () {
 
                     this.$checkout_form.on('click', '.monta-times input[type=radio]', this.setTimeframe);
                     this.$checkout_form.on('click', '.monta-shipment-shipper input[type=radio]', this.setShipper);
+                    this.$checkout_form.on('click', '.monta-shipment-standard-shipper input[type=radio]', this.setShipperStandard);
                     this.$checkout_form.on('click', '.monta-shipment-extras input[type=checkbox]', this.updateWooCheckout);
 
                     $("#shipping_phone").val("")
@@ -187,10 +190,12 @@ jQuery(document).ready(function () {
                     data += '&action=monta_shipping_options';
 
                     $.post(ajax_url, data).done(function (result) {
+                        debugger;
                         if (result.success) {
                             // Frames onthouden
                             if (result.frames !== undefined) {
                                 monta_shipping.frames = result.frames;
+                                monta_shipping.standardShipper = result.standardShipper
                             } else if (result.pickups !== undefined) {
                                 monta_shipping.pickups = result.pickups;
                                 monta_shipping.pickup_default = result.default;
@@ -297,6 +302,8 @@ jQuery(document).ready(function () {
 
                                     if (option !== null && option !== undefined) {
 
+
+                                        //datepicker
                                         let html = $('.monta-choice-template').html();
 
                                         html = html.replace(/{.id}/g, key);
@@ -333,6 +340,56 @@ jQuery(document).ready(function () {
                                         }
                                     }
                                 });
+
+                                debugger;
+                                if(monta_shipping.standardShipper != null && !monta_shipping.standard_shipper_set){
+
+                                    let standardShipper = monta_shipping.standardShipper;
+                                    let html = '<label>\n\n' +
+                                        '        <span style="display:none" class="cropped_name">{.name}</span>\n' +
+                                        '        <span style="display:none" class="cropped_image">{.img}</span>\n' +
+                                        // '        <span style="display:none" class="cropped_type_text">{.type_text}</span>\n' +
+                                        '        <span style="display:none" class="cropped_type">{.type}</span>\n\n' +
+                                        '        <span class="radiobutton">\n' +
+                                        '            <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper" data-preferred="{.preferred}">\n' +
+                                        '            <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}">\n' +
+                                        '        </span>\n\n' +
+                                        '        <div class="image">\n' +
+                                        '            {.img}\n' +
+                                        '        </div>\n\n' +
+                                        '        <div class="information">\n' +
+                                        '            {.name} {.isSustainable}\n' +
+                                        '        </div>\n' +
+                                        '        <div class="pricemonta{.class}" >\n' +
+                                        '            {.price}\n' +
+                                        '        </div>\n' +
+                                        '        <div class="clearboth"></div>\n\n' +
+                                        '    </label>';
+                                    html = html.replace(/{.code}/g, standardShipper.code);
+                                    html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + standardShipper.shipperCodes[0] + '.png">');
+                                    html = html.replace(/{.name}/g, standardShipper.displayName);
+                                    html = html.replace(/{.preferred}/g, standardShipper.isPreferred);
+                                    html = html.replace(/{.price}/g, wc_price(standardShipper.price, wc_settings_args));
+
+                                    let discountclass = '';
+                                    if (standardShipper.discount_percentage > 0) {
+                                        discountclass = "discount";
+                                    }
+
+                                    html = html.replace(/{.class}/g, discountclass);
+
+                                    if (standardShipper.isSustainable) {
+                                        html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + standardShipper.code + '" id="sustainable-' + standardShipper.code + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + standardShipper.code + '" data-popper-arrow></div></div>');
+                                    } else {
+                                        html = html.replace(/{.isSustainable}/g, '');
+                                    }
+
+                                    const shippers = $('.monta-shipment-standard-shipper');
+                                    shippers.append(html);
+
+                                    monta_shipping.standard_shipper_set = true;
+
+                                }
 
                                 if (hidedatebar === true && monta_shipping.first_preferred === null) {
                                     $('.monta-times').addClass('monta-hide');
@@ -527,6 +584,7 @@ jQuery(document).ready(function () {
                 setTimeframe: function () {
                     const value = $(this).val();
                     const shippers = $('.monta-shipment-shipper');
+                    debugger;
                     const options = monta_shipping.frames[value].options;
 
                     // Empty shippers
@@ -617,7 +675,13 @@ jQuery(document).ready(function () {
                     }
                     monta_shipping.updateWooCheckout();
                 },
+
+                setShipperStandard: function () {
+                    monta_shipping.updateWooCheckout();
+                },
+
                 setShipper: function () {
+                    debugger;
                     const shipper = $('.monta-shipment-shipper input[type=radio]:checked').val();
                     const frame = $('.monta-times input[type=radio]:checked').val();
                     const extras = $('.monta-shipment-extra-options');
