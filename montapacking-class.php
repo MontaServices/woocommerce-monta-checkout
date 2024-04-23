@@ -30,7 +30,6 @@ class Montapacking
         }
 
         $items = null;
-        $standardShipper = null;
         if (!isset($shipment['type']) || $shipment['type'] == '') {
             $errors->add('shipment', __('Select a shipping method.', 'montapacking-checkout'));
         }
@@ -39,7 +38,6 @@ class Montapacking
             case 'delivery':
 
                 $frames = self::get_frames('delivery');
-                $standardShipper = $frames['StandardShipper'];
 
                 if ($frames !== null) {
 
@@ -678,9 +676,6 @@ class Montapacking
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames);
                     $items = $frames['DeliveryOptions'];
-//                     if ($frames['StandardShipper'] != null) {
-// //                        $items[] = $frames['StandardShipper'];
-//                     }
 
                     WC()->session->set('montapacking-frames', $frames);
 
