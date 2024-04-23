@@ -442,58 +442,7 @@ jQuery(document).ready(function () {
                                 $(".monta-times-croppped-error-pickup").css("display", "block")
                             } else {
 
-                                // $('#tabselector input[type=radio]:not(:checked)').click();
-
-                                let standardShipper = monta_shipping.standardShipper;
-                                let html = '<label>\n\n' +
-                                    '        <span style="display:none" class="cropped_name">{.name}</span>\n' +
-                                    '        <span style="display:none" class="cropped_image">{.img}</span>\n' +
-                                    // '        <span style="display:none" class="cropped_type_text">{.type_text}</span>\n' +
-                                    '        <span style="display:none" class="cropped_type">{.type}</span>\n\n' +
-                                    '        <span class="radiobutton">\n' +
-                                    '            <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper" data-preferred="{.preferred}">\n' +
-                                    '            <input type="hidden" name="montapacking[shipment][{.code}][name]" value="{.name}">\n' +
-                                    '        </span>\n\n' +
-                                    '        <div class="image">\n' +
-                                    '            {.img}\n' +
-                                    '        </div>\n\n' +
-                                    '        <div class="information">\n' +
-                                    '            {.name} {.isSustainable}\n' +
-                                    '        </div>\n' +
-                                    '        <div class="pricemonta{.class}" >\n' +
-                                    '            {.price}\n' +
-                                    '        </div>\n' +
-                                    '        <div class="clearboth"></div>\n\n' +
-                                    '    </label>';
-                                html = html.replace(/{.code}/g, standardShipper.code);
-                                html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + standardShipper.shipperCodes[0] + '.png">');
-                                html = html.replace(/{.name}/g, standardShipper.displayName);
-                                html = html.replace(/{.preferred}/g, standardShipper.isPreferred);
-                                html = html.replace(/{.price}/g, wc_price(standardShipper.price, wc_settings_args));
-
-                                let discountclass = '';
-                                if (standardShipper.discount_percentage > 0) {
-                                    discountclass = "discount";
-                                }
-
-                                html = html.replace(/{.class}/g, discountclass);
-
-                                if (standardShipper.isSustainable) {
-                                    html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + standardShipper.code + '" id="sustainable-' + standardShipper.code + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + standardShipper.code + '" data-popper-arrow></div></div>');
-                                } else {
-                                    html = html.replace(/{.isSustainable}/g, '');
-                                }
-
-                                jQuery(".monta-times-extended").css('display', "block");
-
-                                jQuery(".monta-times").css('display', "none");
-                                const shippers = $('.monta-shipment-standard-shipper');
-                                shippers.append(html);
-
-                                monta_shipping.standard_shipper_set = true;
-
-                                mover.find('input[type=radio]:not(.sameday):first').prop('checked', true).click();
-
+                                $('#tabselector input[type=radio]:not(:checked)').click();
                             }
                             monta_shipping.storeLocatorDestroy();
                         }
