@@ -190,12 +190,7 @@ jQuery(document).ready(function () {
                     data += '&action=monta_shipping_options';
 
                     $.post(ajax_url, data).done(function (result) {
-                        debugger;
                         if (result.success) {
-                            // Frames onthouden
-                            // if(result.frames === null  && result.standardShipper !=null){
-                            //     monta_shipping.standardShipper = result.standardShipper;
-                            // }
                              if (result.frames !== undefined) {
                                 monta_shipping.frames = result.frames;
                                 monta_shipping.standardShipper = result.standardShipper
@@ -241,8 +236,7 @@ jQuery(document).ready(function () {
                         $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
-                            if (checked === 'delivery' && monta_shipping.frames != null && Object.keys(monta_shipping.frames).length > 0  ||
-                                checked === 'delivery'&& monta_shipping.frames == null && monta_shipping.standardShipper != null) {
+                            if (checked === 'delivery' && Object.keys(monta_shipping.frames).length > 0) {
                                 // empty fields when pickup was already choosen
                                 $(".monta-pickup-fields").val("");
                                 //$("#initialPickupRadioDummy").removeAttribute("checked");
@@ -344,14 +338,12 @@ jQuery(document).ready(function () {
                                     }
                                 });
 
-                                debugger;
                                 if(monta_shipping.standardShipper != null && !monta_shipping.standard_shipper_set){
 
                                     let standardShipper = monta_shipping.standardShipper;
                                     let html = '<label>\n\n' +
                                         '        <span style="display:none" class="cropped_name">{.name}</span>\n' +
                                         '        <span style="display:none" class="cropped_image">{.img}</span>\n' +
-                                        // '        <span style="display:none" class="cropped_type_text">{.type_text}</span>\n' +
                                         '        <span style="display:none" class="cropped_type">{.type}</span>\n\n' +
                                         '        <span class="radiobutton">\n' +
                                         '            <input type="radio" name="montapacking[shipment][shipper]" value="{.code}" class="montapackingshipmentshipper" data-preferred="{.preferred}">\n' +
@@ -369,7 +361,7 @@ jQuery(document).ready(function () {
                                         '        <div class="clearboth"></div>\n\n' +
                                         '    </label>';
                                     html = html.replace(/{.code}/g, standardShipper.code);
-                                    html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + standardShipper.shipperCodes[0] + '.png">');
+                                    html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png">');
                                     html = html.replace(/{.name}/g, standardShipper.displayName);
                                     html = html.replace(/{.preferred}/g, standardShipper.isPreferred);
                                     html = html.replace(/{.price}/g, wc_price(standardShipper.price, wc_settings_args));
@@ -589,7 +581,6 @@ jQuery(document).ready(function () {
                 setTimeframe: function () {
                     const value = $(this).val();
                     const shippers = $('.monta-shipment-shipper');
-                    debugger;
                     const options = monta_shipping.frames[value].options;
 
                     // Empty shippers
@@ -686,7 +677,6 @@ jQuery(document).ready(function () {
                 },
 
                 setShipper: function () {
-                    debugger;
                     const shipper = $('.monta-shipment-shipper input[type=radio]:checked').val();
                     const frame = $('.monta-times input[type=radio]:checked').val();
                     const extras = $('.monta-shipment-extra-options');
