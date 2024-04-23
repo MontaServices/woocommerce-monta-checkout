@@ -676,7 +676,6 @@ class Montapacking
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames);
                     $items = $frames['DeliveryOptions'];
-
                     WC()->session->set('montapacking-frames', $frames);
 
                     if ($items !== null) {

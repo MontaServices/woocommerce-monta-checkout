@@ -299,8 +299,6 @@ jQuery(document).ready(function () {
 
                                     if (option !== null && option !== undefined) {
 
-
-                                        //datepicker
                                         let html = $('.monta-choice-template').html();
 
                                         html = html.replace(/{.id}/g, key);
@@ -433,7 +431,6 @@ jQuery(document).ready(function () {
                             if (checked === 'pickup') {
                                 $(".monta-times-croppped-error-pickup").css("display", "block")
                             } else {
-
                                 $('#tabselector input[type=radio]:not(:checked)').click();
                             }
                             monta_shipping.storeLocatorDestroy();
