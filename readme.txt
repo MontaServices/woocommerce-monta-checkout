@@ -55,6 +55,14 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.34
+
+* Fixed some php warnings for servers that have php warnings configured in php.ini
+
+#1.58.33
+
+* Fixed issue where evening delivery option was not correctly read in MontaPortal
+
 #1.58.32
 
 * Support for High-Performance Order Storage

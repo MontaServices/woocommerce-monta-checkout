@@ -279,12 +279,14 @@ class Montapacking
                 if (is_array($extras)) {
 
 //                    if (!empty($method->optionCodes)) {
-//
 //                        foreach ($method->optionCodes as $optionCode) {
-//
 //                            array_push($extras, $optionCode);
 //                        }
 //                    }
+
+                    if(is_string($method->optionCodes)) {
+                        array_push($extras, $method->optionCodes);
+                    }
 
                     if (!empty($method->shipperCodes)) {
                         foreach ($method->shipperCodes as $optionCode) {
@@ -297,11 +299,13 @@ class Montapacking
                 } else if (!empty($method->optionCodes)) {
 
                     $extras = array();
-
-                    foreach ($method->optionCodes as $optionCode) {
-
-                        array_push($extras, $optionCode);
+                    if(is_string($method->optionCodes)) {
+                        array_push($extras, $method->optionCodes);
                     }
+
+//                    foreach ($method->optionCodes as $optionCode) {
+//                        array_push($extras, $optionCode);
+//                    }
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
 
@@ -325,8 +329,6 @@ class Montapacking
         }
 
 
-//        $api = new MontapackingShipping(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), false);
-//$helloworld = esc_attr(get_option('monta_google_key'));
         $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10);
         $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 
@@ -471,7 +473,7 @@ class Montapacking
             }
         }
 
-        if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'pickup' || $datapost['montapacking']['shipment']['type'] == 'collect') {
+        if (isset($datapost['montapacking']['shipment']['type']) && isset($datapost['montapacking']['shipment']['type']) == 'pickup' || isset($datapost['montapacking']['shipment']['type']) == 'collect') {
             if (isset($datapost['montapacking']['pickup']['code']) && trim($datapost['montapacking']['pickup']['code'])) {
                 $selectedOption = true;
             }
@@ -1159,8 +1161,8 @@ class Montapacking
             $item = [
                 'id' => $class->method_title,
                 'name' => $class->title,
-                'cost' => $class->instance_settings["cost"],
-                'requires' => $class->requires
+                'cost' => !empty($class->instance_settings["cost"]) ? $class->instance_settings["cost"] : 0,
+                'requires' => !empty($class->requires) ? $class->requires : null
             ];
 
             // If minimum amount is required
