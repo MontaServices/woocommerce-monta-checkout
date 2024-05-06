@@ -48,6 +48,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts_start');
     register_setting('montapacking-plugin-settings', 'monta_leadingstock');
+    register_setting('montapacking-plugin-settings', 'monta_disabledelivery');
     register_setting('montapacking-plugin-settings', 'monta_disablepickup');
     register_setting('montapacking-plugin-settings', 'monta_disablecollect');
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
@@ -343,6 +344,13 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
 
+                <tr>
+                    <th scope="row"><label for="monta_disabledelivery">Disable delivery options</label></th>
+                    <td><input type="checkbox" name="monta_disabledelivery"
+                               value="1" <?php checked('1', get_option('monta_disabledelivery')); ?>/>
+                        <br><i style="font-size:12px">When disabled no delivery options are shown.</i>
+                    </td>
+                </tr>
 
                 <tr>
                     <th scope="row"><label for="monta_disablepickup">Disable pickup points</label></th>

@@ -100,7 +100,13 @@ jQuery(document).ready(function () {
                     const ship_place = $('#shipping_city').val();
                     const ship_country = $('#shipping_country').val();
 
-                    if (other) {
+                    // delivery options disabled
+                    if($('.monta-option-delivery.monta-hide').length === 1){
+                        monta_shipping.enableRadio();
+                        monta_shipping.hideAddressMsg();
+                        $('.monta-options input[value=pickup]').prop('checked', true).click();
+                    }
+                    else if (other) {
                         if (ship_zipcode !== '' && ship_housenumber !== '') {
                             monta_shipping.enableRadio();
                             monta_shipping.hideAddressMsg();
@@ -208,10 +214,10 @@ jQuery(document).ready(function () {
                         }
                     });
                 }, setMethod: function () {
+                    let checked = $('.monta-options input[type=radio]:checked').val();
+
                     $('.monta-shipment-delivery').removeClass('active');
                     $('.monta-shipment-shipper').html('');
-
-                    const checked = $('.monta-options input[type=radio]:checked').val();
 
                     if (checked === "pickup") {
                         $('.monta-loading').addClass('active');
