@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.34
+ * Version: 1.58.35
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -70,8 +70,8 @@ function montacheckout_init()
     ## Check of we in woocommerce zijn
     if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 
-//        remove_action( 'woocommerce_cart_totals_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
-//        remove_action( 'woocommerce_review_order_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
+        remove_action( 'woocommerce_cart_totals_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
+        remove_action( 'woocommerce_review_order_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
 
         ## Standaard woocommerce verzending uitschakelen
         add_filter('woocommerce_shipping_calculator_enable_postcode', false);
@@ -88,8 +88,8 @@ function montacheckout_init()
 
         ## Shipping cost calculation
         add_action('woocommerce_review_order_before_shipping', array('montapacking', 'shipping_calculate'), 10);
-        add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), 10, 1);
-        add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), 10, 1);
+//        add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
+        add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1);
 
         ## Shipping cost calculation
         update_option('woocommerce_enable_shipping_calc', 'no');
