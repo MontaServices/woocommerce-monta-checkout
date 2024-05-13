@@ -40,21 +40,15 @@ class Montapacking
 
                 $frames = self::get_frames('delivery');
                 if ($frames !== null) {
-
-                    ## Frames naar handige array zetten
-//                    $items = self::format_frames($frames);
                     $items = $frames['DeliveryOptions'];
-
                 }
 
                 break;
             case 'pickup':
-
                 if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
-
-
+                
                 if (isset($pickup) && isset($pickup['postnumber']) && trim($pickup['postnumber']) == '') {
                     $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
                 }
@@ -158,10 +152,6 @@ class Montapacking
             case 'delivery':
                 $frames = self::get_frames('delivery');
                 if ($frames !== null) {
-
-                    ## Frames naar handige array zetten
-//                    $items = self::format_frames($frames, $time);
-
                     $items = $frames['DeliveryOptions'];
                 }
 
@@ -238,26 +228,6 @@ class Montapacking
                 $item->add_meta_data('Shipmentmethod', $shipperCodes, true);
                 $item->add_meta_data('Delivery date', $frame->date, true);
 
-//                foreach($items[$time] as $item) {
-//                    $test123 = $item;
-//                    $test123 = $item;
-//                }
-
-//                $test = $items[$time];
-//                foreach($test->options as $selectedItem) {
-//                    $wheeee = $selectedItem;
-//
-//                    if($selectedItem->code == $method->code) {
-//                        $iteminquestion = $method->code;
-//
-//
-//                        $test1 = $selectedItem->from;
-//                        $test2 = $selectedItem->from;
-//                    }
-//
-//                }
-
-//                $time_check = $method->from . ' ' . $method->to;
                 $time_check = $method->from . ' ' . $method->to;
                 if ($time_check != '00:00 00:00' && trim($time_check) && $method->from != $method->to) {
                     $item->add_meta_data('Delivery timeframe', $method->from . ' ' . $method->to, true);
@@ -268,14 +238,7 @@ class Montapacking
                 }
 
                 if (is_array($extras)) {
-
-//                    if (!empty($method->optionCodes)) {
-//                        foreach ($method->optionCodes as $optionCode) {
-//                            array_push($extras, $optionCode);
-//                        }
-//                    }
-
-                    if(is_string($method->optionCodes)) {
+                    if (is_string($method->optionCodes)) {
                         array_push($extras, $method->optionCodes);
                     }
 
@@ -290,13 +253,9 @@ class Montapacking
                 } else if (!empty($method->optionCodes)) {
 
                     $extras = array();
-                    if(is_string($method->optionCodes)) {
+                    if (is_string($method->optionCodes)) {
                         array_push($extras, $method->optionCodes);
                     }
-
-//                    foreach ($method->optionCodes as $optionCode) {
-//                        array_push($extras, $optionCode);
-//                    }
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
 
@@ -319,12 +278,6 @@ class Montapacking
 
         }
 
-
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10);
-        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
-
-
-//        if (true !== $api->checkConnection()) {
         if (false) {
             $arr = array();
             $arr[] = "Webshop was unable to connect to Montapacking REST api. Please contact Montapacking";
@@ -429,7 +382,7 @@ class Montapacking
                 <?php
             } else if ($data['price'] > 0) {
                 ?>
-                <td><?=wc_price($data['price'])?></td>
+                <td><?= wc_price($data['price']) ?></td>
                 <?php
             } else if ($data['price'] == 0) {
                 ?>
@@ -481,9 +434,9 @@ class Montapacking
         $separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
 
         $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
-        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
+        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '', $stringWithCommaOrDot);
 
-        return (float) str_replace(',', '.', $removedThousandSeparator);
+        return (float)str_replace(',', '.', $removedThousandSeparator);
     }
 
     public static function get_shipping_total($data = null)
@@ -527,11 +480,9 @@ class Montapacking
 
         $price = 0;
 
-        $monta = null;
         $shipment = null;
         $pickup = null;
         $type = null;
-        $time = null;
         $shipper = null;
         $extras = null;
 
@@ -569,16 +520,12 @@ class Montapacking
             $frames = WC()->session->get('montapacking-frames');
             if (is_array($frames)) {
 
-                ## Check of gekozen timeframe bestaat
-//                if (isset($frames[$time])) {
+
                 $frames = $frames['DeliveryOptions'];
                 if (isset($frames)) {
 
                     $method = null;
 
-                    ## Check of timeframe opties heeft
-//                    $frame = $frames[$time];
-//                    if (isset($frame->options)) {
 
                     foreach ($frames as $frame) {
                         $thisis = $shipper;
@@ -590,19 +537,6 @@ class Montapacking
                             }
                         }
                     }
-
-                    ## Gekozen shipper ophalen
-//                        foreach ($frames->options as $option) {
-//
-//                            if ($option->code == $shipper) {
-//
-//                                $method = $option;
-//                                break;
-//
-//                            }
-//
-//                        }
-//                    }
 
                     ## Check of verzendmethode is gevonden
                     if ($method !== null) {
@@ -662,9 +596,6 @@ class Montapacking
                 $frames = self::get_frames('delivery');
 
                 if ($frames !== null) {
-
-                    ## Frames naar handige array zetten
-//                    $items = self::format_frames($frames);
                     $items = $frames['DeliveryOptions'];
                     WC()->session->set('montapacking-frames', $frames);
 
@@ -697,14 +628,9 @@ class Montapacking
 
                 break;
             case 'pickup':
-
-                #echo '<pre>';
                 $frames = self::get_frames('pickup');
                 if ($frames !== null) {
 
-                    ## Frames naar handige array zetten
-//                    $items = self::format_pickups($frames);
-                    #print_r($items);
                     $items = $frames['PickupOptions'];
 
                     if ($items !== null) {
@@ -764,11 +690,6 @@ class Montapacking
                             'success' => false,
                             'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                         ]);
-
-                        //$logger = wc_get_logger();
-                        //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                        //$logger->notice('No pickups available for the chosen delivery address', $context);
-
                     }
 
                 } else {
@@ -778,11 +699,6 @@ class Montapacking
                         'success' => false,
                         'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                     ]);
-
-                    //$logger = wc_get_logger();
-                    //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                    //$logger->notice('No pickups available for the chosen delivery address', $context);
-
                 }
 
                 break;
@@ -851,11 +767,6 @@ class Montapacking
                             'success' => false,
                             'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                         ]);
-
-                        //$logger = wc_get_logger();
-                        //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                        //$logger->notice('No pickups available for the chosen delivery address', $context);
-
                     }
 
                 } else {
@@ -865,10 +776,6 @@ class Montapacking
                         'success' => false,
                         'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                     ]);
-
-                    //$logger = wc_get_logger();
-                    //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                    //$logger->notice('No pickups available for the chosen delivery address', $context);
                 }
 
                 break;
@@ -998,12 +905,6 @@ class Montapacking
 
         $api->setOrder($subtotal, $subtotal_ex);
 
-//        if (esc_attr(get_option('monta_logerrors'))) {
-//            $logger = wc_get_logger();
-//            $api->setLogger($logger);
-//
-//        }
-
         ## Type timeframes ophalen
         if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
             $bStockStatus = $bAllProductsAvailableAtWooCommerce;
@@ -1012,14 +913,8 @@ class Montapacking
         }
         do_action('woocommerce_cart_shipping_packages');
 
+        $shippingOptions = $api->getShippingOptions($bStockStatus);
         if ($type == 'delivery') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action('woocommerce_cart_shipping_packages');
-            } else {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action('woocommerce_cart_shipping_packages');
-            }
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                 if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
                     foreach ($shippingOptions[0]->options as $option) {
@@ -1030,22 +925,6 @@ class Montapacking
                 do_action('woocommerce_cart_shipping_packages');
             }
             return $shippingOptions;
-        } else if ($type == 'pickup') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
-                return $api->getShippingOptions($bStockStatus);
-            } else {
-//                return $api->getPickupOptions($bStockStatus);
-                return $api->getShippingOptions($bStockStatus);
-            }
-        } else if ($type == 'collect') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
-                return $api->getShippingOptions($bStockStatus);
-            } else {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, array(), true);
-                return $api->getShippingOptions($bStockStatus);
-            }
         }
     }
 
@@ -1109,21 +988,6 @@ class Montapacking
         }
 
         return $value;
-    }
-
-    public static function checkFreeShippingCouponCodes()
-    {
-        global $woocommerce;
-        if ($woocommerce->cart->get_applied_coupons()) {
-            foreach ($woocommerce->cart->get_applied_coupons() as $coupon) {
-                $getDetails = (new WC_Coupon($coupon));
-
-                if ($getDetails->get_free_shipping()) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
