@@ -220,7 +220,7 @@ class Montapacking
         }
 
         if ($standardShipper != null) {
-            $item->add_meta_data('Shipmentmethod', "MultipleShipper_ShippingDayUnknown", true);
+            $item->add_meta_data('Shipmentmethod', implode(',', $standardShipper->shipperCodes), true);
             $bMontapackingAdd = true;
         } ## Check of gekozen timeframe bestaat
         else if (isset($items[$time])) {
