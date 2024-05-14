@@ -373,7 +373,7 @@ jQuery(document).ready(function () {
                                     html = html.replace(/{.class}/g, discountclass);
 
                                     if (standardShipper.isSustainable) {
-                                        html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + standardShipper.code + '" id="sustainable-' + standardShipper.code + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + standardShipper.code + '" data-popper-arrow></div></div>');
+                                        html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + standardShipper.code + '" id="sustainable-' + standardShipper.code + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + standardShipper.code + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + standardShipper.code + '" data-popper-arrow></div></div>');
                                     } else {
                                         html = html.replace(/{.isSustainable}/g, '');
                                     }
