@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.35
+ * Version: 1.58.36
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -88,7 +88,7 @@ function montacheckout_init()
 
         ## Shipping cost calculation
         add_action('woocommerce_review_order_before_shipping', array('montapacking', 'shipping_calculate'), 10);
-//        add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
+        add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
         add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1);
 
         ## Shipping cost calculation
