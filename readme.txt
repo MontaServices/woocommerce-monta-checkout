@@ -57,7 +57,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 #1.58.37
 
-* Show standard shipper and add fallback shipper 
+* Show standard shipper when enabled
 
 #1.58.36
 
