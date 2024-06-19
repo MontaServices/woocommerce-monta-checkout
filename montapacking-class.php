@@ -30,7 +30,6 @@ class Montapacking
         }
 
         $items = null;
-
         if (!isset($shipment['type']) || $shipment['type'] == '') {
             $errors->add('shipment', __('Select a shipping method.', 'montapacking-checkout'));
         }
@@ -39,6 +38,7 @@ class Montapacking
             case 'delivery':
 
                 $frames = self::get_frames('delivery');
+
                 if ($frames !== null) {
 
                     ## Frames naar handige array zetten
@@ -70,7 +70,9 @@ class Montapacking
 
                 ## Check of timeframe opties heeft
                 $frame = $items[$time];
-                if (isset($frame->options)) {
+                if ($shipper == "MultipleShipper_ShippingDayUnknown") {
+                    $found = true;
+                } else if (isset($frame->options)) {
 
                     ## Gekozen shipper ophalen
                     $found = false;
@@ -154,10 +156,14 @@ class Montapacking
         $pickup = $type['pickup'];
 
         $items = null;
+        $standardShipper = null;
         switch ($shipment['type']) {
             case 'delivery':
                 $frames = self::get_frames('delivery');
-                if ($frames !== null) {
+
+                if ($shipment['shipper'] == "MultipleShipper_ShippingDayUnknown") {
+                    $standardShipper = $frames['StandardShipper'];
+                } else if ($frames !== null) {
 
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames, $time);
@@ -213,8 +219,11 @@ class Montapacking
                 break;
         }
 
-        ## Check of gekozen timeframe bestaat
-        if (isset($items[$time])) {
+        if ($standardShipper != null) {
+            $item->add_meta_data('Shipmentmethod', implode(',', $standardShipper->shipperCodes), true);
+            $bMontapackingAdd = true;
+        } ## Check of gekozen timeframe bestaat
+        else if (isset($items[$time])) {
             $method = null;
             $shipperCode = null;
 
@@ -484,7 +493,7 @@ class Montapacking
         $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
         $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
 
-        return (float) str_replace(',', '.', $removedThousandSeparator);
+        return (float)str_replace(',', '.', $removedThousandSeparator);
     }
 
     public static function get_shipping_total($data = null)
@@ -568,7 +577,10 @@ class Montapacking
 
             ## Timeframes uit sessie ophalen
             $frames = WC()->session->get('montapacking-frames');
-            if (is_array($frames)) {
+            if ($shipper == "MultipleShipper_ShippingDayUnknown") {
+                $price = $frames['StandardShipper']->price;
+                $isfound = true;
+            } else if (is_array($frames)) {
 
                 ## Check of gekozen timeframe bestaat
 //                if (isset($frames[$time])) {
@@ -674,7 +686,8 @@ class Montapacking
                         header('Content-Type: application/json');
                         echo json_encode([
                             'success' => true,
-                            'frames' => $items
+                            'frames' => $items,
+                            'standardShipper' => $frames['StandardShipper']
                         ]);
 
                     } else {
