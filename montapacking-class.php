@@ -1024,7 +1024,6 @@ class Montapacking
         } else {
             $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
-
         do_action('woocommerce_cart_shipping_packages');
 
         if ($type == 'delivery') {
