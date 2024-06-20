@@ -1019,11 +1019,11 @@ class Montapacking
 //        }
 
         ## Type timeframes ophalen
-       if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
-           $bStockStatus = $bAllProductsAvailableAtWooCommerce;
-       } else {
-           $bStockStatus = $bAllProductsAvailableAtMontapacking;
-       }
+        if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
+            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+        } else {
+            $bStockStatus = $bAllProductsAvailableAtMontapacking;
+        }
 
         if (esc_attr(get_option('monta_checkproductsonsku')) == 'false') {
 
