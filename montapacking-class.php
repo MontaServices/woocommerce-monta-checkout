@@ -924,7 +924,7 @@ class Montapacking
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), 2, excludeShippingDiscount: $excludeShippingDiscount);
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount);
         if ($type == 'delivery') {
             $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
 
@@ -1019,11 +1019,16 @@ class Montapacking
 //        }
 
         ## Type timeframes ophalen
-        if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
-            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
-        } else {
-            $bStockStatus = $bAllProductsAvailableAtMontapacking;
+//        if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
+//            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+//        } else {
+//            $bStockStatus = $bAllProductsAvailableAtMontapacking;
+//        }
+
+        if (esc_attr(get_option('monta_checkproductsonsku')) == 'false') {
+
         }
+
         do_action('woocommerce_cart_shipping_packages');
 
         if ($type == 'delivery') {
@@ -1031,7 +1036,7 @@ class Montapacking
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
                 do_action('woocommerce_cart_shipping_packages');
             } else {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
+                $shippingOptions = $api->getShippingOptions(false);
                 do_action('woocommerce_cart_shipping_packages');
             }
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
