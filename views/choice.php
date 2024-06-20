@@ -115,6 +115,7 @@
 
 
         <div class="monta-times-extended" style="display:none">
+            <div class="monta-shipment-standard-shipper"></div>
 
             <span class="monta-times-extended-title"><?php _e('Select delivery time and date', 'montapacking-checkout'); ?></span><br>
             <div class="monta-times">

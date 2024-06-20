@@ -233,14 +233,17 @@ body.monta-cover-open {
     margin-right: 3px;
 }
 /******************** SHIPPER OPTIONS CSS */
-.monta-shipment-shipper input {
+.monta-shipment-shipper input,
+.monta-shipment-standard-shipper input{
     display: none;
 }
-.monta-shipment-shipper label.checked {
+.monta-shipment-shipper label.checked,
+.monta-shipment-standard-shipper label.checked{
     background: #f5f5f5;
     border-color: #79898C;
 }
-.monta-shipment-shipper label {
+.monta-shipment-shipper label ,
+.monta-shipment-standard-shipper label {
     position: relative;
     display: block !important;
     margin-top: 10px;
@@ -248,19 +251,22 @@ body.monta-cover-open {
     padding: 10px 0px;
     font-size: 14px;
 }
-.monta-shipment-shipper label div.image, .loadedimage {
+.monta-shipment-shipper label div.image,
+.monta-shipment-standard-shipper label div.image, .loadedimage {
     width: 50px;
     float: left;
 }
 .loadedimage {
     margin-top: 16px;
 }
-.monta-shipment-shipper label div.image img, .loadedimage img {
+.monta-shipment-shipper label div.image img,
+.monta-shipment-standard-shipper label div.image img, .loadedimage img {
     width: 30px;
     margin-left: 10px;
     height: 30px;
 }
-.monta-shipment-shipper label div.information, .loadedinformation {
+.monta-shipment-shipper label div.information,
+.monta-shipment-standard-shipper label div.information, .loadedinformation {
     width: calc(100% - 110px);
     float: left;
     font-size: 14px;
@@ -270,7 +276,8 @@ body.monta-cover-open {
 .loadedinformation {
     line-height:20px !important;
 }
-.monta-shipment-shipper label div.pricemonta, .loadedprice {
+.monta-shipment-shipper label div.pricemonta,
+.monta-shipment-standard-shipper label div.pricemonta, .loadedprice {
     width: 50px;
     float: right;
     text-align: right;
@@ -281,7 +288,8 @@ body.monta-cover-open {
 .pricemonta.discount {
     color:#25af25; 
 }
-.monta-shipment-shipper label input:checked + span {
+.monta-shipment-shipper label input:checked + span,
+.monta-shipment-standard-shipper label input:checked + span {
     background: #f5f5f5;
     border-color: #79898C;
 }
