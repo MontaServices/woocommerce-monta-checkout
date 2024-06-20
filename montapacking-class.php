@@ -1025,10 +1025,6 @@ class Montapacking
             $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
 
-        if (esc_attr(get_option('monta_checkproductsonsku')) == 'false') {
-
-        }
-
         do_action('woocommerce_cart_shipping_packages');
 
         if ($type == 'delivery') {
@@ -1036,7 +1032,7 @@ class Montapacking
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
                 do_action('woocommerce_cart_shipping_packages');
             } else {
-                $shippingOptions = $api->getShippingOptions(false);
+                $shippingOptions = $api->getShippingOptions($bStockStatus);
                 do_action('woocommerce_cart_shipping_packages');
             }
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
