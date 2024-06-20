@@ -217,10 +217,10 @@ jQuery(document).ready(function () {
                         }
                     });
                 }, setMethod: function () {
-                    let checked = $('.monta-options input[type=radio]:checked').val();
-
                     $('.monta-shipment-delivery').removeClass('active');
                     $('.monta-shipment-shipper').html('');
+
+                    const checked = $('.monta-options input[type=radio]:checked').val();
 
                     if (checked === "pickup") {
                         $('.monta-loading').addClass('active');
