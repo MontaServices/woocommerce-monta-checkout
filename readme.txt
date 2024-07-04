@@ -55,6 +55,16 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.40
+
+* Possibility to show text "free" when zero costs
+* Possibility to override text of store collect button
+* Possibility to upload your own image for store collect
+
+#1.58.39
+
+* Bugfix store collect
+
 #1.58.38
 
 * Bugfix shipping costs fallback shipper

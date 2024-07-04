@@ -33,6 +33,9 @@
 <input id="maxpickuppoints" type="hidden" name="maxpickuppoints"
        value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')); ?>">
 
+<input id="zero-costs-as-free" type="hidden" name="zero-costs-as-free" value="<?php echo esc_attr(get_option('monta_show_zero_costs_as_free')) ?>">
+
+<input id="afh-image" type="hidden" name="afh-image" value="<?php echo esc_attr(get_option('monta_afh_image_path')) ?>">
 
 <div class="woocommerce-shipping-fields montapacking-shipping">
 
@@ -71,7 +74,11 @@
                 <input type="radio" name="montapacking[shipment][type]" value="collect" class="selectshipment"
                        autocomplete="on"/>
                 <span class="block">
-					<?php _e('Store Collect', 'montapacking-checkout'); ?>
+                    <?php if (!empty(esc_attr(get_option('monta_collect_name')))) : ?>
+                        <?php echo esc_attr(get_option('monta_collect_name')) ?>
+                    <?php else : ?>
+                        <?php _e('Store Collect', 'montapacking-checkout'); ?>
+                    <?php endif ?>
 				</span>
             </label>
 
