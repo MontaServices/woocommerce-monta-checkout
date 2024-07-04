@@ -335,7 +335,7 @@ class Montapacking
 
 
         $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10);
-        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
 
 
 //        if (true !== $api->checkConnection()) {
@@ -931,10 +931,10 @@ class Montapacking
 
         $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount);
         if ($type == 'delivery') {
-            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
 
         } else if ($type == 'pickup' || $type == 'collect') {
-            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, 'nl-NL');
+            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
         }
 
         ## Monta packing API aanroepen

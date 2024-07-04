@@ -1042,7 +1042,7 @@ function hideTooltip() {
 function set_price_text(shipping_option) {
     let price_text = wc_price(shipping_option.price, wc_settings_args);
     if (shipping_option.price === 0 && jQuery("#zero-costs-as-free").val() === '1') {
-        price_text = "Gratis";
+        price_text = shopData.translations.free_of_charge;
     }
 
     return price_text;

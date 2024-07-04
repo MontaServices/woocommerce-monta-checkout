@@ -197,6 +197,12 @@ function montacheckout_enqueue_scripts()
         );
 
         wp_add_inline_script( 'wc-price-js', ' var wc_settings_args=' . wp_json_encode( $wc_store_object ) . ';' );
+        wp_localize_script('montapacking_checkout_plugin_monta', 'shopData', array(
+            'language' => get_bloginfo('language'),
+            'translations' => array(
+                'free_of_charge' => __('Free of charge', 'montapacking-checkout')
+            )
+        ));
     }
 }
 
