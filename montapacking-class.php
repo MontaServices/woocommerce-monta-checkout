@@ -60,6 +60,11 @@ class Montapacking
                 }
 
                 break;
+
+            case 'collect':
+                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') {
+                    $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
+                }
         }
 
         ## Check of timeframes bekend zijn en niet van een te oude sessie
