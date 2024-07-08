@@ -495,8 +495,6 @@ jQuery(document).ready(function () {
                 selectPickup: function (location, markerId) {
                     monta_shipping.pickup_selected = location;
 
-                    console.log("pickup", location);
-
                     $('.monta-select-pickup').addClass('active');
 
                     if (monta_shipping.pickup_selected !== null) {
