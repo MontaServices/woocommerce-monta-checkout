@@ -200,7 +200,7 @@ function montacheckout_enqueue_scripts()
         wp_localize_script('montapacking_checkout_plugin_monta', 'shopData', array(
             'language' => get_bloginfo('language'),
             'translations' => array(
-                'free_of_charge' => __('Free of charge', 'montapacking-checkout')
+                'free' => __('Free', 'montapacking-checkout')
             )
         ));
     }
