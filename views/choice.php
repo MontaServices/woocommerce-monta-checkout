@@ -46,7 +46,7 @@
     <div class="monta-options <?php echo esc_attr(get_option('monta_disablepickup') && get_option('monta_disablecollect')) ? "monta-hide" : "" ?>"
          id="tabselector">
 
-        <div class="monta-option monta-disabled monta-option-delivery">
+        <div class="monta-option monta-disabled monta-option-delivery <?php echo esc_attr(get_option('monta_disabledelivery')) ? "monta-hide" : "" ?>">
 
             <label>
                 <input type="radio" name="montapacking[shipment][type]" value="delivery" class="selectshipment"
