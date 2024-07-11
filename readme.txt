@@ -55,11 +55,14 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
-#1.58.40
+#1.58.41
 
 * Possibility to show text "free" when zero costs
 * Possibility to override text of store collect button
 * Possibility to upload your own image for store collect
+
+#1.58.40
+
 * Added setting to hide delivery options 
 
 #1.58.39
