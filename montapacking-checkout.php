@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.40
+ * Version: 1.58.41
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -56,6 +56,9 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_max_pickuppoints');
     register_setting('montapacking-plugin-settings', 'monta_show_seperate_shipping_email_and_phone_fields');
     register_setting('montapacking-plugin-settings', 'monta_exclude_discounted_shipping_for_role');
+    register_setting('montapacking-plugin-settings', 'monta_collect_name');
+    register_setting('montapacking-plugin-settings', 'monta_show_zero_costs_as_free');
+    register_setting('montapacking-plugin-settings', 'monta_afh_image_path');
 });
 
 // Include installed Language packs
@@ -104,6 +107,7 @@ function montacheckout_init()
 
         // CSS/JS scripts registreren
         add_action('wp_enqueue_scripts', 'montacheckout_enqueue_scripts');
+        wp_enqueue_media();
 
         ## Ajax actions
         add_action('wp_ajax_monta_shipping_options', array('montapacking', 'shipping_options'));
@@ -194,6 +198,12 @@ function montacheckout_enqueue_scripts()
         );
 
         wp_add_inline_script( 'wc-price-js', ' var wc_settings_args=' . wp_json_encode( $wc_store_object ) . ';' );
+        wp_localize_script('montapacking_checkout_plugin_monta', 'shopData', array(
+            'language' => get_bloginfo('language'),
+            'translations' => array(
+                'free' => __('Free', 'montapacking-checkout')
+            )
+        ));
     }
 }
 
@@ -390,11 +400,37 @@ function montacheckout_render_settings()
                 </tr>
 
                 <tr>
+                    <th scope="row"><label for="monta_collect_name">Store collect name</label></th>
+                    <td><input type="text" name="monta_collect_name"
+                               value="<?php echo esc_attr(get_option('monta_collect_name')); ?>" size="50"/>
+                        <br><i style="font-size:12px">In some situations you want to change the name of the
+                            option 'Store collect'. Here you can override this name.</i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_show_zero_costs_as_free">Shipping costs free</label></th>
+                    <td><input type="checkbox" name="monta_show_zero_costs_as_free"
+                               value="1" <?php checked("1", get_option('monta_show_zero_costs_as_free')); ?>/>
+                        <br><i style="font-size:12px">Show the text "free" in stead of 0 when the shipping costs are free.</i>
+                    </td>
+                </tr>
+
+                <tr>
                     <th scope="row"><label for="monta_standardshipmentname">Standard shipment name</label></th>
                     <td><input type="text" name="monta_standardshipmentname"
                                value="<?php echo esc_attr(get_option('monta_standardshipmentname')); ?>" size="50"/>
                         <br><i style="font-size:12px">We have a standard shipment option in the Montaportal. Here you
                             can override this name.</i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="monta_afh_image_path">Store collect image path</label></th>
+                    <td><input type="text" id="monta_afh_image_path" name="monta_afh_image_path" value="<?php echo esc_attr(get_option('monta_afh_image_path')); ?>" size="50"/>
+                        <span><input type=button id="upload_image_button" name="upload_image_button" value="Upload image"/></span>
+                        <br><i style="font-size:12px">Here you can set the path of your own image for store collect.</i>
+
                     </td>
                 </tr>
 
@@ -416,6 +452,7 @@ function montacheckout_render_settings()
                                size="50"/>
                         <br><i style="font-size:12px">Role for which you want to exclude shipping discounts</i>
                     </td>
+
                 </tr>
 
             </table>
@@ -435,9 +472,36 @@ function montacheckout_render_settings()
             <?php submit_button(); ?>
         </form>
     </div>
+
+    <script>
+        jQuery(document).ready(function($){
+            $('#upload_image_button').click(function(e) {
+                e.preventDefault();
+                var image = wp.media({
+                    title: 'Upload Image',
+                    // mutiple: true if you want to upload multiple files at once
+                    multiple: false,
+                    library: {
+                        type: [ 'image' ]
+                    },
+                    type : 'image'
+                }).open()
+                    .on('select', function(e){
+                        // This will return the selected image from the Media Uploader, the result is an object
+                        const uploaded_image = image.state().get('selection').first();
+                        // We convert uploaded_image to a JSON object to make accessing it easier
+                        // Output to the console uploaded_image
+                        const image_url = uploaded_image.toJSON().url.toString();
+                        const formatted_url = image_url.split("/").slice(3).join("/");
+
+                        // Let's assign the url value to the input field
+                        $('#monta_afh_image_path').val("/" + formatted_url);
+                    });
+            });
+        });
+    </script>
     <?php
 }
-
 
 function filter_woocommerce_order_shipping_method($html, $instance)
 {
