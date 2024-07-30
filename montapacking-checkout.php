@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.41
+ * Version: 1.58.42
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -93,7 +93,7 @@ function montacheckout_init()
         ## Shipping cost calculation
         add_action('woocommerce_review_order_before_shipping', array('montapacking', 'shipping_calculate'), 10);
         add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
-        add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1);
+//        add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1);
 
         ## Shipping cost calculation
         update_option('woocommerce_enable_shipping_calc', 'no');
@@ -107,7 +107,6 @@ function montacheckout_init()
 
         // CSS/JS scripts registreren
         add_action('wp_enqueue_scripts', 'montacheckout_enqueue_scripts');
-        wp_enqueue_media();
 
         ## Ajax actions
         add_action('wp_ajax_monta_shipping_options', array('montapacking', 'shipping_options'));
@@ -262,6 +261,8 @@ function ts_shipping_phone_checkout_display($order)
 
 function montacheckout_render_settings()
 {
+    wp_enqueue_media();
+
     // Check that the user is allowed to update options
     if (!current_user_can('manage_options')) {
         wp_die('You do not have sufficient permissions to access this page.');
