@@ -672,7 +672,16 @@ class Montapacking
 
     public static function shipping_options()
     {
+        if (empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
+            return;
+        }
+
         $type = sanitize_post($_POST['montapacking']);
+
+        if(!isset($type['shipment'])) {
+            return;
+        }
+        
         $shipment = $type['shipment'];
 
         switch ($shipment['type']) {

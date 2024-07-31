@@ -72,7 +72,7 @@ add_action('wp_loaded', 'montacheckout_init');
 function montacheckout_init()
 {
     ## Check of we in woocommerce zijn
-    if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+    if (is_plugin_active('woocommerce/woocommerce.php')) {
 
         remove_action( 'woocommerce_cart_totals_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
         remove_action( 'woocommerce_review_order_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
