@@ -672,7 +672,7 @@ class Montapacking
 
     public static function shipping_options()
     {
-        if (empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
+        if (!isset($_POST['montapacking']) || empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
             return;
         }
 
