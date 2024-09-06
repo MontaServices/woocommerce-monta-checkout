@@ -225,12 +225,14 @@ class Montapacking
         }
 
         if ($standardShipper != null) {
-            $item->add_meta_data('Shipmentmethod', implode(',', $standardShipper->shipperCodes), true);
+            $item->add_meta_data('Shipmentmethod', $standardShipper->shipper, true);
+            $item->add_meta_data('ShipmentmethodCode', implode(',', $standardShipper->code), true);
             $bMontapackingAdd = true;
         } ## Check of gekozen timeframe bestaat
         else if (isset($items[$time])) {
             $method = null;
             $shipperCode = null;
+            $shipperName = null;
 
             ## Check of timeframe opties heeft
             $frame = $items[$time];
@@ -239,6 +241,7 @@ class Montapacking
                 foreach ($frame->options as $option) {
                     if ($option->code == $shipper) {
                         $shipperCodes = implode(',', $option->shipperCodes);
+                        $shipperName = $option->shipper;
                         $method = $option;
                         break;
                     }
@@ -249,7 +252,8 @@ class Montapacking
             if ($method !== null) {
 
                 ## Gekozen optie met datum en tijd toevoegen
-                $item->add_meta_data('Shipmentmethod', $shipperCodes, true);
+                $item->add_meta_data('Shipmentmethod', $shipperName, true);
+                $item->add_meta_data('ShipmentmethodCode', $shipperCodes, true);
                 $item->add_meta_data('Delivery date', $frame->date, true);
 
 //                foreach($items[$time] as $item) {
@@ -672,7 +676,16 @@ class Montapacking
 
     public static function shipping_options()
     {
+        if (!isset($_POST['montapacking']) || empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
+            return;
+        }
+
         $type = sanitize_post($_POST['montapacking']);
+
+        if(!isset($type['shipment'])) {
+            return;
+        }
+        
         $shipment = $type['shipment'];
 
         switch ($shipment['type']) {
