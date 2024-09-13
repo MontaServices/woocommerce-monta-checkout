@@ -746,6 +746,9 @@ class Montapacking
 
     public static function set_api_products($api, $items, $hasDigitalProducts, $hasPhysicalProducts, &$bAllProductsAvailableAtWooCommerce): bool
     {
+        $skuArray = array();
+        $x = 0;
+
         foreach ($items as $item => $values) {
             $product = wc_get_product($values['product_id']);
             if ($values['variation_id']) {
