@@ -1,8 +1,10 @@
 <?php
 
-class Montapacking extends MontapackingBase
+class Montapacking
 {
     private static $WooCommerceShippingMethod = null;
+
+    private static $frames = [];
 
     public static function shipping_package($packages)
     {
@@ -89,7 +91,6 @@ class Montapacking extends MontapackingBase
 
         return null;
     }
-
 
     private static function validate_products(WC_Abstract_Order $order)
     {
@@ -196,47 +197,57 @@ class Montapacking extends MontapackingBase
         $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
 
         if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
-
-            $mixed = WC_Tax::get_shipping_tax_rates(null, null);
-
-            $vat_percent = 0;
-            $id = "";
-            foreach ($mixed as $key => $obj) {
-                $vat_percent = $obj['rate'];
-                $id = ":" . $key;
-                break;
-            }
-
-            $vat_calculate = 100 + $vat_percent;
-
-
-            $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
-
-            $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', (double)$price - $tax, $tax, 'flat_rate');
-
-            $item->set_props(array(
-                'method_title' => $rate->label,
-                'method_id' => $rate->id,
-                'total' => wc_format_decimal($rate->cost),
-                'taxes' => $rate->taxes,
-                'meta_data' => $rate->get_meta_data()
-            ));
-
-            $order->add_item($item);
-            $order->save();
-
-            WC()->session->set('chosen_shipping_methods', ['flat_rate_shipping' . $id]);
-            $order->calculate_totals(true);
+            self::save_order_tax($order, $item, $price);
         } else {
-            $item->set_props(array(
-                'method_title' => 'Webshop verzendmethode',
-                'method_id' => 0,
-                'total' => $price,
-            ));
-
-            WC()->session->set('chosen_shipping_methods', [0]);
-            $order->add_item($item);
+            self::save_order_without_tax($order, $item, $price);
         }
+    }
+
+    private static function save_order_without_tax($order, $item, $price)
+    {
+        $item->set_props(array(
+            'method_title' => 'Webshop verzendmethode',
+            'method_id' => 0,
+            'total' => $price,
+        ));
+
+        WC()->session->set('chosen_shipping_methods', [0]);
+        $order->add_item($item);
+        $order->save();
+    }
+
+    private static function save_order_tax($order, $item, $price)
+    {
+        $mixed = WC_Tax::get_shipping_tax_rates(null, null);
+
+        $vat_percent = 0;
+        $id = "";
+        foreach ($mixed as $key => $obj) {
+            $vat_percent = $obj['rate'];
+            $id = ":" . $key;
+            break;
+        }
+
+        $vat_calculate = 100 + $vat_percent;
+
+
+        $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
+
+        $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', (double)$price - $tax, $tax, 'flat_rate');
+
+        $item->set_props(array(
+            'method_title' => $rate->label,
+            'method_id' => $rate->id,
+            'total' => wc_format_decimal($rate->cost),
+            'taxes' => $rate->taxes,
+            'meta_data' => $rate->get_meta_data()
+        ));
+
+        $order->add_item($item);
+        $order->save();
+
+        WC()->session->set('chosen_shipping_methods', ['flat_rate_shipping' . $id]);
+        $order->calculate_totals(true);
         $order->save();
     }
 
@@ -255,7 +266,7 @@ class Montapacking extends MontapackingBase
         $order->set_shipping_country($pickup['country']);
 
         // post nummer voor duitsland
-        if ($pickup['postnumber'] && trim($pickup['postnumber'])) {
+        if (isset($pickup['postnumber']) && trim($pickup['postnumber'])) {
             if (isset($pickup['shippingOptions'])) {
                 $pickup['shippingOptions'] = $pickup['shippingOptions'] . ",DHLPCPostNummer_" . $pickup['postnumber'];
             } else {
@@ -573,9 +584,6 @@ class Montapacking extends MontapackingBase
         return $price;
     }
 
-
-   
-
     private static function sendErrorResponse($text)
     {
         header('Content-Type: application/json');
@@ -634,7 +642,6 @@ class Montapacking extends MontapackingBase
         return false;
     }
 
-
     public static function shipping_options()
     {
         if (!isset($_POST['montapacking']) || empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
@@ -674,51 +681,22 @@ class Montapacking extends MontapackingBase
 
                 break;
             case 'pickup':
-            case 'collect':
+                $frames = self::get_frames('pickup');
+                if ($frames !== null) {
+                    $items = $frames['PickupOptions'];
+                    self::format_pickuppoints($items);
+                } else {
+                    self::sendErrorResponse('No pickups available for the chosen delivery address.');
+                }
 
-                #echo '<pre>';
-                $frames = self::get_frames();
+                break;
+            case 'collect':
+                $frames = self::get_frames('collect');
 
                 if ($frames !== null) {
-
-                    ## Frames naar handige array zetten
-//                    $items = self::format_pickups($frames);
-                    #print_r($items);
-                    $items = $frames['PickupOptions'];
-
-                    if ($items !== null) {
-                        ## Get order location
-                        // Get lat and long by address
-
-                        $address = self::sanitize_text_field_address();
-
-                        $prepAddr = str_replace('  ', ' ', $address);
-                        $prepAddr = str_replace(' ', '+', $prepAddr);
-
-                        $output = self::getCoordinates($prepAddr, esc_attr(get_option('monta_google_key')));
-
-                        $result = end($output->results);
-                        if (isset($result->geometry)) {
-                            $latitude = $result->geometry->location->lat;
-                            $longitude = $result->geometry->location->lng;
-                        } else {
-                            $latitude = 0;
-                            $longitude = 0;
-                        }
-
-                        header('Content-Type: application/json');
-                        echo json_encode([
-                            'success' => true,
-                            'default' => (object)[
-                                'lat' => $latitude,
-                                'lng' => $longitude,
-                            ],
-                            'pickups' => $items
-                        ]);
-
-                    } else {
-                        self::sendErrorResponse('No pickups available for the chosen delivery address.');
-                    }
+                    $items = $frames['StoreLocation'];
+                    $items = [$items];
+                    self::format_pickuppoints($items);
                 } else {
                     self::sendErrorResponse('No pickups available for the chosen delivery address.');
                 }
@@ -729,69 +707,45 @@ class Montapacking extends MontapackingBase
         wp_die();
     }
 
-    
-
-    public static function get_frames($type = 'delivery')
+    public static function format_pickuppoints($items): void
     {
-        global $woocommerce;
+        if ($items !== null) {
+            ## Get order location
+            // Get lat and long by address
 
-        ## Postdata escapen
-        $data = sanitize_post($_POST);
-        foreach ($data as $field => $value) {
-            $data[$field] = ($value != '' && $value != null && !is_array($value)) ? htmlspecialchars($value) : $value;
-        }
-        $data = (object)$data;
+            $address = self::sanitize_text_field_address();
 
-        if (isset($data->billing_street_name) && trim($data->billing_street_name)) {
-            $data->billing_address_1 = $data->billing_street_name;
+            $prepAddr = str_replace('  ', ' ', $address);
+            $prepAddr = str_replace(' ', '+', $prepAddr);
 
-            if (trim($data->billing_house_number)) {
-                $data->billing_address_1 = $data->billing_address_1 . " " . $data->billing_house_number;
+            $output = self::getCoordinates($prepAddr, esc_attr(get_option('monta_google_key')));
+
+            $result = end($output->results);
+            if (isset($result->geometry)) {
+                $latitude = $result->geometry->location->lat;
+                $longitude = $result->geometry->location->lng;
+            } else {
+                $latitude = 0;
+                $longitude = 0;
             }
-        }
 
-        $excludeShippingDiscount = self::check_exclude_discounted_shipping_for_role();
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'default' => (object)[
+                    'lat' => $latitude,
+                    'lng' => $longitude,
+                ],
+                'pickups' => $items
+            ]);
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount);
-        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
-
-        ## Monta packing API aanroepen
-        if (!isset($data->ship_to_different_address)) {
-            ## Set address of customer
-            $api->setAddress(
-                $data->billing_address_1,
-                '',
-                $data->billing_address_2,
-                $data->billing_postcode,
-                $data->billing_city,
-                $data->billing_state,
-                $data->billing_country
-            );
         } else {
-            ## Set shipping adres of customer when different
-            $api->setAddress(
-                $data->shipping_address_1,
-                '',
-                $data->shipping_address_2,
-                $data->shipping_postcode,
-                $data->shipping_city,
-                $data->shipping_state,
-                $data->shipping_country
-            );
+            self::sendErrorResponse('No pickups available for the chosen delivery address.');
         }
+    }
 
-        ## Fill products
-        $items = $woocommerce->cart->get_cart();
-
-        $bAllProductsAvailableAtMontapacking = true;
-        $bAllProductsAvailableAtWooCommerce = true;
-
-        $hasDigitalProducts = false;
-        $hasPhysicalProducts = false;
-
-        $skuArray = array();
-        $x = 0;
-
+    public static function set_api_products($api, $items, $hasDigitalProducts, $hasPhysicalProducts, &$bAllProductsAvailableAtWooCommerce): bool
+    {
         foreach ($items as $item => $values) {
             $product = wc_get_product($values['product_id']);
             if ($values['variation_id']) {
@@ -827,6 +781,52 @@ class Montapacking extends MontapackingBase
         }
 
         if ($hasPhysicalProducts == false && $hasDigitalProducts == true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function get_frames($type = 'delivery')
+    {
+        global $woocommerce;
+
+        ## Postdata escapen
+        $data = sanitize_post($_POST);
+        foreach ($data as $field => $value) {
+            $data[$field] = ($value != '' && $value != null && !is_array($value)) ? htmlspecialchars($value) : $value;
+        }
+        $data = (object)$data;
+
+        if (isset($data->billing_street_name) && trim($data->billing_street_name)) {
+            $data->billing_address_1 = $data->billing_street_name;
+
+            if (trim($data->billing_house_number)) {
+                $data->billing_address_1 = $data->billing_address_1 . " " . $data->billing_house_number;
+            }
+        }
+
+        $excludeShippingDiscount = self::check_exclude_discounted_shipping_for_role();
+
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount);
+        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
+
+
+        self::set_api_address($data, $api);
+
+
+        ## Fill products
+        $items = $woocommerce->cart->get_cart();
+
+        $bAllProductsAvailableAtMontapacking = true;
+        $bAllProductsAvailableAtWooCommerce = true;
+
+        $hasDigitalProducts = false;
+        $hasPhysicalProducts = false;
+
+        $hasproducts = self::set_api_products($api, $items, $hasDigitalProducts, $hasPhysicalProducts, $bAllProductsAvailableAtWooCommerce);
+
+        if (!$hasproducts) {
             return null;
         }
 
@@ -844,13 +844,9 @@ class Montapacking extends MontapackingBase
         do_action('woocommerce_cart_shipping_packages');
 
         if ($type == 'delivery') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action('woocommerce_cart_shipping_packages');
-            } else {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action('woocommerce_cart_shipping_packages');
-            }
+            $shippingOptions = $api->getShippingOptions($bStockStatus);
+            do_action('woocommerce_cart_shipping_packages');
+
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                 if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
                     foreach ($shippingOptions[0]->options as $option) {
@@ -861,25 +857,39 @@ class Montapacking extends MontapackingBase
                 do_action('woocommerce_cart_shipping_packages');
             }
             self::$frames = $shippingOptions;
-        } else if ($type == 'pickup') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
-                self::$frames = $api->getShippingOptions($bStockStatus);
-            } else {
-//                return $api->getPickupOptions($bStockStatus);
-                self::$frames = $api->getShippingOptions($bStockStatus);
-            }
-        } else if ($type == 'collect') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
-                self::$frames = $api->getShippingOptions($bStockStatus);
-            } else {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, array(), true);
-                self::$frames = $api->getShippingOptions($bStockStatus);
-            }
+        } else if ($type == 'pickup' || $type == 'collect') {
+            self::$frames = $api->getShippingOptions($bStockStatus);
         }
 
         return self::$frames;
+    }
+
+    private static function set_api_address($data, $api)
+    {
+        ## Monta packing API aanroepen
+        if (!isset($data->ship_to_different_address)) {
+            ## Set address of customer
+            $api->setAddress(
+                $data->billing_address_1,
+                '',
+                $data->billing_address_2,
+                $data->billing_postcode,
+                $data->billing_city,
+                $data->billing_state,
+                $data->billing_country
+            );
+        } else {
+            ## Set shipping adres of customer when different
+            $api->setAddress(
+                $data->shipping_address_1,
+                '',
+                $data->shipping_address_2,
+                $data->shipping_postcode,
+                $data->shipping_city,
+                $data->shipping_state,
+                $data->shipping_country
+            );
+        }
     }
 
     public static function shipping()
@@ -910,7 +920,7 @@ class Montapacking extends MontapackingBase
                 $vat_percent = 0;
                 foreach ($mixed as $key => $obj) {
                     $vat_percent = $obj['rate'];
-                    break; 
+                    break;
                 }
 
 
@@ -938,21 +948,6 @@ class Montapacking extends MontapackingBase
         }
 
         return $value;
-    }
-
-    public static function checkFreeShippingCouponCodes()
-    {
-        global $woocommerce;
-        if ($woocommerce->cart->get_applied_coupons()) {
-            foreach ($woocommerce->cart->get_applied_coupons() as $coupon) {
-                $getDetails = (new WC_Coupon($coupon));
-
-                if ($getDetails->get_free_shipping()) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
