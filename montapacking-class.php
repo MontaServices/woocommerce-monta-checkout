@@ -38,7 +38,7 @@ class Montapacking
 
         switch ($shipment['type']) {
             case 'delivery':
-                $frames = self::$frames;
+                $frames = self::get_frames();
 
                 if ($frames !== null) {
                     $deliveryOptions = $frames['DeliveryOptions'];
@@ -68,7 +68,7 @@ class Montapacking
         if ($deliveryOptions !== null) {
             $itemExists = self::check_shipping_option_in_timeframes($deliveryOptions, $shipper);
 
-            if (isset($itemExists)) {
+            if (!isset($itemExists)) {
                 $errors->add('shipment', __('The shipment option(s) you choose are not available at this time, please select an other option.', 'montapacking-checkout'));
             }
         }
@@ -152,7 +152,7 @@ class Montapacking
 
         switch ($shipment['type']) {
             case 'delivery':
-                $frames = self::$frames;
+                $frames = self::get_frames();
 
                 if ($shipment['shipper'] == "MultipleShipper_ShippingDayUnknown") {
                     $standardShipper = $frames['StandardShipper'];
