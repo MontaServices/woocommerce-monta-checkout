@@ -184,7 +184,7 @@ class Montapacking
             case 'pickup':
             case 'collect':
 
-                self::set_meta_data_pickuppoints($order, $pickup, $item);
+                self::set_meta_data_pickup_points($order, $pickup, $item);
 
                 $bMontapackingAdd = true;
                 break;
@@ -197,7 +197,7 @@ class Montapacking
         $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
 
         if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
-            self::save_order_tax($order, $item, $price);
+            self::save_order_with_tax($order, $item, $price);
         } else {
             self::save_order_without_tax($order, $item, $price);
         }
@@ -216,7 +216,7 @@ class Montapacking
         $order->save();
     }
 
-    private static function save_order_tax($order, $item, $price)
+    private static function save_order_with_tax($order, $item, $price)
     {
         $mixed = WC_Tax::get_shipping_tax_rates(null, null);
 
@@ -248,10 +248,9 @@ class Montapacking
 
         WC()->session->set('chosen_shipping_methods', ['flat_rate_shipping' . $id]);
         $order->calculate_totals(true);
-        $order->save();
     }
 
-    private static function set_meta_data_pickuppoints($order, $pickup, $item): void
+    private static function set_meta_data_pickup_points($order, $pickup, $item): void
     {
         $name = $order->get_billing_first_name() . " " . $order->get_billing_last_name();
         $pickup['name'] = $name;
@@ -345,7 +344,6 @@ class Montapacking
         }
     }
 
-
     public static function shipping_total($wc_price = 0): float
     {
         $data = null;
@@ -389,7 +387,6 @@ class Montapacking
         do_action('monta_shipping_calculate_html_output', ['price' => $price, 'selectedOption' => $selectedOption]);
     }
 
-
     public static function shipping_calculate_html_output($data)
     {
         ?>
@@ -414,8 +411,7 @@ class Montapacking
         <?php
     }
 
-
-    public static function stringCurrencyToFloat($money)
+    public static function string_currency_to_float($money)
     {
         $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
         $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
@@ -559,7 +555,7 @@ class Montapacking
             }
         }
 
-        return self::stringCurrencyToFloat($price);
+        return self::string_currency_to_float($price);
 
     }
 
@@ -584,7 +580,7 @@ class Montapacking
         return $price;
     }
 
-    private static function sendErrorResponse($text)
+    private static function send_error_response($text)
     {
         header('Content-Type: application/json');
         echo json_encode([
@@ -616,7 +612,7 @@ class Montapacking
         return $address;
     }
 
-    private static function getCoordinates($prepAddr, $google_api_key)
+    private static function get_coordinates($prepAddr, $google_api_key)
     {
         $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . $google_api_key);
         if (isset($geocode['body'])) {
@@ -673,10 +669,10 @@ class Montapacking
                             'standardShipper' => $frames['StandardShipper']
                         ]);
                     } else {
-                        self::sendErrorResponse('3 - No shippers available for the chosen delivery address.');
+                        self::send_error_response('3 - No shippers available for the chosen delivery address.');
                     }
                 } else {
-                    self::sendErrorResponse('4 - No shippers available for the chosen delivery address.');
+                    self::send_error_response('4 - No shippers available for the chosen delivery address.');
                 }
 
                 break;
@@ -684,9 +680,9 @@ class Montapacking
                 $frames = self::get_frames('pickup');
                 if ($frames !== null) {
                     $items = $frames['PickupOptions'];
-                    self::format_pickuppoints($items);
+                    self::format_pickup_points($items);
                 } else {
-                    self::sendErrorResponse('No pickups available for the chosen delivery address.');
+                    self::send_error_response('No pickups available for the chosen delivery address.');
                 }
 
                 break;
@@ -696,9 +692,9 @@ class Montapacking
                 if ($frames !== null) {
                     $items = $frames['StoreLocation'];
                     $items = [$items];
-                    self::format_pickuppoints($items);
+                    self::format_pickup_points($items);
                 } else {
-                    self::sendErrorResponse('No pickups available for the chosen delivery address.');
+                    self::send_error_response('No pickups available for the chosen delivery address.');
                 }
 
                 break;
@@ -707,7 +703,7 @@ class Montapacking
         wp_die();
     }
 
-    public static function format_pickuppoints($items): void
+    public static function format_pickup_points($items): void
     {
         if ($items !== null) {
             ## Get order location
@@ -718,7 +714,7 @@ class Montapacking
             $prepAddr = str_replace('  ', ' ', $address);
             $prepAddr = str_replace(' ', '+', $prepAddr);
 
-            $output = self::getCoordinates($prepAddr, esc_attr(get_option('monta_google_key')));
+            $output = self::get_coordinates($prepAddr, esc_attr(get_option('monta_google_key')));
 
             $result = end($output->results);
             if (isset($result->geometry)) {
@@ -740,7 +736,7 @@ class Montapacking
             ]);
 
         } else {
-            self::sendErrorResponse('No pickups available for the chosen delivery address.');
+            self::send_error_response('No pickups available for the chosen delivery address.');
         }
     }
 
@@ -859,12 +855,11 @@ class Montapacking
 
                 do_action('woocommerce_cart_shipping_packages');
             }
-            self::$frames = $shippingOptions;
         } else if ($type == 'pickup' || $type == 'collect') {
-            self::$frames = $api->getShippingOptions($bStockStatus);
+            return $api->getShippingOptions($bStockStatus);
         }
 
-        return self::$frames;
+        return $shippingOptions;
     }
 
     private static function set_api_address($data, $api)
