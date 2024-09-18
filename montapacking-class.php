@@ -4,8 +4,6 @@ class Montapacking
 {
     private static $WooCommerceShippingMethod = null;
 
-    private static $frames = [];
-
     public static function shipping_package($packages)
     {
         if (isset($packages[0])) {
@@ -24,7 +22,6 @@ class Montapacking
         $type = sanitize_post($_POST['montapacking']);
         $pickup = $type['pickup'];
         $shipment = $type['shipment'];
-        $time = $shipment['time'];
 
         $shipper = "";
         if (isset($shipment['shipper'])) {
@@ -46,18 +43,15 @@ class Montapacking
 
                 break;
             case 'pickup':
-
                 if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
-
 
                 if (isset($pickup) && isset($pickup['postnumber']) && trim($pickup['postnumber']) == '') {
                     $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
                 }
 
                 break;
-
             case 'collect':
                 if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
