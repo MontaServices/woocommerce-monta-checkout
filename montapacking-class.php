@@ -409,10 +409,12 @@ class Montapacking
                 'total' => $price,
             ));
 
-            WC()->session->set('chosen_shipping_methods', [0]);
             $order->add_item($item);
+            $order->save();
+
+            WC()->session->set('chosen_shipping_methods', [0]);
+            $order->calculate_totals(true);
         }
-        $order->save();
     }
 
     public static function shipping_total($wc_price = 0)
