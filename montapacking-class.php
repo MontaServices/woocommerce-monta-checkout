@@ -208,6 +208,8 @@ class Montapacking
         WC()->session->set('chosen_shipping_methods', [0]);
         $order->add_item($item);
         $order->save();
+
+        $order->calculate_totals(true);
     }
 
     private static function save_order_with_tax($order, $item, $price)

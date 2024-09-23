@@ -55,9 +55,13 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
-#1.58.43
+#1.58.44
 
 * Refactor checkout code
+
+#1.58.43
+
+* Bugfix invoice shpping price 
 
 #1.58.42
 
