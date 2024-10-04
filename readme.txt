@@ -55,7 +55,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
-#1.58.43
+#1.58.44
 
 * Bugfix invoice shpping price pickup points
 
