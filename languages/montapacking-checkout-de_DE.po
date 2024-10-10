@@ -54,6 +54,9 @@ msgstr "Wird geladen..."
 msgid "Select delivery time and date"
 msgstr "Wählen Sie Lieferzeit und Datum"
 
+msgid "Select a shipping option"
+msgstr "Wählen Sie eine Versandoption"
+
 msgid "Your order will be delivered with"
 msgstr "Ihre Bestellung wird mit geliefert"
 

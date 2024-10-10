@@ -54,6 +54,9 @@ msgstr "Laden..."
 msgid "Select delivery time and date"
 msgstr "Selecteer afleverdatum en tijd"
 
+msgid "Select a shipping option"
+msgstr "Selecteer een verzendoptie"
+
 msgid "Your order will be delivered with"
 msgstr "Je order wordt bezorgd met"
 
