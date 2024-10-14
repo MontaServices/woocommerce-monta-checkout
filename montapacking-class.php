@@ -179,6 +179,7 @@ class Montapacking
                 break;
             case 'pickup':
             case 'collect':
+                $item->add_meta_data('Shipmentmethod', $pickup["shipper"], true);
                 $name = $order->get_billing_first_name() . " " . $order->get_billing_last_name();
                 $pickup['name'] = $name;
 

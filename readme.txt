@@ -55,9 +55,13 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
-#1.58.44
+#1.58.45
 
 * Changed translations for datepicker block
+
+#1.58.44
+
+* Bugfix invoice shpping price pickup points
 
 #1.58.43
 
