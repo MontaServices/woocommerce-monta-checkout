@@ -19,6 +19,20 @@ class Montapacking
             return;
         }
 
+        $cart_items = WC()->cart->get_cart();
+
+        $has_virtual_products = false;
+
+        // Controleer elk product in de winkelwagen
+        foreach ($cart_items as $cart_item) {
+            $product = wc_get_product($cart_item['product_id']);
+
+            if ($product && $product->get_virtual()) {
+                $has_virtual_products = true;
+            }
+        }
+
+
         $type = sanitize_post($_POST['montapacking']);
         $pickup = $type['pickup'];
         $shipment = $type['shipment'];
@@ -50,7 +64,7 @@ class Montapacking
                 break;
             case 'pickup':
 
-                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') {
+                if ((!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') && ($has_virtual_products == false)) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
 
