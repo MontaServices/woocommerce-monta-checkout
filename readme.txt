@@ -55,6 +55,10 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 == Changelog ==
 
+#1.58.46
+
+* Fixed validation issue for virtual products where customer could not finish the checkout
+
 #1.58.45
 
 * Changed translations for datepicker block
