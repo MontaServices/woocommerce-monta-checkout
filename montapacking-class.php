@@ -1021,7 +1021,18 @@ class Montapacking
                     $hasDigitalProducts = true;
                 } else {
 
-                    $api->addProduct($sku, $quantity, price: $price);
+
+                    //monta_checkproductsonsku checken?
+                    $price = $product->get_price();
+
+                    $aaa = $product->get_length();
+
+                    if(get_option('monta_checkproductsonsku')) {
+                        $api->addProduct(sku: $sku, quantity: $quantity, price: $price);
+                    } else {
+                        $api->addProduct(sku: $sku, quantity: $quantity, lengthMm: $product->get_length() * 10, widthMm: $product->get_width() * 10, heightMm: $product->get_height() * 10, weightGrammes: $product->get_weight() * 1000, price: $price);
+                    }
+
 
                     $hasPhysicalProducts = true;
 
@@ -1050,10 +1061,12 @@ class Montapacking
 //        }
 
         ## Type timeframes ophalen
-        if (esc_attr(get_option('monta_leadingstock')) == 'woocommerce') {
+        if (esc_attr(get_option('monta_leadingstock')) == '') {
             $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+            $api->setOnStock($bStockStatus);
         } else {
             $bStockStatus = $bAllProductsAvailableAtMontapacking;
+            $api->setOnStock($bStockStatus);
         }
         do_action('woocommerce_cart_shipping_packages');
 
@@ -1077,18 +1090,14 @@ class Montapacking
             return $shippingOptions;
         } else if ($type == 'pickup') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray);
                 return $api->getShippingOptions($bStockStatus);
             } else {
-//                return $api->getPickupOptions($bStockStatus);
                 return $api->getShippingOptions($bStockStatus);
             }
         } else if ($type == 'collect') {
             if (esc_attr(get_option('monta_checkproductsonsku'))) {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, $skuArray, true);
                 return $api->getShippingOptions($bStockStatus);
             } else {
-//                return $api->getPickupOptions($bStockStatus, false, false, false, false, array(), true);
                 return $api->getShippingOptions($bStockStatus);
             }
         }
