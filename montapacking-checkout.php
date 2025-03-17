@@ -389,7 +389,15 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
 
-                <input type="hidden" name="monta_leadingstock" value="woocommerce">
+<!--                <tr>-->
+<!--                    <th scope="row"><label for="monta_leadingstock">monta_leadingstock</label></th>-->
+<!--                    <td>-->
+                        <input type="hidden" name="monta_leadingstock"
+                               value="1" <?php checked('1', get_option('monta_leadingstock')); ?>/>
+<!--                        <br><i style="font-size:12px">monta_leadingstock.</i>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <input type="hidden" name="monta_leadingstock" value="woocommerce">-->
 
                 <tr>
                     <th scope="row"><label for="monta_pickupname">Pickup name</label></th>
