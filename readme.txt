@@ -4,7 +4,7 @@ Donate link:
 Tags: monta, checkout, woocommerce, extension, monta
 Requires at least: 4.0.1
 Tested up to: 6.4.1
-Stable tag: 1.58.47
+Stable tag: 1.58.48
 Requires PHP: 8.0
 License: GPLv3 or later License
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -54,6 +54,11 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 
 == Changelog ==
+
+#1.58.48
+
+* Added French translation for the WooCommerce Monta module.
+* Fixed a bug where the length, height, and depth parameters were not correctly set when the product SKU check was disabled. Please check the setting CheckProductsOnSku and assure it is set correctly to your desire before updating the package.
 
 #1.58.47
 
