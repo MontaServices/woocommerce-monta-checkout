@@ -1024,13 +1024,11 @@ class Montapacking
 
                     //monta_checkproductsonsku checken?
                     $price = $product->get_price();
-
-                    $aaa = $product->get_length();
-
+                    
                     if(get_option('monta_checkproductsonsku')) {
                         $api->addProduct(sku: $sku, quantity: $quantity, price: $price);
                     } else {
-                        $api->addProduct(sku: $sku, quantity: $quantity, lengthMm: $product->get_length() * 10, widthMm: $product->get_width() * 10, heightMm: $product->get_height() * 10, weightGrammes: $product->get_weight() * 1000, price: $price);
+                        $api->addProduct(sku: $sku, quantity: $quantity, lengthMm: ($product->get_length() == '' ?? 0) * 10,  widthMm: ($product->get_width() == '' ?? 0) * 10, heightMm: ($product->get_height() == '' ?? 0) * 10, weightGrammes: ($product->get_weight() == '' ?? 0) * 1000, price: $price);
                     }
 
 
