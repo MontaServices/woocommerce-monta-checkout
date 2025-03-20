@@ -37,6 +37,9 @@ msgstr "Méthode d'expédition"
 msgid "Please fill in an address before selecting a shipping method"
 msgstr "Veuillez d'abord saisir une adresse avant de sélectionner une méthode d'expédition"
 
+msgid "Delivery"
+msgstr "Livraison"
+
 msgid "Delivery Options"
 msgstr "Options de livraison"
 
