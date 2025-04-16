@@ -69,14 +69,14 @@ class Montapacking
                 }
 
 
-                if (isset($pickup) && isset($pickup['postnumber']) && trim($pickup['postnumber']) == '') {
+                if (isset($pickup) && isset($pickup['postnumber']) && trim($pickup['postnumber']) == '' && ($has_virtual_products == false)) {
                     $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
                 }
 
                 break;
 
             case 'collect':
-                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') {
+                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && ($has_virtual_products == false)) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
         }
