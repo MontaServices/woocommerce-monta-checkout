@@ -506,17 +506,18 @@ jQuery(document).ready(function () {
                     if (monta_shipping.pickup_selected !== null) {
                         //initialPickupPointRadio
                         const loc = monta_shipping.pickup_selected;
-//                         const n = loc.raw.shipperOptionsWithValue.includes("_packStation");
-//                         const m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
-//
-//                         if (n && !m) {
-//                             $("#PCPostNummer").css("display", "block");
-//                             $("#PCPostNummer input").removeAttr("disabled");
-//
-//                         } else {
-//                             $("#PCPostNummer").css("display", "none");
-//                             $("#PCPostNummer input").attr("disabled", "disabled");
-//                         }
+                        const n = loc.raw.shipperOptionsWithValue.includes("_packStation");
+                        const m = loc.raw.shipperOptionsWithValue.includes("DHLPCPostNummer_");
+                        const p = loc.raw.shipperOptionsWithValue.includes("PackingStationCode_");
+
+                        if ((n && !m) || p) {
+                            $("#PCPostNummer").css("display", "block");
+                            $("#PCPostNummer input").removeAttr("disabled");
+
+                        } else {
+                            $("#PCPostNummer").css("display", "none");
+                            $("#PCPostNummer input").attr("disabled", "disabled");
+                        }
 
                         const imageUrl = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + loc.raw.shipperCode + ".png";
 
