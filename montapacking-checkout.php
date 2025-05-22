@@ -49,7 +49,6 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts_start');
     register_setting('montapacking-plugin-settings', 'monta_leadingstock');
     register_setting('montapacking-plugin-settings', 'monta_disabledelivery');
-    register_setting('montapacking-plugin-settings', 'monta_hidedhlpackstations');
     register_setting('montapacking-plugin-settings', 'monta_disablepickup');
     register_setting('montapacking-plugin-settings', 'monta_disablecollect');
     register_setting('montapacking-plugin-settings', 'monta_checkproductsonsku');
@@ -361,14 +360,6 @@ function montacheckout_render_settings()
                     <td><input type="checkbox" name="monta_disabledelivery"
                                value="1" <?php checked('1', get_option('monta_disabledelivery')); ?>/>
                         <br><i style="font-size:12px">When disabled no delivery options are shown.</i>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><label for="monta_hidedhlpackstations">Hide DHL Packstations</label></th>
-                    <td><input type="checkbox" name="monta_hidedhlpackstations"
-                               value="1" <?php checked('1', get_option('monta_hidedhlpackstations')); ?>/>
-                        <br><i style="font-size:12px">When disabled no DHL Packstations are shown.</i>
                     </td>
                 </tr>
 

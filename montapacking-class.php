@@ -348,7 +348,8 @@ class Montapacking
 
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10, 'nl-NL', '€', false, false, esc_attr(get_option('monta_hidedhlpackstations')));
+
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10);
         $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
 
 
@@ -954,7 +955,7 @@ class Montapacking
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount, hideDHLPackstations:  esc_attr(get_option('monta_hidedhlpackstations')));
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount);
         if ($type == 'delivery') {
             $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
 
