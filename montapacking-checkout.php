@@ -73,25 +73,25 @@ function montacheckout_init()
 {
     ## Check of we in woocommerce zijn
     if (is_plugin_active('woocommerce/woocommerce.php')) {
-        remove_action('woocommerce_cart_totals_after_order_total', array('WC_Subscriptions_Cart', 'display_recurring_totals'), 10);
-        remove_action('woocommerce_review_order_after_order_total', array('WC_Subscriptions_Cart', 'display_recurring_totals'), 10);
+        remove_action('woocommerce_cart_totals_after_order_total', ['WC_Subscriptions_Cart', 'display_recurring_totals'], 10);
+        remove_action('woocommerce_review_order_after_order_total', ['WC_Subscriptions_Cart', 'display_recurring_totals'], 10);
 
         ## Standaard woocommerce verzending uitschakelen
         add_filter('woocommerce_shipping_calculator_enable_postcode', false);
         add_filter('woocommerce_shipping_calculator_enable_city', false);
 
         ## Shipping form in checkout plaatsen
-        add_action('woocommerce_before_order_notes', array(Packing::class, 'shipping'), 10);
+        add_action('woocommerce_before_order_notes', [Packing::class, 'shipping'], 10);
 
         ## Shipping package toevoegen
-        add_action('woocommerce_cart_shipping_packages', array(Packing::class, 'shipping_package'), 10);
+        add_action('woocommerce_cart_shipping_packages', [Packing::class, 'shipping_package'], 10);
 
         ## Shipping cost calculation
-        add_action('woocommerce_package_rates', array(Packing::class, 'shipping_calculate'), 10);
+        add_action('woocommerce_package_rates', [Packing::class, 'shipping_calculate'], 10);
 
         ## Shipping cost calculation
-        add_action('woocommerce_review_order_before_shipping', array(Packing::class, 'shipping_calculate'), 10);
-        add_filter('woocommerce_cart_get_total', array(Packing::class, 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
+        add_action('woocommerce_review_order_before_shipping', [Packing::class, 'shipping_calculate'], 10);
+        add_filter('woocommerce_cart_get_total', [Packing::class, 'shipping_total'], PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
 //        add_filter('woocommerce_cart_get_shipping_total', array(\Monta\Montapacking::class, 'shipping_total'), PHP_INT_MAX, 1);
 
         ## Shipping cost calculation
@@ -99,17 +99,17 @@ function montacheckout_init()
         update_option('woocommerce_shipping_cost_requires_address', 'no');
 
         ## Validation rules
-        add_action('woocommerce_after_checkout_validation', array(Packing::class, 'checkout_validate'), 10, 2);
+        add_action('woocommerce_after_checkout_validation', [Packing::class, 'checkout_validate'], 10, 2);
 
         ## Shipment data opslaan bij order
-        add_action('woocommerce_checkout_create_order', array(Packing::class, 'checkout_store'), 10, 2);
+        add_action('woocommerce_checkout_create_order', [Packing::class, 'checkout_store'], 10, 2);
 
         // CSS/JS scripts registreren
         add_action('wp_enqueue_scripts', 'montacheckout_enqueue_scripts');
 
         ## Ajax actions
-        add_action('wp_ajax_monta_shipping_options', array(Packing::class, 'shipping_options'));
-        add_action('wp_ajax_nopriv_monta_shipping_options', array(Packing::class, 'shipping_options'));
+        add_action('wp_ajax_monta_shipping_options', [Packing::class, 'shipping_options']);
+        add_action('wp_ajax_nopriv_monta_shipping_options', [Packing::class, 'shipping_options']);
 
         ## Init session usage#
         // add_action('init', 'montacheckout_register_session');
@@ -118,11 +118,11 @@ function montacheckout_init()
         add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
         add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
-        add_filter('woocommerce_cart_totals_order_total_html', array(Packing::class, 'taxes'), 20, 1);
+        add_filter('woocommerce_cart_totals_order_total_html', [Packing::class, 'taxes'], 20, 1);
         add_action('woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping');
         add_action("woocommerce_removed_coupon", 'updatecheckout');
         add_action("woocommerce_applied_coupon", 'updatecheckout');
-        add_action('monta_shipping_calculate_html_output', array(Packing::class, 'shipping_calculate_html_output'));
+        add_action('monta_shipping_calculate_html_output', [Packing::class, 'shipping_calculate_html_output']);
 
         if (esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))) {
             add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
@@ -174,7 +174,7 @@ function montacheckout_enqueue_scripts()
 {
     // CSS
     if (is_cart() || is_checkout()) {
-        wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), array(), date("h:i:s"));
+        wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), [], date("h:i:s"));
 
         // Javascript
         wp_enqueue_script('montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . esc_attr(get_option('monta_google_key')), ['jquery']);
@@ -182,9 +182,9 @@ function montacheckout_enqueue_scripts()
         wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-storelocator.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_monta', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-shipping.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_popper', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/popper.min.js'), date("h:i:s"));
-        wp_enqueue_script('wc-price-js', plugin_dir_url(__FILE__) . 'assets/js/wc_price.js', array('jquery'), '1.0', false);
+        wp_enqueue_script('wc-price-js', plugin_dir_url(__FILE__) . 'assets/js/wc_price.js', ['jquery'], '1.0', false);
 
-        $wc_store_object = array(
+        $wc_store_object = [
             'html' => false,
             'currency_symbol' => get_woocommerce_currency_symbol(get_woocommerce_currency()),
             'currency_position' => get_option('woocommerce_currency_pos', true),
@@ -192,15 +192,15 @@ function montacheckout_enqueue_scripts()
             'currency_format_trim_zeros' => wc_get_price_thousand_separator(),
             'currency_format_num_decimals' => wc_get_price_decimals(),
             'price_format' => get_woocommerce_price_format(),
-        );
+        ];
 
         wp_add_inline_script('wc-price-js', ' var wc_settings_args=' . wp_json_encode($wc_store_object) . ';');
-        wp_localize_script('montapacking_checkout_plugin_monta', 'shopData', array(
+        wp_localize_script('montapacking_checkout_plugin_monta', 'shopData', [
             'language' => get_bloginfo('language'),
-            'translations' => array(
+            'translations' => [
                 'free' => __('Free', 'montapacking-checkout')
-            )
-        ));
+            ]
+        ]);
     }
 }
 
@@ -218,25 +218,25 @@ function montacheckout_init_menu()
 
 function ts_shipping_phone_checkout($fields)
 {
-    $fields['shipping']['shipping_email'] = array(
+    $fields['shipping']['shipping_email'] = [
         'label' => __('Email', 'montapacking-checkout'),
         'type' => 'email',
         'required' => false,
-        'class' => array('form-row-wide'),
-        'validate' => array('email'),
+        'class' => ['form-row-wide'],
+        'validate' => ['email'],
         'autocomplete' => 'email',
         'priority' => 25,
-    );
+    ];
 
-    $fields['shipping']['shipping_phone'] = array(
+    $fields['shipping']['shipping_phone'] = [
         'label' => __('Phone', 'montapacking-checkout'),
         'type' => 'tel',
         'required' => false,
-        'class' => array('form-row-wide'),
-        'validate' => array('tel'),
+        'class' => ['form-row-wide'],
+        'validate' => ['tel'],
         'autocomplete' => 'tel',
         'priority' => 26,
-    );
+    ];
 
     return $fields;
 }
@@ -547,7 +547,7 @@ function filter_woocommerce_order_shipping_method($html, $instance)
         }
     }
 
-    $names = array();
+    $names = [];
     foreach ($order->get_shipping_methods() as $shipping_method) {
         $names[] = $shipping_method->get_name();
     }

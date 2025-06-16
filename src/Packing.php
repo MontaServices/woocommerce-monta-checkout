@@ -212,7 +212,7 @@ class Packing
                 $item->add_meta_data('Pickup Data', $pickup, true);
 
                 // setting up address in a nice array
-                $arr = array();
+                $arr = [];
                 //$arr[] = $pickup['shipper'];
                 //$arr[] = $pickup['code'];
                 $arr[] = "<b>Ophaalpunt</b>";
@@ -306,7 +306,7 @@ class Packing
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
                 } else if (!empty($method->optionCodes)) {
-                    $extras = array();
+                    $extras = [];
                     if (is_string($method->optionCodes)) {
                         array_push($extras, $method->optionCodes);
                     }
@@ -339,14 +339,14 @@ class Packing
 
 //        if (true !== $api->checkConnection()) {
         if (false) {
-            $arr = array();
+            $arr = [];
             $arr[] = "Webshop was unable to connect to Montapacking REST api. Please contact Montapacking";
             $arr = implode("\n\r", $arr);
 
             $item->add_meta_data('No Connection', $arr, true);
         } else {
             if (false === $bMontapackingAdd) {
-                $arr = array();
+                $arr = [];
 
                 switch ($shipment['type']) {
                     case 'delivery':
@@ -384,13 +384,13 @@ class Packing
 
             $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', (double)$price - $tax, $tax, 'flat_rate');
 
-            $item->set_props(array(
+            $item->set_props([
                 'method_title' => $rate->label,
                 'method_id' => $rate->id,
                 'total' => wc_format_decimal($rate->cost),
                 'taxes' => $rate->taxes,
                 'meta_data' => $rate->get_meta_data()
-            ));
+            ]);
 
             $order->add_item($item);
             $order->save();
@@ -398,11 +398,11 @@ class Packing
             WC()->session->set('chosen_shipping_methods', ['flat_rate_shipping' . $id]);
             $order->calculate_totals(true);
         } else {
-            $item->set_props(array(
+            $item->set_props([
                 'method_title' => 'Webshop verzendmethode',
                 'method_id' => 0,
                 'total' => $price,
-            ));
+            ]);
 
             $order->add_item($item);
             $order->save();
@@ -934,7 +934,7 @@ class Packing
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
 
-        $skuArray = array();
+        $skuArray = [];
         $x = 0;
 
         foreach ($items as $item => $values) {
@@ -948,7 +948,7 @@ class Packing
                 $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
 
                 if (trim($sku)) {
-                    $skuArray[$x] = array($sku, $quantity);
+                    $skuArray[$x] = [$sku, $quantity];
                     $x++;
                 }
 
@@ -1046,7 +1046,7 @@ class Packing
 
         // If prices are tax inclusive, show taxes here.
         if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
-            $tax_string_array = array();
+            $tax_string_array = [];
             $cart_tax_totals = WC()->cart->get_tax_totals();
 
             if (get_option('woocommerce_tax_total_display') === 'itemized') {
@@ -1113,8 +1113,8 @@ class Packing
     public static function getWooCommerceShippingMethod($package): ?array
     {
         if ($package == "") {
-            $address = array();
-            $address['destination'] = array();
+            $address = [];
+            $address['destination'] = [];
             $address['destination']['country'] = WC()->customer->get_shipping_country();
             $address['destination']['state'] = WC()->customer->get_shipping_state();
             $address['destination']['postcode'] = WC()->customer->get_shipping_postcode();
