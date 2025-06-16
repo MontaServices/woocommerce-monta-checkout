@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Acceptance;
 
 use Tests\Support\AcceptanceTester;
@@ -75,6 +74,5 @@ class FirstCest
         $I->click('.monta-option-pickup');
 
         $I->wait(5);
-
     }
 }

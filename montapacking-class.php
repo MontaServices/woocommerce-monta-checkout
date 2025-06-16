@@ -32,7 +32,6 @@ class Montapacking
             }
         }
 
-
         $type = sanitize_post($_POST['montapacking']);
         $pickup = $type['pickup'];
         $shipment = $type['shipment'];
@@ -54,11 +53,9 @@ class Montapacking
                 $frames = self::get_frames('delivery');
 
                 if ($frames !== null) {
-
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames);
                     $items = $frames['DeliveryOptions'];
-
                 }
 
                 break;
@@ -67,7 +64,6 @@ class Montapacking
                 if ((!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') && ($has_virtual_products == false)) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
-
 
                 if (isset($pickup) && isset($pickup['postnumber']) && trim($pickup['postnumber']) == '' && ($has_virtual_products == false)) {
                     $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
@@ -83,22 +79,17 @@ class Montapacking
 
         ## Check of timeframes bekend zijn en niet van een te oude sessie
         if ($items !== null) {
-
             $error = false;
             if (isset($items[$time])) {
-
                 ## Check of timeframe opties heeft
                 $frame = $items[$time];
                 if ($shipper == "MultipleShipper_ShippingDayUnknown") {
                     $found = true;
                 } else if (isset($frame->options)) {
-
                     ## Gekozen shipper ophalen
                     $found = false;
                     foreach ($frame->options as $option) {
-
                         if ($option->code == $shipper) {
-
                             $found = true;
                             break;
                         }
@@ -108,14 +99,10 @@ class Montapacking
                     if (!$found) {
                         $error = true;
                     }
-
                 } else {
-
                     $error = true;
                 }
-
             } else {
-
                 $error = true;
             }
 
@@ -132,7 +119,6 @@ class Montapacking
 
         foreach ($order->get_items() as $cart_item) {
             if ($cart_item['quantity']) {
-
                 if ($cart_item['variation_id']) {
                     $product = wc_get_product($cart_item['variation_id']);
                 } else {
@@ -183,7 +169,6 @@ class Montapacking
                 if ($shipment['shipper'] == "MultipleShipper_ShippingDayUnknown") {
                     $standardShipper = $frames['StandardShipper'];
                 } else if ($frames !== null) {
-
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames, $time);
 
@@ -215,7 +200,6 @@ class Montapacking
                     }
                     unset($pickup['postnumber']);
                 }
-
 
                 $item->add_meta_data('Pickup Data', $pickup, true);
 
@@ -262,7 +246,6 @@ class Montapacking
 
             ## Check of verzendmethode is gevonden
             if ($method !== null) {
-
                 ## Gekozen optie met datum en tijd toevoegen
                 $item->add_meta_data('Shipmentmethod', $shipperCodes, true);
                 $item->add_meta_data('Delivery date', $frame->date, true);
@@ -297,14 +280,13 @@ class Montapacking
                 }
 
                 if (is_array($extras)) {
-
 //                    if (!empty($method->optionCodes)) {
 //                        foreach ($method->optionCodes as $optionCode) {
 //                            array_push($extras, $optionCode);
 //                        }
 //                    }
 
-                    if(is_string($method->optionCodes)) {
+                    if (is_string($method->optionCodes)) {
                         array_push($extras, $method->optionCodes);
                     }
 
@@ -315,11 +297,9 @@ class Montapacking
                     }
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
-
                 } else if (!empty($method->optionCodes)) {
-
                     $extras = array();
-                    if(is_string($method->optionCodes)) {
+                    if (is_string($method->optionCodes)) {
                         array_push($extras, $method->optionCodes);
                     }
 
@@ -328,7 +308,6 @@ class Montapacking
 //                    }
 
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
-
                 }
 
                 $shipping_phone = WC()->checkout->get_value('shipping_phone');
@@ -345,12 +324,10 @@ class Montapacking
 
                 $bMontapackingAdd = true;
             }
-
         }
 
         $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10, 'nl-NL', '€', false, false, esc_attr(get_option('monta_hidedhlpackstations')));
         $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
-
 
 //        if (true !== $api->checkConnection()) {
         if (false) {
@@ -361,7 +338,6 @@ class Montapacking
             $item->add_meta_data('No Connection', $arr, true);
         } else {
             if (false === $bMontapackingAdd) {
-
                 $arr = array();
 
                 switch ($shipment['type']) {
@@ -382,7 +358,6 @@ class Montapacking
         $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
 
         if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
-
             $mixed = WC_Tax::get_shipping_tax_rates(null, null);
 
             $found = false;
@@ -396,7 +371,6 @@ class Montapacking
             }
 
             $vat_calculate = 100 + $vat_percent;
-
 
             $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
 
@@ -416,7 +390,6 @@ class Montapacking
             WC()->session->set('chosen_shipping_methods', ['flat_rate_shipping' . $id]);
             $order->calculate_totals(true);
         } else {
-
             $item->set_props(array(
                 'method_title' => 'Webshop verzendmethode',
                 'method_id' => 0,
@@ -460,7 +433,7 @@ class Montapacking
                 <?php
             } else if ($data['price'] > 0) {
                 ?>
-                <td><?=wc_price($data['price'])?></td>
+                <td><?= wc_price($data['price']) ?></td>
                 <?php
             } else if ($data['price'] == 0) {
                 ?>
@@ -471,7 +444,6 @@ class Montapacking
         </tr>
         <?php
     }
-
 
     public static function shipping_calculate()
     {
@@ -489,7 +461,6 @@ class Montapacking
         $selectedOption = false;
 
         if (isset($datapost['montapacking']['shipment']['type']) && $datapost['montapacking']['shipment']['type'] == 'delivery') {
-
             if (isset($datapost['montapacking']['shipment']['shipper'])) {
                 $selectedOption = true;
             }
@@ -512,7 +483,7 @@ class Montapacking
         $separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
 
         $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
-        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
+        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '', $stringWithCommaOrDot);
 
         return (float)str_replace(',', '.', $removedThousandSeparator);
     }
@@ -568,7 +539,6 @@ class Montapacking
 
         ## Postdata ophalen
         if (isset($data['montapacking'])) {
-
             $monta = $data['montapacking'];
 
             if (isset($monta['shipment'])) {
@@ -595,19 +565,16 @@ class Montapacking
 
         $isfound = false;
         if ($type == 'delivery') {
-
             ## Timeframes uit sessie ophalen
             $frames = WC()->session->get('montapacking-frames');
             if ($shipper == "MultipleShipper_ShippingDayUnknown") {
                 $price = $frames['StandardShipper']->price;
                 $isfound = true;
             } else if (is_array($frames)) {
-
                 ## Check of gekozen timeframe bestaat
 //                if (isset($frames[$time])) {
                 $frames = $frames['DeliveryOptions'];
                 if (isset($frames)) {
-
                     $method = null;
 
                     ## Check of timeframe opties heeft
@@ -620,7 +587,6 @@ class Montapacking
                             if ($option->code == $shipper) {
                                 $method = $option;
                                 break;
-
                             }
                         }
                     }
@@ -640,14 +606,12 @@ class Montapacking
 
                     ## Check of verzendmethode is gevonden
                     if ($method !== null) {
-
                         ## Basis prijs bepalen
                         $price += $method->price;
                         $isfound = true;
 
                         ## Eventuele extra's bijvoeren
                         if (is_array($extras)) {
-
                             ## Extra's toevoegen
                             foreach ($extras as $extra) {
                                 foreach ($method->deliveryOptions as $deliveryOption) {
@@ -660,15 +624,12 @@ class Montapacking
                     }
                 }
             }
-
         } else if ($type == 'pickup' || $type == 'collect') {
             $price = $pickup['price'];
             $isfound = true;
         }
 
-
         if (false === $isfound) {
-
             $start = esc_attr(get_option('monta_shippingcosts_start'));
             $default = esc_attr(get_option('monta_shippingcosts'));
 
@@ -678,12 +639,9 @@ class Montapacking
                 //return $default;
                 return;
             }
-
         }
 
-
         return self::stringCurrencyToFloat($price);
-
     }
 
     public static function shipping_options()
@@ -694,10 +652,10 @@ class Montapacking
 
         $type = sanitize_post($_POST['montapacking']);
 
-        if(!isset($type['shipment'])) {
+        if (!isset($type['shipment'])) {
             return;
         }
-        
+
         $shipment = $type['shipment'];
 
         switch ($shipment['type']) {
@@ -705,33 +663,26 @@ class Montapacking
                 $frames = self::get_frames('delivery');
 
                 if ($frames !== null) {
-
                     ## Frames naar handige array zetten
 //                    $items = self::format_frames($frames);
                     $items = $frames['DeliveryOptions'];
                     WC()->session->set('montapacking-frames', $frames);
 
                     if ($items !== null) {
-
                         header('Content-Type: application/json');
                         echo json_encode([
                             'success' => true,
                             'frames' => $items,
                             'standardShipper' => $frames['StandardShipper']
                         ]);
-
                     } else {
-
                         header('Content-Type: application/json');
                         echo json_encode([
                             'success' => false,
                             'message' => translate('3 - No shippers available for the chosen delivery address.', 'montapacking-checkout')
                         ]);
-
                     }
-
                 } else {
-
                     header('Content-Type: application/json');
                     echo json_encode([
                         'success' => false,
@@ -745,7 +696,6 @@ class Montapacking
                 #echo '<pre>';
                 $frames = self::get_frames('pickup');
                 if ($frames !== null) {
-
                     ## Frames naar handige array zetten
 //                    $items = self::format_pickups($frames);
                     #print_r($items);
@@ -755,21 +705,17 @@ class Montapacking
                         ## Get order location
                         // Get lat and long by address
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
-
                             $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
                                 sanitize_text_field($_POST['shipping_address_2']) . ' ' .
                                 sanitize_text_field($_POST['shipping_postcode']) . ', ' .
                                 sanitize_text_field($_POST['shipping_city']) . ' ' .
                                 sanitize_text_field($_POST['shipping_country']) . '';
-
                         } else {
-
                             $address = sanitize_text_field($_POST['billing_address_1']) . ' ' .
                                 sanitize_text_field($_POST['billing_address_2']) . ' ' .
                                 sanitize_text_field($_POST['billing_postcode']) . ', ' .
                                 sanitize_text_field($_POST['billing_city']) . ' ' .
                                 sanitize_text_field($_POST['billing_country']) . '';
-
                         }
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
@@ -799,9 +745,7 @@ class Montapacking
                             ],
                             'pickups' => $items
                         ]);
-
                     } else {
-
                         header('Content-Type: application/json');
 
                         echo json_encode([
@@ -814,9 +758,7 @@ class Montapacking
                         //$logger->notice('No pickups available for the chosen delivery address', $context);
 
                     }
-
                 } else {
-
                     header('Content-Type: application/json');
                     echo json_encode([
                         'success' => false,
@@ -838,25 +780,20 @@ class Montapacking
                     $items = [$items];
 
                     if ($items !== null) {
-
                         ## Get order location
                         // Get lat and long by address
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
-
                             $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
                                 sanitize_text_field($_POST['shipping_address_2']) . ' ' .
                                 sanitize_text_field($_POST['shipping_postcode']) . ', ' .
                                 sanitize_text_field($_POST['shipping_city']) . ' ' .
                                 sanitize_text_field($_POST['shipping_country']) . '';
-
                         } else {
-
                             $address = sanitize_text_field($_POST['billing_address_1']) . ' ' .
                                 sanitize_text_field($_POST['billing_address_2']) . ' ' .
                                 sanitize_text_field($_POST['billing_postcode']) . ', ' .
                                 sanitize_text_field($_POST['billing_city']) . ' ' .
                                 sanitize_text_field($_POST['billing_country']) . '';
-
                         }
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
@@ -886,9 +823,7 @@ class Montapacking
                             ],
                             'pickups' => $items
                         ]);
-
                     } else {
-
                         header('Content-Type: application/json');
 
                         echo json_encode([
@@ -901,9 +836,7 @@ class Montapacking
                         //$logger->notice('No pickups available for the chosen delivery address', $context);
 
                     }
-
                 } else {
-
                     header('Content-Type: application/json');
                     echo json_encode([
                         'success' => false,
@@ -919,12 +852,10 @@ class Montapacking
         }
 
         wp_die();
-
     }
 
     public static function get_frames($type = 'delivery')
     {
-
         global $woocommerce;
 
         ## Postdata escapen
@@ -954,10 +885,9 @@ class Montapacking
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount, hideDHLPackstations:  esc_attr(get_option('monta_hidedhlpackstations')));
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount, hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations')));
         if ($type == 'delivery') {
             $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
-
         } else if ($type == 'pickup' || $type == 'collect') {
             $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
         }
@@ -1019,17 +949,14 @@ class Montapacking
                 if ($virtual) {
                     $hasDigitalProducts = true;
                 } else {
-
-
                     //monta_checkproductsonsku checken?
                     $price = $product->get_price();
-                    
-                    if(get_option('monta_checkproductsonsku')) {
+
+                    if (get_option('monta_checkproductsonsku')) {
                         $api->addProduct(sku: $sku, quantity: $quantity, price: $price);
                     } else {
-                        $api->addProduct(sku: $sku, quantity: $quantity, lengthMm: ($product->get_length() == '' ?? 0) * 10,  widthMm: ($product->get_width() == '' ?? 0) * 10, heightMm: ($product->get_height() == '' ?? 0) * 10, weightGrammes: ($product->get_weight() == '' ?? 0) * 1000, price: $price);
+                        $api->addProduct(sku: $sku, quantity: $quantity, lengthMm: ($product->get_length() == '' ?? 0) * 10, widthMm: ($product->get_width() == '' ?? 0) * 10, heightMm: ($product->get_height() == '' ?? 0) * 10, weightGrammes: ($product->get_weight() == '' ?? 0) * 1000, price: $price);
                     }
-
 
                     $hasPhysicalProducts = true;
 
@@ -1102,9 +1029,7 @@ class Montapacking
 
     public static function shipping()
     {
-
         include 'views/choice.php';
-
     }
 
     public static function taxes()
@@ -1121,8 +1046,6 @@ class Montapacking
                     $tax_string_array[] = sprintf('%s %s', $tax->formatted_amount, $tax->label);
                 }
             } elseif (!empty($cart_tax_totals)) {
-
-
                 $mixed = WC_Tax::get_shipping_tax_rates(null, null);
 
                 $found = false;
@@ -1135,14 +1058,12 @@ class Montapacking
                     break;
                 }
 
-
                 $shipping_costs = self::shipping_total();
                 $tax = ($shipping_costs / 121) * $vat_percent;
 
                 $vat_ex_shipment = WC()->cart->get_taxes_total(true, true);
 
                 $price = wc_price($vat_ex_shipment + $tax);
-
 
                 $tax_string_array[] = sprintf('%s %s', $price, WC()->countries->tax_or_vat());
             }
