@@ -11,8 +11,12 @@
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
-        "codeception/module-phpbrowser": "*",
         "codeception/module-asserts": "*",
+        "codeception/module-phpbrowser": "*",
         "codeception/module-webdriver": "^3.2"
+    },
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist"
     }
 }
