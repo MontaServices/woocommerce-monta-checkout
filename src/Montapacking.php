@@ -1037,7 +1037,7 @@ class Montapacking
 
     public static function shipping()
     {
-        include 'views/choice.php';
+        include __DIR__ . DIRECTORY_SEPARATOR . "../views/choice.php";
     }
 
     public static function taxes()
