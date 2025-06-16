@@ -73,7 +73,7 @@ class Packing
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
 
-                if (isset($pickup) && isset($pickup['postnumber']) && trim($pickup['postnumber']) == '' && ($has_virtual_products == false)) {
+                if (isset($pickup['postnumber']) && trim($pickup['postnumber']) == '' && $has_virtual_products == false) {
                     $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
                 }
 
@@ -172,7 +172,7 @@ class Packing
         $standardShipper = null;
         switch ($shipment['type']) {
             case 'delivery':
-                $frames = self::get_frames('delivery');
+                $frames = self::get_frames();
 
                 if ($shipment['shipper'] == "MultipleShipper_ShippingDayUnknown") {
                     $standardShipper = $frames['StandardShipper'];
@@ -654,7 +654,7 @@ class Packing
 
     public static function shipping_options()
     {
-        if (!isset($_POST['montapacking']) || empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
+        if (empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
             return;
         }
 
@@ -945,7 +945,7 @@ class Packing
             if ($product->get_type() != "woosb") {
                 $sku = $product->get_sku();
                 $price = $product->get_price();
-                $quantity = isset($values['quantity']) ? $values['quantity'] : 1;
+                $quantity = $values['quantity'] ?? 1;
 
                 if (trim($sku)) {
                     $skuArray[$x] = [$sku, $quantity];
