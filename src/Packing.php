@@ -8,7 +8,7 @@ use WC_Shipping_Rate;
 use WC_Shipping_Zones;
 use WC_Tax;
 
-class Montapacking
+class Packing
 {
     private static $WooCommerceShippingMethod = null;
 
