@@ -1,5 +1,5 @@
 {
-    "name": "kevin/montapacking-checkout-woocommerce-extension",
+    "name": "monta/woocommerce-checkout",
     "authors": [
         {
             "name": "Monta",
@@ -9,7 +9,7 @@
     "license": "GPL-3.0-or-later",
     "require": {
         "php": "^8.0",
-        "monta/checkout-api-wrapper": "^v1.25"
+        "monta/checkout-api-wrapper": "^1.25"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
