@@ -6,7 +6,9 @@
             "email": "servicedesk@monta.nl"
         }
     ],
+    "license": "GPL-3.0-or-later",
     "require": {
+        "php": "^8.0",
         "monta/checkout-api-wrapper": "^v1.25"
     },
     "require-dev": {
@@ -15,6 +17,13 @@
         "codeception/module-phpbrowser": "*",
         "codeception/module-webdriver": "^3.2"
     },
+    "keywords": [
+        "Monta",
+        "Checkout",
+        "Woocommerce",
+        "extension",
+        "monta"
+    ],
     "config": {
         "sort-packages": true,
         "preferred-install": "dist"

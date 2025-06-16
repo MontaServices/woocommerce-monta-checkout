@@ -1,11 +1,5 @@
 # Monta Checkout
-Contributors: monta
-Tags: monta, checkout, woocommerce, extension, monta
-Requires at least: 4.0.1
-Tested up to: 6.4.1
-Requires PHP: 8.0
-License: GPLv3 or later License
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Requires WooCommerce version at least: **4.0.1** and tested up to **6.4.1**
 
 ## Description
 WooCommerce plugin to integrate the Monta shipping options
