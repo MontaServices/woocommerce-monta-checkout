@@ -17,6 +17,11 @@
         "codeception/module-phpbrowser": "*",
         "codeception/module-webdriver": "^3.2"
     },
+    "autoload": {
+        "psr-4": {
+            "Monta\\": "src/"
+        }
+    },
     "keywords": [
         "Monta",
         "Checkout",
