@@ -19,6 +19,8 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
+use Monta\Packing;
+
 include('montapacking-config.php');
 
 if (esc_attr(get_option('monta_logerrors'))) {
@@ -79,17 +81,17 @@ function montacheckout_init()
         add_filter('woocommerce_shipping_calculator_enable_city', false);
 
         ## Shipping form in checkout plaatsen
-        add_action('woocommerce_before_order_notes', array(\Monta\Montapacking::class, 'shipping'), 10);
+        add_action('woocommerce_before_order_notes', array(Packing::class, 'shipping'), 10);
 
         ## Shipping package toevoegen
-        add_action('woocommerce_cart_shipping_packages', array(\Monta\Montapacking::class, 'shipping_package'), 10);
+        add_action('woocommerce_cart_shipping_packages', array(Packing::class, 'shipping_package'), 10);
 
         ## Shipping cost calculation
-        add_action('woocommerce_package_rates', array(\Monta\Montapacking::class, 'shipping_calculate'), 10);
+        add_action('woocommerce_package_rates', array(Packing::class, 'shipping_calculate'), 10);
 
         ## Shipping cost calculation
-        add_action('woocommerce_review_order_before_shipping', array(\Monta\Montapacking::class, 'shipping_calculate'), 10);
-        add_filter('woocommerce_cart_get_total', array(\Monta\Montapacking::class, 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
+        add_action('woocommerce_review_order_before_shipping', array(Packing::class, 'shipping_calculate'), 10);
+        add_filter('woocommerce_cart_get_total', array(Packing::class, 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
 //        add_filter('woocommerce_cart_get_shipping_total', array(\Monta\Montapacking::class, 'shipping_total'), PHP_INT_MAX, 1);
 
         ## Shipping cost calculation
@@ -97,17 +99,17 @@ function montacheckout_init()
         update_option('woocommerce_shipping_cost_requires_address', 'no');
 
         ## Validation rules
-        add_action('woocommerce_after_checkout_validation', array(\Monta\Montapacking::class, 'checkout_validate'), 10, 2);
+        add_action('woocommerce_after_checkout_validation', array(Packing::class, 'checkout_validate'), 10, 2);
 
         ## Shipment data opslaan bij order
-        add_action('woocommerce_checkout_create_order', array(\Monta\Montapacking::class, 'checkout_store'), 10, 2);
+        add_action('woocommerce_checkout_create_order', array(Packing::class, 'checkout_store'), 10, 2);
 
         // CSS/JS scripts registreren
         add_action('wp_enqueue_scripts', 'montacheckout_enqueue_scripts');
 
         ## Ajax actions
-        add_action('wp_ajax_monta_shipping_options', array(\Monta\Montapacking::class, 'shipping_options'));
-        add_action('wp_ajax_nopriv_monta_shipping_options', array(\Monta\Montapacking::class, 'shipping_options'));
+        add_action('wp_ajax_monta_shipping_options', array(Packing::class, 'shipping_options'));
+        add_action('wp_ajax_nopriv_monta_shipping_options', array(Packing::class, 'shipping_options'));
 
         ## Init session usage#
         // add_action('init', 'montacheckout_register_session');
@@ -116,11 +118,11 @@ function montacheckout_init()
         add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
         add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
-        add_filter('woocommerce_cart_totals_order_total_html', array(\Monta\Montapacking::class, 'taxes'), 20, 1);
+        add_filter('woocommerce_cart_totals_order_total_html', array(Packing::class, 'taxes'), 20, 1);
         add_action('woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping');
         add_action("woocommerce_removed_coupon", 'updatecheckout');
         add_action("woocommerce_applied_coupon", 'updatecheckout');
-        add_action('monta_shipping_calculate_html_output', array(\Monta\Montapacking::class, 'shipping_calculate_html_output'));
+        add_action('monta_shipping_calculate_html_output', array(Packing::class, 'shipping_calculate_html_output'));
 
         if (esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))) {
             add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
@@ -540,8 +542,7 @@ function filter_woocommerce_order_shipping_method($html, $instance)
             }
 
             if ($value->key == 'Pickup Data') {
-                $method = strip_tags($value->value['description']);
-                return $method;
+                return strip_tags($value->value['description']);
             }
         }
     }
