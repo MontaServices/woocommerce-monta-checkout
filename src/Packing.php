@@ -1,6 +1,8 @@
 <?php
 namespace Monta;
 
+use Monta\Helper\System;
+
 class Packing
 {
     private static $WooCommerceShippingMethod = null;
@@ -837,6 +839,9 @@ class Packing
             excludeShippingDiscount: $excludeShippingDiscount,
             hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations'))
         );
+        // Add SystemInfo to API call
+        $settings->setSystemInfo(System::getInfo());
+        
         if ($type == 'delivery') {
             $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
         } else if ($type == 'pickup' || $type == 'collect') {
