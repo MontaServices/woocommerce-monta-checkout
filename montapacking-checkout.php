@@ -22,7 +22,6 @@
 use Monta\Packing;
 
 include('montapacking-config.php');
-include("src/Packing.php"); // Still required because core does not read PSR-4 when adding hooks
 
 if (esc_attr(get_option('monta_logerrors'))) {
     define('WC_LOG_HANDLER', 'WC_Log_Handler_DB');
