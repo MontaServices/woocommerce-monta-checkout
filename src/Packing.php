@@ -88,7 +88,6 @@ class Packing
                 ## Check of timeframe opties heeft
                 $frame = $items[$time];
                 if ($shipper == "MultipleShipper_ShippingDayUnknown") {
-                    $found = true;
                 } else if (isset($frame->options)) {
                     ## Gekozen shipper ophalen
                     $found = false;
@@ -228,7 +227,6 @@ class Packing
         } ## Check of gekozen timeframe bestaat
         else if (isset($items[$time])) {
             $method = null;
-            $shipperCode = null;
 
             ## Check of timeframe opties heeft
             $frame = $items[$time];
@@ -316,12 +314,10 @@ class Packing
         if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
             $mixed = WC_Tax::get_shipping_tax_rates(null, null);
 
-            $found = false;
             $vat_percent = 0;
             $id = "";
             foreach ($mixed as $key => $obj) {
                 $vat_percent = $obj['rate'];
-                $found = true;
                 $id = ":" . $key;
                 break;
             }
@@ -458,7 +454,7 @@ class Packing
 
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
-        foreach ($items as $item => $values) {
+        foreach ($items as $values) {
             $virtual = $values['data']->get_virtual();
 
             if ($virtual) {
@@ -484,7 +480,6 @@ class Packing
         $shipment = null;
         $pickup = null;
         $type = null;
-        $time = null;
         $shipper = null;
         $extras = null;
 
@@ -500,9 +495,6 @@ class Packing
             }
             if (isset($shipment['type'])) {
                 $type = $shipment['type'];
-            }
-            if (isset($shipment['time'])) {
-                $time = $shipment['time'];
             }
             if (isset($shipment['shipper'])) {
                 $shipper = $shipment['shipper'];
@@ -528,7 +520,6 @@ class Packing
 
                     ## Check of timeframe opties heeft
                     foreach ($frames as $frame) {
-                        $thisis = $shipper;
                         if (!is_array($options = $frame->options)) {
                             throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
                         }
@@ -567,7 +558,6 @@ class Packing
 
         if (false === $isfound) {
             $start = esc_attr(get_option('monta_shippingcosts_start'));
-            $default = esc_attr(get_option('monta_shippingcosts'));
 
             if (trim($start)) {
                 return $start;
@@ -879,14 +869,13 @@ class Packing
         $skuArray = [];
         $x = 0;
 
-        foreach ($items as $item => $values) {
+        foreach ($items as $values) {
             $product = wc_get_product($values['product_id']);
             if ($values['variation_id']) {
                 $product = wc_get_product($values['variation_id']);
             }
             if ($product->get_type() != "woosb") {
                 $sku = $product->get_sku();
-                $price = $product->get_price();
                 $quantity = $values['quantity'] ?? 1;
 
                 if (trim($sku)) {
@@ -986,19 +975,15 @@ class Packing
             $cart_tax_totals = WC()->cart->get_tax_totals();
 
             if (get_option('woocommerce_tax_total_display') === 'itemized') {
-                foreach ($cart_tax_totals as $code => $tax) {
+                foreach ($cart_tax_totals as $tax) {
                     $tax_string_array[] = sprintf('%s %s', $tax->formatted_amount, $tax->label);
                 }
             } elseif (!empty($cart_tax_totals)) {
                 $mixed = WC_Tax::get_shipping_tax_rates(null, null);
 
-                $found = false;
                 $vat_percent = 0;
-                $id = "";
-                foreach ($mixed as $key => $obj) {
+                foreach ($mixed as $obj) {
                     $vat_percent = $obj['rate'];
-                    $found = true;
-                    $id = ":" . $key;
                     break;
                 }
 
@@ -1059,7 +1044,7 @@ class Packing
             $shipping_zone = WC_Shipping_Zones::get_zone_matching_package($package);
         }
         $chosenMethod = null;
-        foreach ($shipping_zone->get_shipping_methods(true) as $key => $class) {
+        foreach ($shipping_zone->get_shipping_methods(true) as $class) {
             // Method's ID and custom name
             $item = [
                 'id' => $class->method_title,
