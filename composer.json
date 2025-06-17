@@ -1,18 +1,36 @@
 {
-    "name": "kevin/montapacking-checkout-woocommerce-extension",
+    "name": "monta/woocommerce-checkout",
     "authors": [
         {
             "name": "Monta",
             "email": "servicedesk@monta.nl"
         }
     ],
+    "license": "GPL-3.0-or-later",
     "require": {
-        "monta/checkout-api-wrapper": "^v1.25"
+        "php": "^8.0",
+        "monta/checkout-api-wrapper": "^1.25"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
-        "codeception/module-phpbrowser": "*",
         "codeception/module-asserts": "*",
+        "codeception/module-phpbrowser": "*",
         "codeception/module-webdriver": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Monta\\": "src/"
+        }
+    },
+    "keywords": [
+        "Monta",
+        "Checkout",
+        "Woocommerce",
+        "extension",
+        "monta"
+    ],
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist"
     }
 }
