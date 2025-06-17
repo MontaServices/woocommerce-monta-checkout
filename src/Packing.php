@@ -1,6 +1,8 @@
 <?php
 namespace Monta;
 
+use Monta\CheckoutApiWrapper\MontapackingShipping;
+use Monta\CheckoutApiWrapper\Objects\Settings;
 use Monta\Helper\System;
 
 class Packing
@@ -294,8 +296,8 @@ class Packing
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10, 'nl-NL', '€', false, false, esc_attr(get_option('monta_hidedhlpackstations')));
-        $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
+        $settings = new Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10, 'nl-NL', '€', false, false, esc_attr(get_option('monta_hidedhlpackstations')));
+        $api = new MontapackingShipping($settings, get_bloginfo('language'));
 
 //        if (true !== $api->checkConnection()) {
         if (false) {
@@ -828,7 +830,7 @@ class Packing
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(
+        $settings = new Settings(
             origin: esc_attr(get_option('monta_shop')),
             user: esc_attr(get_option('monta_username')),
             password: esc_attr(get_option('monta_password')),
@@ -846,7 +848,7 @@ class Packing
             case 'delivery':
             case 'pickup':
             case 'collect':
-                $api = new \Monta\CheckoutApiWrapper\MontapackingShipping(
+                $api = new MontapackingShipping(
                     settings: $settings,
                     language: get_bloginfo('language'),
                 );
