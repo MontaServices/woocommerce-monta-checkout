@@ -33,8 +33,7 @@
 <input id="maxpickuppoints" type="hidden" name="maxpickuppoints"
        value="<?php echo esc_attr(get_option('monta_max_pickuppoints')) <= 0 ? 3 : esc_attr(get_option('monta_max_pickuppoints')); ?>">
 
-<input id="zero-costs-as-free" type="hidden" name="zero-costs-as-free"
-       value="<?php echo esc_attr(get_option('monta_show_zero_costs_as_free')) ?>">
+<input id="zero-costs-as-free" type="hidden" name="zero-costs-as-free" value="<?php echo esc_attr(get_option('monta_show_zero_costs_as_free')) ?>">
 
 <input id="afh-image" type="hidden" name="afh-image" value="<?php echo esc_attr(get_option('monta_afh_image_path')) ?>">
 
@@ -104,6 +103,8 @@
                         <?php _e('Your order will be delivered with', 'montapacking-checkout'); ?>
                         <strong class="shippingtype"></strong>
                     </span>
+
+
 
 
                     <div style="clear:both"></div>
@@ -278,14 +279,9 @@
                     </div>
                 </div>
                 <div class="montapacking-search-zipcode-container">
-                    <label for="montapacking-search-zipcode"
-                           class="montapacking-search-zipcode-label"><?php _e('Search using postal code', 'montapacking-checkout'); ?></label>
-                    <input type="text" name="montapacking-search-zipcode" id="montapacking-search-zipcode"
-                           title="<?php _e('Postcode', 'montapacking-checkout'); ?>"
-                           placeholder="<?php _e('Postcode', 'montapacking-checkout'); ?>"
-                           class="montapacking-search-zipcode-input">
-                    <button type="button" class="button montapacking-search-zipcode-button"
-                            id="montapacking-search-zipcode-button"><?php _e('Search', 'montapacking-checkout'); ?></button>
+                    <label for="montapacking-search-zipcode" class="montapacking-search-zipcode-label"><?php _e('Search using postal code', 'montapacking-checkout'); ?></label>
+                    <input type="text" name="montapacking-search-zipcode" id="montapacking-search-zipcode" title="<?php _e('Postcode', 'montapacking-checkout'); ?>" placeholder="<?php _e('Postcode', 'montapacking-checkout'); ?>" class="montapacking-search-zipcode-input">
+                    <button type="button" class="button montapacking-search-zipcode-button" id="montapacking-search-zipcode-button"><?php _e('Search', 'montapacking-checkout'); ?></button>
                 </div>
             </div>
             <a class="monta-select-pickup"><?php _e('Use selection', 'montapacking-checkout'); ?></a>

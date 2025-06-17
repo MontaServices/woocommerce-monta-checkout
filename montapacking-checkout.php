@@ -19,19 +19,20 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-use Monta\Packing;
 
 include('montapacking-config.php');
+include('montapacking-class.php');
 
 if (esc_attr(get_option('monta_logerrors'))) {
     define('WC_LOG_HANDLER', 'WC_Log_Handler_DB');
 }
 // Declare WooCommerce HPOS compatibility
-add_action('before_woocommerce_init', function () {
-    if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
-        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+add_action('before_woocommerce_init', function(){
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
     }
 });
+
 
 ## Add config actions
 add_action('admin_menu', 'montacheckout_init_menu');
@@ -73,43 +74,44 @@ function montacheckout_init()
 {
     ## Check of we in woocommerce zijn
     if (is_plugin_active('woocommerce/woocommerce.php')) {
-        remove_action('woocommerce_cart_totals_after_order_total', ['WC_Subscriptions_Cart', 'display_recurring_totals'], 10);
-        remove_action('woocommerce_review_order_after_order_total', ['WC_Subscriptions_Cart', 'display_recurring_totals'], 10);
+
+        remove_action( 'woocommerce_cart_totals_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
+        remove_action( 'woocommerce_review_order_after_order_total', array( 'WC_Subscriptions_Cart', 'display_recurring_totals' ), 10 );
 
         ## Standaard woocommerce verzending uitschakelen
         add_filter('woocommerce_shipping_calculator_enable_postcode', false);
         add_filter('woocommerce_shipping_calculator_enable_city', false);
 
         ## Shipping form in checkout plaatsen
-        add_action('woocommerce_before_order_notes', [Packing::class, 'shipping'], 10);
+        add_action('woocommerce_before_order_notes', array('montapacking', 'shipping'), 10);
 
         ## Shipping package toevoegen
-        add_action('woocommerce_cart_shipping_packages', [Packing::class, 'shipping_package'], 10);
+        add_action('woocommerce_cart_shipping_packages', array('montapacking', 'shipping_package'), 10);
 
         ## Shipping cost calculation
-        add_action('woocommerce_package_rates', [Packing::class, 'shipping_calculate'], 10);
+        add_action('woocommerce_package_rates', array('montapacking', 'shipping_calculate'), 10);
 
         ## Shipping cost calculation
-        add_action('woocommerce_review_order_before_shipping', [Packing::class, 'shipping_calculate'], 10);
-        add_filter('woocommerce_cart_get_total', [Packing::class, 'shipping_total'], PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
-//        add_filter('woocommerce_cart_get_shipping_total', array(\Monta\Montapacking::class, 'shipping_total'), PHP_INT_MAX, 1);
+        add_action('woocommerce_review_order_before_shipping', array('montapacking', 'shipping_calculate'), 10);
+        add_filter('woocommerce_cart_get_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
+//        add_filter('woocommerce_cart_get_shipping_total', array('montapacking', 'shipping_total'), PHP_INT_MAX, 1);
 
         ## Shipping cost calculation
         update_option('woocommerce_enable_shipping_calc', 'no');
         update_option('woocommerce_shipping_cost_requires_address', 'no');
 
         ## Validation rules
-        add_action('woocommerce_after_checkout_validation', [Packing::class, 'checkout_validate'], 10, 2);
+        add_action('woocommerce_after_checkout_validation', array('montapacking', 'checkout_validate'), 10, 2);
 
         ## Shipment data opslaan bij order
-        add_action('woocommerce_checkout_create_order', [Packing::class, 'checkout_store'], 10, 2);
+        add_action('woocommerce_checkout_create_order', array('montapacking', 'checkout_store'), 10, 2);
 
         // CSS/JS scripts registreren
         add_action('wp_enqueue_scripts', 'montacheckout_enqueue_scripts');
 
         ## Ajax actions
-        add_action('wp_ajax_monta_shipping_options', [Packing::class, 'shipping_options']);
-        add_action('wp_ajax_nopriv_monta_shipping_options', [Packing::class, 'shipping_options']);
+        add_action('wp_ajax_monta_shipping_options', array('montapacking', 'shipping_options'));
+        add_action('wp_ajax_nopriv_monta_shipping_options', array('montapacking', 'shipping_options'));
 
         ## Init session usage#
         // add_action('init', 'montacheckout_register_session');
@@ -118,11 +120,11 @@ function montacheckout_init()
         add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
 
         add_filter('woocommerce_cart_needs_shipping_address', 'filter_woocommerce_cart_needs_shipping_address', 10, 1);
-        add_filter('woocommerce_cart_totals_order_total_html', [Packing::class, 'taxes'], 20, 1);
+        add_filter('woocommerce_cart_totals_order_total_html', array('montapacking', 'taxes'), 20, 1);
         add_action('woocommerce_cart_totals_before_shipping', 'filter_review_order_before_shipping');
         add_action("woocommerce_removed_coupon", 'updatecheckout');
         add_action("woocommerce_applied_coupon", 'updatecheckout');
-        add_action('monta_shipping_calculate_html_output', [Packing::class, 'shipping_calculate_html_output']);
+        add_action('monta_shipping_calculate_html_output', array('montapacking', 'shipping_calculate_html_output'));
 
         if (esc_attr(get_option('monta_show_seperate_shipping_email_and_phone_fields'))) {
             add_filter('woocommerce_checkout_fields', 'ts_shipping_phone_checkout');
@@ -174,7 +176,8 @@ function montacheckout_enqueue_scripts()
 {
     // CSS
     if (is_cart() || is_checkout()) {
-        wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), [], date("h:i:s"));
+
+        wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), array(), date("h:i:s"));
 
         // Javascript
         wp_enqueue_script('montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . esc_attr(get_option('monta_google_key')), ['jquery']);
@@ -182,9 +185,9 @@ function montacheckout_enqueue_scripts()
         wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-storelocator.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_monta', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-shipping.js'), ['jquery'], date("h:i:s"));
         wp_enqueue_script('montapacking_checkout_plugin_popper', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/popper.min.js'), date("h:i:s"));
-        wp_enqueue_script('wc-price-js', plugin_dir_url(__FILE__) . 'assets/js/wc_price.js', ['jquery'], '1.0', false);
+        wp_enqueue_script( 'wc-price-js', plugin_dir_url( __FILE__ ) . 'assets/js/wc_price.js', array( 'jquery' ), '1.0', false );
 
-        $wc_store_object = [
+        $wc_store_object = array(
             'html' => false,
             'currency_symbol' => get_woocommerce_currency_symbol(get_woocommerce_currency()),
             'currency_position' => get_option('woocommerce_currency_pos', true),
@@ -192,15 +195,15 @@ function montacheckout_enqueue_scripts()
             'currency_format_trim_zeros' => wc_get_price_thousand_separator(),
             'currency_format_num_decimals' => wc_get_price_decimals(),
             'price_format' => get_woocommerce_price_format(),
-        ];
+        );
 
-        wp_add_inline_script('wc-price-js', ' var wc_settings_args=' . wp_json_encode($wc_store_object) . ';');
-        wp_localize_script('montapacking_checkout_plugin_monta', 'shopData', [
+        wp_add_inline_script( 'wc-price-js', ' var wc_settings_args=' . wp_json_encode( $wc_store_object ) . ';' );
+        wp_localize_script('montapacking_checkout_plugin_monta', 'shopData', array(
             'language' => get_bloginfo('language'),
-            'translations' => [
+            'translations' => array(
                 'free' => __('Free', 'montapacking-checkout')
-            ]
-        ]);
+            )
+        ));
     }
 }
 
@@ -218,25 +221,25 @@ function montacheckout_init_menu()
 
 function ts_shipping_phone_checkout($fields)
 {
-    $fields['shipping']['shipping_email'] = [
+    $fields['shipping']['shipping_email'] = array(
         'label' => __('Email', 'montapacking-checkout'),
         'type' => 'email',
         'required' => false,
-        'class' => ['form-row-wide'],
-        'validate' => ['email'],
+        'class' => array('form-row-wide'),
+        'validate' => array('email'),
         'autocomplete' => 'email',
         'priority' => 25,
-    ];
+    );
 
-    $fields['shipping']['shipping_phone'] = [
+    $fields['shipping']['shipping_phone'] = array(
         'label' => __('Phone', 'montapacking-checkout'),
         'type' => 'tel',
         'required' => false,
-        'class' => ['form-row-wide'],
-        'validate' => ['tel'],
+        'class' => array('form-row-wide'),
+        'validate' => array('tel'),
         'autocomplete' => 'tel',
         'priority' => 26,
-    ];
+    );
 
     return $fields;
 }
@@ -281,8 +284,8 @@ function montacheckout_render_settings()
                     <td><input required type="text" name="monta_shop"
                                value="<?php echo esc_attr(get_option('monta_shop')); ?>" size="50"/>
                         <br><i style="font-size:12px">The name of the webshop in Monta Portal. Name can be found <a
-                                    target="_new"
-                                    href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a>.</i>
+                                target="_new"
+                                href="https://montaportal.nl/Home/CustomerSettings#CheckoutOptions">here</a>.</i>
                     </td>
                 </tr>
 
@@ -349,7 +352,7 @@ function montacheckout_render_settings()
                     <td><input type="checkbox" name="monta_logerrors"
                                value="1" <?php checked('1', get_option('monta_logerrors')); ?>/>
                         <br><i style="font-size:12px">Turn on logs which are shown <a
-                                    href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a>.</i>
+                                href=/wp-admin/admin.php?page=wc-status&tab=logs">here</a>.</i>
                     </td>
                 </tr>
 
@@ -395,15 +398,15 @@ function montacheckout_render_settings()
                     </td>
                 </tr>
 
-                <!--                <tr>-->
-                <!--                    <th scope="row"><label for="monta_leadingstock">monta_leadingstock</label></th>-->
-                <!--                    <td>-->
-                <input type="hidden" name="monta_leadingstock"
-                       value="1" <?php checked('1', get_option('monta_leadingstock')); ?>/>
-                <!--                        <br><i style="font-size:12px">monta_leadingstock.</i>-->
-                <!--                    </td>-->
-                <!--                </tr>-->
-                <!--                <input type="hidden" name="monta_leadingstock" value="woocommerce">-->
+<!--                <tr>-->
+<!--                    <th scope="row"><label for="monta_leadingstock">monta_leadingstock</label></th>-->
+<!--                    <td>-->
+                        <input type="hidden" name="monta_leadingstock"
+                               value="1" <?php checked('1', get_option('monta_leadingstock')); ?>/>
+<!--                        <br><i style="font-size:12px">monta_leadingstock.</i>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <input type="hidden" name="monta_leadingstock" value="woocommerce">-->
 
                 <tr>
                     <th scope="row"><label for="monta_pickupname">Pickup name</label></th>
@@ -427,8 +430,7 @@ function montacheckout_render_settings()
                     <th scope="row"><label for="monta_show_zero_costs_as_free">Shipping costs free</label></th>
                     <td><input type="checkbox" name="monta_show_zero_costs_as_free"
                                value="1" <?php checked("1", get_option('monta_show_zero_costs_as_free')); ?>/>
-                        <br><i style="font-size:12px">Show the text "free" in stead of 0 when the shipping costs are
-                            free.</i>
+                        <br><i style="font-size:12px">Show the text "free" in stead of 0 when the shipping costs are free.</i>
                     </td>
                 </tr>
 
@@ -443,10 +445,8 @@ function montacheckout_render_settings()
 
                 <tr>
                     <th scope="row"><label for="monta_afh_image_path">Store collect image path</label></th>
-                    <td><input type="text" id="monta_afh_image_path" name="monta_afh_image_path"
-                               value="<?php echo esc_attr(get_option('monta_afh_image_path')); ?>" size="50"/>
-                        <span><input type=button id="upload_image_button" name="upload_image_button"
-                                     value="Upload image"/></span>
+                    <td><input type="text" id="monta_afh_image_path" name="monta_afh_image_path" value="<?php echo esc_attr(get_option('monta_afh_image_path')); ?>" size="50"/>
+                        <span><input type=button id="upload_image_button" name="upload_image_button" value="Upload image"/></span>
                         <br><i style="font-size:12px">Here you can set the path of your own image for store collect.</i>
 
                     </td>
@@ -492,19 +492,19 @@ function montacheckout_render_settings()
     </div>
 
     <script>
-        jQuery(document).ready(function ($) {
-            $('#upload_image_button').click(function (e) {
+        jQuery(document).ready(function($){
+            $('#upload_image_button').click(function(e) {
                 e.preventDefault();
                 var image = wp.media({
                     title: 'Upload Image',
                     // mutiple: true if you want to upload multiple files at once
                     multiple: false,
                     library: {
-                        type: ['image']
+                        type: [ 'image' ]
                     },
-                    type: 'image'
+                    type : 'image'
                 }).open()
-                    .on('select', function (e) {
+                    .on('select', function(e){
                         // This will return the selected image from the Media Uploader, the result is an object
                         const uploaded_image = image.state().get('selection').first();
                         // We convert uploaded_image to a JSON object to make accessing it easier
@@ -532,7 +532,10 @@ function filter_woocommerce_order_shipping_method($html, $instance)
         $meta_data = $item->get_meta_data();
 
         foreach ($meta_data as $value) {
+
+
             if ($value->key == 'Shipmentmethod') {
+
                 $method = strip_tags($value->value);
 
                 if ($value->value == 'SEL,SELBuspakje') {
@@ -542,12 +545,13 @@ function filter_woocommerce_order_shipping_method($html, $instance)
             }
 
             if ($value->key == 'Pickup Data') {
-                return strip_tags($value->value['description']);
+                $method = strip_tags($value->value['description']);
+                return $method;
             }
         }
     }
 
-    $names = [];
+    $names = array();
     foreach ($order->get_shipping_methods() as $shipping_method) {
         $names[] = $shipping_method->get_name();
     }
