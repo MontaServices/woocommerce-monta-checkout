@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.52
+ * Version: 1.58.53
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -11,8 +11,8 @@
  * Text Domain: montapacking-checkout-woocommerce-extension
  * Domain Path: /languages
  *
- * WC requires at least: 4.0.1
- * WC tested up to: 6.1.1
+ * WC requires at least: 5.0.0
+ * WC tested up to: 6.8.1
  *
  * Copyright: © 2009-2021 WooCommerce.
  * License: GNU General Public License v3.0
@@ -92,8 +92,8 @@ function montacheckout_init()
 
         ## Shipping cost calculation
         add_action('woocommerce_review_order_before_shipping', [Packing::class, 'shipping_calculate'], 10);
-        add_filter('woocommerce_cart_get_total', [Packing::class, 'shipping_total'], PHP_INT_MAX, 1); // Disabled this since is causing double calculated shipping rates
-//        add_filter('woocommerce_cart_get_shipping_total', array(\Monta\Montapacking::class, 'shipping_total'), PHP_INT_MAX, 1);
+        // Disabled this since is causing double calculated shipping rates
+        add_filter('woocommerce_cart_get_total', [Packing::class, 'shipping_total'], PHP_INT_MAX, 1);
 
         ## Shipping cost calculation
         update_option('woocommerce_enable_shipping_calc', 'no');
@@ -111,9 +111,6 @@ function montacheckout_init()
         ## Ajax actions
         add_action('wp_ajax_monta_shipping_options', [Packing::class, 'shipping_options']);
         add_action('wp_ajax_nopriv_monta_shipping_options', [Packing::class, 'shipping_options']);
-
-        ## Init session usage#
-        // add_action('init', 'montacheckout_register_session');
 
         //add_filter('woocommerce_order_shipping_to_display_shipped_via', 'filter_woocommerce_order_shipping_to_display_shipped_via', 10, 2);
         add_filter('woocommerce_order_shipping_method', 'filter_woocommerce_order_shipping_method', 10, 2);
@@ -498,7 +495,7 @@ function montacheckout_render_settings()
                 e.preventDefault();
                 var image = wp.media({
                     title: 'Upload Image',
-                    // mutiple: true if you want to upload multiple files at once
+                    // multiple: true if you want to upload multiple files at once
                     multiple: false,
                     library: {
                         type: ['image']

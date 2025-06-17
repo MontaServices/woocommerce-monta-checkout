@@ -61,8 +61,7 @@ class Packing
                 $frames = self::get_frames('delivery');
 
                 if ($frames !== null) {
-                    ## Frames naar handige array zetten
-//                    $items = self::format_frames($frames);
+                    // Frames naar handige array zetten
                     $items = $frames['DeliveryOptions'];
                 }
 
@@ -177,9 +176,6 @@ class Packing
                 if ($shipment['shipper'] == "MultipleShipper_ShippingDayUnknown") {
                     $standardShipper = $frames['StandardShipper'];
                 } else if ($frames !== null) {
-                    ## Frames naar handige array zetten
-//                    $items = self::format_frames($frames, $time);
-
                     $items = $frames['DeliveryOptions'];
                 }
 
@@ -258,26 +254,6 @@ class Packing
                 $item->add_meta_data('Shipmentmethod', $shipperCodes, true);
                 $item->add_meta_data('Delivery date', $frame->date, true);
 
-//                foreach($items[$time] as $item) {
-//                    $test123 = $item;
-//                    $test123 = $item;
-//                }
-
-//                $test = $items[$time];
-//                foreach($test->options as $selectedItem) {
-//                    $wheeee = $selectedItem;
-//
-//                    if($selectedItem->code == $method->code) {
-//                        $iteminquestion = $method->code;
-//
-//
-//                        $test1 = $selectedItem->from;
-//                        $test2 = $selectedItem->from;
-//                    }
-//
-//                }
-
-//                $time_check = $method->from . ' ' . $method->to;
                 $time_check = $method->from . ' ' . $method->to;
                 if ($time_check != '00:00 00:00' && trim($time_check) && $method->from != $method->to) {
                     $item->add_meta_data('Delivery timeframe', $method->from . ' ' . $method->to, true);
@@ -288,12 +264,6 @@ class Packing
                 }
 
                 if (is_array($extras)) {
-//                    if (!empty($method->optionCodes)) {
-//                        foreach ($method->optionCodes as $optionCode) {
-//                            array_push($extras, $optionCode);
-//                        }
-//                    }
-
                     if (is_string($method->optionCodes)) {
                         array_push($extras, $method->optionCodes);
                     }
@@ -310,11 +280,6 @@ class Packing
                     if (is_string($method->optionCodes)) {
                         array_push($extras, $method->optionCodes);
                     }
-
-//                    foreach ($method->optionCodes as $optionCode) {
-//                        array_push($extras, $optionCode);
-//                    }
-
                     $item->add_meta_data('Extras', implode(", ", $extras), true);
                 }
 
@@ -414,11 +379,6 @@ class Packing
 
     public static function shipping_total($wc_price = 0)
     {
-        // Comment this out for now, since its not needed if the shipping cost are not calculated double
-//        if (did_filter('woocommerce_cart_get_total')) {
-//            return $wc_price;
-//        }
-
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -570,7 +530,6 @@ class Packing
         }
 
         ## Check by type
-
         $isfound = false;
         if ($type == 'delivery') {
             ## Timeframes uit sessie ophalen
@@ -580,37 +539,23 @@ class Packing
                 $isfound = true;
             } else if (is_array($frames)) {
                 ## Check of gekozen timeframe bestaat
-//                if (isset($frames[$time])) {
                 $frames = $frames['DeliveryOptions'];
                 if (isset($frames)) {
                     $method = null;
 
                     ## Check of timeframe opties heeft
-//                    $frame = $frames[$time];
-//                    if (isset($frame->options)) {
-
                     foreach ($frames as $frame) {
                         $thisis = $shipper;
-                        foreach ($frame->options as $option) {
+                        if (!is_array($options = $frame->options)) {
+                            throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
+                        }
+                        foreach ($options as $option) {
                             if ($option->code == $shipper) {
                                 $method = $option;
                                 break;
                             }
                         }
                     }
-
-                    ## Gekozen shipper ophalen
-//                        foreach ($frames->options as $option) {
-//
-//                            if ($option->code == $shipper) {
-//
-//                                $method = $option;
-//                                break;
-//
-//                            }
-//
-//                        }
-//                    }
 
                     ## Check of verzendmethode is gevonden
                     if ($method !== null) {
@@ -672,7 +617,6 @@ class Packing
 
                 if ($frames !== null) {
                     ## Frames naar handige array zetten
-//                    $items = self::format_frames($frames);
                     $items = $frames['DeliveryOptions'];
                     WC()->session->set('montapacking-frames', $frames);
 
@@ -705,13 +649,10 @@ class Packing
                 $frames = self::get_frames('pickup');
                 if ($frames !== null) {
                     ## Frames naar handige array zetten
-//                    $items = self::format_pickups($frames);
-                    #print_r($items);
                     $items = $frames['PickupOptions'];
 
                     if ($items !== null) {
-                        ## Get order location
-                        // Get lat and long by address
+                        // Get order location (lat and long by address)
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
                             $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
                                 sanitize_text_field($_POST['shipping_address_2']) . ' ' .
@@ -788,8 +729,7 @@ class Packing
                     $items = [$items];
 
                     if ($items !== null) {
-                        ## Get order location
-                        // Get lat and long by address
+                        // Get order location (long and lat by address)
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
                             $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
                                 sanitize_text_field($_POST['shipping_address_2']) . ' ' .
@@ -985,12 +925,6 @@ class Packing
         $subtotal_ex = WC()->cart->get_subtotal_tax();
 
         $api->setOrder($subtotal, $subtotal_ex);
-
-//        if (esc_attr(get_option('monta_logerrors'))) {
-//            $logger = wc_get_logger();
-//            $api->setLogger($logger);
-//
-//        }
 
         ## Type timeframes ophalen
         if (esc_attr(get_option('monta_leadingstock')) == '') {
