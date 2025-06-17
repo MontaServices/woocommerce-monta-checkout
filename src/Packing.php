@@ -192,7 +192,7 @@ class Packing
                 $order->set_shipping_city($pickup['city']);
                 $order->set_shipping_country($pickup['country']);
 
-                // post nummer voor duitsland
+                // Postnummer voor Duitsland
                 if ($pickup['postnumber'] && trim($pickup['postnumber'])) {
                     if (isset($pickup['shippingOptions'])) {
                         $pickup['shippingOptions'] = $pickup['shippingOptions'] . ",DHLPCPostNummer_" . $pickup['postnumber'];
@@ -206,8 +206,6 @@ class Packing
 
                 // setting up address in a nice array
                 $arr = [];
-                //$arr[] = $pickup['shipper'];
-                //$arr[] = $pickup['code'];
                 $arr[] = "<b>Ophaalpunt</b>";
                 $arr[] = $pickup['description'];
                 $arr[] = $pickup['company'];
@@ -296,46 +294,20 @@ class Packing
             }
         }
 
-        $settings = new Settings(
-            origin: esc_attr(get_option('monta_shop')),
-            user: esc_attr(get_option('monta_username')),
-            password: esc_attr(get_option('monta_password')),
-            pickupPointsEnabled: true,
-            maxPickupPoints: 5,
-            googleKey: esc_attr(get_option('monta_google_key')),
-            defaultCosts: 10,
-            webshopLanguage: 'nl-NL',
-            currency: '€',
-            excludeShippingDiscount: false,
-            showZeroCostsAsFree: false,
-            hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations')),
-        );
-        $api = new MontapackingShipping($settings, get_bloginfo('language'));
-
-        // TODO what happens here? API is instantiated and promptly ignored
-//        if (true !== $api->checkConnection()) {
-        if (false) {
+        if (false === $bMontapackingAdd) {
             $arr = [];
-            $arr[] = "Webshop was unable to connect to Montapacking REST api. Please contact Montapacking";
-            $arr = implode("\n\r", $arr);
 
-            $item->add_meta_data('No Connection', $arr, true);
-        } else {
-            if (false === $bMontapackingAdd) {
-                $arr = [];
-
-                switch ($shipment['type']) {
-                    case 'delivery':
-                        $arr[] = "1 - No shippers available for the chosen delivery address";
-                        $arr = implode("\n\r", $arr);
-                        $item->add_meta_data('1 - No shippers available for the chosen delivery address', $arr, true);
-                        break;
-                    case 'pickup':
-                        $arr[] = "2 - No pickups available for the chosen delivery address";
-                        $arr = implode("\n\r", $arr);
-                        $item->add_meta_data('2 - No pickup address chosen ', $arr, true);
-                        break;
-                }
+            switch ($shipment['type']) {
+                case 'delivery':
+                    $arr[] = "1 - No shippers available for the chosen delivery address";
+                    $arr = implode("\n\r", $arr);
+                    $item->add_meta_data('1 - No shippers available for the chosen delivery address', $arr, true);
+                    break;
+                case 'pickup':
+                    $arr[] = "2 - No pickups available for the chosen delivery address";
+                    $arr = implode("\n\r", $arr);
+                    $item->add_meta_data('2 - No pickup address chosen ', $arr, true);
+                    break;
             }
         }
 
