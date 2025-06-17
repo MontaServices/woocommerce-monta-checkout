@@ -806,7 +806,6 @@ class Packing
             }
         }
 
-        // TODO merge nearly identical code with self::checkout_store()
         $settings = new Settings(
             origin: esc_attr(get_option('monta_shop')),
             user: esc_attr(get_option('monta_username')),
