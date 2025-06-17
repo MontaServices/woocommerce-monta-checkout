@@ -1,13 +1,6 @@
 <?php
 namespace Monta;
 
-use WC_Abstract_Order;
-use WC_Coupon;
-use WC_Order_Item_Shipping;
-use WC_Shipping_Rate;
-use WC_Shipping_Zones;
-use WC_Tax;
-
 class Packing
 {
     private static $WooCommerceShippingMethod = null;
@@ -833,7 +826,17 @@ class Packing
             }
         }
 
-        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), !esc_attr(get_option('monta_disablepickup')), esc_attr(get_option('monta_max_pickuppoints')), esc_attr(get_option('monta_google_key')), esc_attr(get_option('monta_shippingcosts')), excludeShippingDiscount: $excludeShippingDiscount, hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations')));
+        $settings = new \Monta\CheckoutApiWrapper\Objects\Settings(
+            origin: esc_attr(get_option('monta_shop')),
+            user: esc_attr(get_option('monta_username')),
+            password: esc_attr(get_option('monta_password')),
+            pickupPointsEnabled: !esc_attr(get_option('monta_disablepickup')),
+            maxPickupPoints: esc_attr(get_option('monta_max_pickuppoints')),
+            googleKey: esc_attr(get_option('monta_google_key')),
+            defaultCosts: (get_option('monta_shippingcosts')),
+            excludeShippingDiscount: $excludeShippingDiscount,
+            hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations'))
+        );
         if ($type == 'delivery') {
             $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
         } else if ($type == 'pickup' || $type == 'collect') {
