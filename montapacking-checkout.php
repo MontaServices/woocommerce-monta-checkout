@@ -11,7 +11,7 @@
  * Text Domain: montapacking-checkout-woocommerce-extension
  * Domain Path: /languages
  *
- * WC requires at least: 4.0.1
+ * WC requires at least: 5.0.0
  * WC tested up to: 6.1.1
  *
  * Copyright: © 2009-2021 WooCommerce.
