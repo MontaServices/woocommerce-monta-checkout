@@ -841,11 +841,16 @@ class Packing
         );
         // Add SystemInfo to API call
         $settings->setSystemInfo(System::getInfo());
-        
-        if ($type == 'delivery') {
-            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
-        } else if ($type == 'pickup' || $type == 'collect') {
-            $api = new \Monta\CheckoutApiWrapper\MontapackingShipping($settings, get_bloginfo('language'));
+
+        switch ($type) {
+            case 'delivery':
+            case 'pickup':
+            case 'collect':
+                $api = new \Monta\CheckoutApiWrapper\MontapackingShipping(
+                    settings: $settings,
+                    language: get_bloginfo('language'),
+                );
+                break;
         }
 
         ## Monta packing API aanroepen
