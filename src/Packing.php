@@ -296,9 +296,23 @@ class Packing
             }
         }
 
-        $settings = new Settings(esc_attr(get_option('monta_shop')), esc_attr(get_option('monta_username')), esc_attr(get_option('monta_password')), true, 5, esc_attr(get_option('monta_google_key')), 10, 'nl-NL', '€', false, false, esc_attr(get_option('monta_hidedhlpackstations')));
+        $settings = new Settings(
+            origin: esc_attr(get_option('monta_shop')),
+            user: esc_attr(get_option('monta_username')),
+            password: esc_attr(get_option('monta_password')),
+            pickupPointsEnabled: true,
+            maxPickupPoints: 5,
+            googleKey: esc_attr(get_option('monta_google_key')),
+            defaultCosts: 10,
+            webshopLanguage: 'nl-NL',
+            currency: '€',
+            excludeShippingDiscount: false,
+            showZeroCostsAsFree: false,
+            hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations')),
+        );
         $api = new MontapackingShipping($settings, get_bloginfo('language'));
 
+        // TODO what happens here? API is instantiated and promptly ignored
 //        if (true !== $api->checkConnection()) {
         if (false) {
             $arr = [];
@@ -830,6 +844,7 @@ class Packing
             }
         }
 
+        // TODO merge nearly identical code with self::checkout_store()
         $settings = new Settings(
             origin: esc_attr(get_option('monta_shop')),
             user: esc_attr(get_option('monta_username')),
