@@ -5,6 +5,7 @@
  */
 namespace Monta\Helper;
 
+use Composer\InstalledVersions;
 use Monta\CheckoutApiWrapper\Objects\Settings;
 
 class System
@@ -19,11 +20,26 @@ class System
         $info = self::getPluginInfo();
         return [
             Settings::CORE_SOFTWARE => 'WooCommerce',
-            Settings::CORE_VERSION => WC_VERSION,
-            Settings::CHECKOUT_API_WRAPPER_VERSION => "0.0", // TODO get dynamically
+            Settings::CORE_VERSION => WC_VERSION, // WooCommerce version is defined as global constant
+            Settings::CHECKOUT_API_WRAPPER_VERSION => self::getComposerVersion("monta/checkout-api-wrapper"),
             Settings::MODULE_NAME => $moduleName,
             Settings::MODULE_VERSION => $info['Version'] ?? "0.0",
         ];
+    }
+
+    /** TODO duplicate code in WooCommerce, Shopware and Magento projects. Merge centrally to CheckoutApiWrapper
+     *
+     * @param string $packageName
+     * @return string|null
+     */
+    protected static function getComposerVersion(string $packageName)
+    {
+        try {
+            return InstalledVersions::getVersion($packageName);
+        } catch (\OutOfBoundsException $e) {
+            // When module not installed, catch error and return empty string
+            return "";
+        }
     }
 
     /**
