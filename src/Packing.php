@@ -115,7 +115,7 @@ class Packing
         }
     }
 
-    public static function checkout_store(WC_Abstract_Order $order)
+    public static function checkout_store(\WC_Abstract_Order $order)
     {
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
@@ -144,7 +144,7 @@ class Packing
         $bMontapackingAdd = false;
 
         ## Shipping regel aanmaken bij order
-        $item = new WC_Order_Item_Shipping();
+        $item = new \WC_Order_Item_Shipping();
 
         ## Ingevulde meta data opslaan
         $type = sanitize_post($_POST['montapacking']);
@@ -312,7 +312,7 @@ class Packing
         $price = wc_format_decimal(self::get_shipping_total(sanitize_post($_POST)));
 
         if (wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
-            $mixed = WC_Tax::get_shipping_tax_rates(null, null);
+            $mixed = \WC_Tax::get_shipping_tax_rates(null, null);
 
             $vat_percent = 0;
             $id = "";
@@ -326,7 +326,7 @@ class Packing
 
             $tax = (self::get_shipping_total(sanitize_post($_POST)) / $vat_calculate) * $vat_percent;
 
-            $rate = new WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', (double)$price - $tax, $tax, 'flat_rate');
+            $rate = new \WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', (double)$price - $tax, $tax, 'flat_rate');
 
             $item->set_props([
                 'method_title' => $rate->label,
@@ -446,7 +446,7 @@ class Packing
         // dan hoef je de prijs verder ook niet meer te berekenen   
         $applied_coupons = WC()->cart->get_applied_coupons();
         foreach ($applied_coupons as $coupon_code) {
-            $coupon = new WC_Coupon($coupon_code);
+            $coupon = new \WC_Coupon($coupon_code);
             if ($coupon->get_free_shipping()) {
                 return 0;
             }
@@ -978,7 +978,7 @@ class Packing
                     $tax_string_array[] = sprintf('%s %s', $tax->formatted_amount, $tax->label);
                 }
             } elseif (!empty($cart_tax_totals)) {
-                $mixed = WC_Tax::get_shipping_tax_rates(null, null);
+                $mixed = \WC_Tax::get_shipping_tax_rates(null, null);
 
                 $vat_percent = 0;
                 foreach ($mixed as $obj) {
@@ -1016,7 +1016,7 @@ class Packing
         global $woocommerce;
         if ($woocommerce->cart->get_applied_coupons()) {
             foreach ($woocommerce->cart->get_applied_coupons() as $coupon) {
-                $getDetails = (new WC_Coupon($coupon));
+                $getDetails = (new \WC_Coupon($coupon));
 
                 if ($getDetails->get_free_shipping()) {
                     return true;
@@ -1038,9 +1038,9 @@ class Packing
             $address['destination']['country'] = WC()->customer->get_shipping_country();
             $address['destination']['state'] = WC()->customer->get_shipping_state();
             $address['destination']['postcode'] = WC()->customer->get_shipping_postcode();
-            $shipping_zone = WC_Shipping_Zones::get_zone_matching_package($address);
+            $shipping_zone = \WC_Shipping_Zones::get_zone_matching_package($address);
         } else {
-            $shipping_zone = WC_Shipping_Zones::get_zone_matching_package($package);
+            $shipping_zone = \WC_Shipping_Zones::get_zone_matching_package($package);
         }
         $chosenMethod = null;
         foreach ($shipping_zone->get_shipping_methods(true) as $class) {
@@ -1064,7 +1064,7 @@ class Packing
                     $applied_coupons = WC()->cart->get_applied_coupons();
                     $hasFreeShipping = false;
                     foreach ($applied_coupons as $coupon_code) {
-                        $coupon = new WC_Coupon($coupon_code);
+                        $coupon = new \WC_Coupon($coupon_code);
                         if ($coupon->get_free_shipping()) {
                             $hasFreeShipping = true;
                         }
