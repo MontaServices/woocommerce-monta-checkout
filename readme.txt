@@ -45,6 +45,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 #1.58.53
 
 * Clean up entire plugin, drop support for WC <5.0 and PHP <8.0
+* Collect System information for debugging
 
 #1.58.52
 
