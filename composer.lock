@@ -333,16 +333,16 @@
         },
         {
             "name": "monta/checkout-api-wrapper",
-            "version": "1.25",
+            "version": "1.25.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MontaServices/checkout-api-wrapper.git",
-                "reference": "6c75e0fe2a3052e8d78bc5c88bf018ea3ea743d9"
+                "reference": "9f8be72711b2a80d32e987551101bbdb1cc5bf8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MontaServices/checkout-api-wrapper/zipball/6c75e0fe2a3052e8d78bc5c88bf018ea3ea743d9",
-                "reference": "6c75e0fe2a3052e8d78bc5c88bf018ea3ea743d9",
+                "url": "https://api.github.com/repos/MontaServices/checkout-api-wrapper/zipball/9f8be72711b2a80d32e987551101bbdb1cc5bf8e",
+                "reference": "9f8be72711b2a80d32e987551101bbdb1cc5bf8e",
                 "shasum": ""
             },
             "require": {
@@ -368,9 +368,9 @@
             "description": "An API Wrapper to connect to the Monta Backend",
             "support": {
                 "issues": "https://github.com/MontaServices/checkout-api-wrapper/issues",
-                "source": "https://github.com/MontaServices/checkout-api-wrapper/tree/1.25"
+                "source": "https://github.com/MontaServices/checkout-api-wrapper/tree/1.25.2"
             },
-            "time": "2025-05-21T13:04:43+00:00"
+            "time": "2025-06-23T06:57:46+00:00"
         },
         {
             "name": "psr/http-client",
@@ -2205,16 +2205,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.12.8",
+            "version": "v0.12.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "85057ceedee50c49d4f6ecaff73ee96adb3b3625"
+                "reference": "1b801844becfe648985372cb4b12ad6840245ace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/85057ceedee50c49d4f6ecaff73ee96adb3b3625",
-                "reference": "85057ceedee50c49d4f6ecaff73ee96adb3b3625",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/1b801844becfe648985372cb4b12ad6840245ace",
+                "reference": "1b801844becfe648985372cb4b12ad6840245ace",
                 "shasum": ""
             },
             "require": {
@@ -2278,9 +2278,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-                "source": "https://github.com/bobthecow/psysh/tree/v0.12.8"
+                "source": "https://github.com/bobthecow/psysh/tree/v0.12.9"
             },
-            "time": "2025-03-16T03:05:19+00:00"
+            "time": "2025-06-23T02:35:06+00:00"
         },
         {
             "name": "sebastian/cli-parser",
