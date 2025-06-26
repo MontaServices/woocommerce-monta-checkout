@@ -487,73 +487,70 @@ class Packing
         if (isset($data['montapacking'])) {
             $monta = $data['montapacking'];
 
-            if (isset($monta['shipment'])) {
-                $shipment = $monta['shipment'];
-            }
-            if (isset($monta['pickup'])) {
-                $pickup = $monta['pickup'];
-            }
-            if (isset($shipment['type'])) {
-                $type = $shipment['type'];
-            }
-            if (isset($shipment['shipper'])) {
-                $shipper = $shipment['shipper'];
-            }
-            if (isset($shipment['extras'])) {
-                $extras = $shipment['extras'];
-            }
+            $shipment = $monta['shipment'] ?? null;
+            $pickup = $monta['pickup'] ?? null;
+            $type = $shipment['type'] ?? null;
+            $shipper = $shipment['shipper'] ?? null;
+            $extras = $shipment['extras'] ?? null;
         }
 
         ## Check by type
         $isfound = false;
-        if ($type == 'delivery') {
-            ## Timeframes uit sessie ophalen
-            $frames = WC()->session->get('montapacking-frames');
-            if ($shipper == "MultipleShipper_ShippingDayUnknown") {
-                $price = $frames['StandardShipper']->price;
-                $isfound = true;
-            } else if (is_array($frames)) {
-                ## Check of gekozen timeframe bestaat
-                $frames = $frames['DeliveryOptions'];
-                if (isset($frames)) {
-                    $method = null;
+        switch ($type) {
+            case 'delivery':
+                ## Timeframes uit sessie ophalen
+                $frames = WC()->session->get('montapacking-frames');
+                if ($shipper == "MultipleShipper_ShippingDayUnknown") {
+                    $price = $frames['StandardShipper']->price;
+                    $isfound = true;
+                } else if (is_array($frames)) {
+                    ## Check of gekozen timeframe bestaat
+                    $frames = $frames['DeliveryOptions'];
+                    if (isset($frames)) {
+                        $method = null;
 
-                    ## Check of timeframe opties heeft
-                    foreach ($frames as $frame) {
-                        if (!is_array($options = $frame->options)) {
-                            throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
-                        }
-                        foreach ($options as $option) {
-                            if ($option->code == $shipper) {
-                                $method = $option;
-                                break;
+                        ## Check of timeframe opties heeft
+                        foreach ($frames as $frame) {
+                            if (!is_array($options = $frame->options)) {
+                                throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
+                            }
+                            foreach ($options as $option) {
+                                if ($option->code == $shipper) {
+                                    $method = $option;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    ## Check of verzendmethode is gevonden
-                    if ($method !== null) {
-                        ## Basis prijs bepalen
-                        $price += $method->price;
-                        $isfound = true;
+                        ## Check of verzendmethode is gevonden
+                        if ($method !== null) {
+                            ## Basis prijs bepalen
+                            $price += $method->price;
+                            $isfound = true;
 
-                        ## Eventuele extra's bijvoeren
-                        if (is_array($extras)) {
-                            ## Extra's toevoegen
-                            foreach ($extras as $extra) {
-                                foreach ($method->deliveryOptions as $deliveryOption) {
-                                    if ($extra == $deliveryOption->code) {
-                                        $price += $deliveryOption->price;
+                            ## Eventuele extra's bijvoeren
+                            if (is_array($extras)) {
+                                ## Extra's toevoegen
+                                foreach ($extras as $extra) {
+                                    foreach ($method->deliveryOptions as $deliveryOption) {
+                                        if ($extra == $deliveryOption->code) {
+                                            $price += $deliveryOption->price;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                } else {
+                    // TODO What if frames from session were incomplete? Maybe flush session here
                 }
-            }
-        } else if ($type == 'pickup' || $type == 'collect') {
-            $price = $pickup['price'];
-            $isfound = true;
+                break;
+            case 'pickup':
+            case 'collect':
+                $price = $pickup['price'];
+                $isfound = true;
+                break;
+            // no default case
         }
 
         if (false === $isfound) {
