@@ -581,40 +581,37 @@ class Packing
 
         $shipment = $type['shipment'];
 
+        $params = [];
         switch ($shipment['type']) {
             case 'delivery':
                 $frames = self::get_frames('delivery');
-
+                // Cache frames in session
+                WC()->session->set('montapacking-frames', $frames);
                 if ($frames !== null) {
                     ## Frames naar handige array zetten
                     $items = $frames['DeliveryOptions'];
-                    WC()->session->set('montapacking-frames', $frames);
 
                     if ($items !== null) {
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        $params = [
                             'success' => true,
                             'frames' => $items,
                             'standardShipper' => $frames['StandardShipper']
-                        ]);
+                        ];
                     } else {
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        $params = [
                             'success' => false,
                             'message' => translate('3 - No shippers available for the chosen delivery address.', 'montapacking-checkout')
-                        ]);
+                        ];
                     }
                 } else {
-                    header('Content-Type: application/json');
-                    echo json_encode([
+                    $params = [
                         'success' => false,
                         'message' => translate('4 - No shippers available for the chosen delivery address.', 'montapacking-checkout')
-                    ]);
+                    ];
                 }
 
                 break;
             case 'pickup':
-
                 #echo '<pre>';
                 $frames = self::get_frames('pickup');
                 if ($frames !== null) {
@@ -655,44 +652,29 @@ class Packing
                             $longitude = 0;
                         }
 
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        $params = [
                             'success' => true,
                             'default' => (object)[
                                 'lat' => $latitude,
                                 'lng' => $longitude,
                             ],
                             'pickups' => $items
-                        ]);
+                        ];
                     } else {
-                        header('Content-Type: application/json');
-
-                        echo json_encode([
+                        $params = [
                             'success' => false,
                             'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                        ]);
-
-                        //$logger = wc_get_logger();
-                        //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                        //$logger->notice('No pickups available for the chosen delivery address', $context);
-
+                        ];
                     }
                 } else {
-                    header('Content-Type: application/json');
-                    echo json_encode([
+                    $params = [
                         'success' => false,
                         'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                    ]);
-
-                    //$logger = wc_get_logger();
-                    //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                    //$logger->notice('No pickups available for the chosen delivery address', $context);
-
+                    ];
                 }
 
                 break;
             case 'collect':
-
                 $frames = self::get_frames('collect');
                 if ($frames !== null) {
                     $items = $frames['StoreLocation'];
@@ -732,43 +714,35 @@ class Packing
                             $longitude = 0;
                         }
 
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        $params = [
                             'success' => true,
                             'default' => (object)[
                                 'lat' => $latitude,
                                 'lng' => $longitude,
                             ],
                             'pickups' => $items
-                        ]);
+                        ];
                     } else {
-                        header('Content-Type: application/json');
-
-                        echo json_encode([
+                        $params = [
                             'success' => false,
                             'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                        ]);
-
-                        //$logger = wc_get_logger();
-                        //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                        //$logger->notice('No pickups available for the chosen delivery address', $context);
-
+                        ];
                     }
                 } else {
-                    header('Content-Type: application/json');
-                    echo json_encode([
+                    $params = [
                         'success' => false,
                         'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                    ]);
-
-                    //$logger = wc_get_logger();
-                    //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                    //$logger->notice('No pickups available for the chosen delivery address', $context);
+                    ];
                 }
 
                 break;
         }
 
+        // Send response with parameters
+        header('Content-Type: application/json');
+        echo json_encode($params);
+
+        // End execution here
         wp_die();
     }
 
