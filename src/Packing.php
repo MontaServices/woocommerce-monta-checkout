@@ -585,13 +585,13 @@ class Packing
         switch ($shipment['type']) {
             case 'delivery':
                 $frames = self::get_frames('delivery');
-                // Cache frames in session
-                WC()->session->set('montapacking-frames', $frames);
                 if ($frames !== null) {
                     ## Frames naar handige array zetten
                     $items = $frames['DeliveryOptions'];
 
                     if ($items !== null) {
+                        // Cache frames in session on success
+                        WC()->session->set('montapacking-frames', $frames);
                         $params = [
                             'success' => true,
                             'frames' => $items,
