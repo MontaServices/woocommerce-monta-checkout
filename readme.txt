@@ -43,7 +43,9 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 == Changelog ==
 
 #1.58.54
+
 * Improve error messaging and clean up code
+* Update "tested up to" value
 
 #1.58.53
 
