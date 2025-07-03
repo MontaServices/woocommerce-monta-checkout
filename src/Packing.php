@@ -297,13 +297,13 @@ class Packing
 
             switch ($shipment['type']) {
                 case 'delivery':
-                    $errorMessage = __LINE__ . " - " . translate("No shippers available for the chosen delivery address");
+                    $errorMessage = translate("No shippers available for the chosen delivery address.");
                     $arr[] = $errorMessage;
                     $arr = implode("\n\r", $arr);
                     $item->add_meta_data($errorMessage, $arr, true);
                     break;
                 case 'pickup':
-                    $arr[] = __LINE__ . " - " . translate("No pickups available for the chosen delivery address");
+                    $arr[] = translate("No pickups available for the chosen delivery address.");
                     $arr = implode("\n\r", $arr);
                     $item->add_meta_data('2 - No pickup address chosen ', $arr, true);
                     break;
@@ -601,13 +601,13 @@ class Packing
                     } else {
                         $params = [
                             'success' => false,
-                            'message' => __LINE__ . " - " . translate('No shippers available for the chosen delivery address', 'montapacking-checkout')
+                            'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
                         ];
                     }
                 } else {
                     $params = [
                         'success' => false,
-                        'message' => __LINE__ . " - " . translate('No shippers available for the chosen delivery address', 'montapacking-checkout')
+                        'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
                     ];
                 }
 
@@ -664,13 +664,13 @@ class Packing
                     } else {
                         $params = [
                             'success' => false,
-                            'message' => __LINE__ . " - " . translate('No pickups available for the chosen delivery address', 'montapacking-checkout')
+                            'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                         ];
                     }
                 } else {
                     $params = [
                         'success' => false,
-                        'message' => __LINE__ . " - " . translate('No pickups available for the chosen delivery address', 'montapacking-checkout')
+                        'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                     ];
                 }
 
@@ -726,13 +726,13 @@ class Packing
                     } else {
                         $params = [
                             'success' => false,
-                            'message' => __LINE__ . " - " . translate('No pickups available for the chosen delivery address', 'montapacking-checkout')
+                            'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                         ];
                     }
                 } else {
                     $params = [
                         'success' => false,
-                        'message' => __LINE__ . " - " . translate('No pickups available for the chosen delivery address', 'montapacking-checkout')
+                        'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                     ];
                 }
 

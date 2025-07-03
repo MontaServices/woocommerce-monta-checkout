@@ -213,12 +213,12 @@
     </div>
 
     <div class="monta-times-croppped-error-deliveries monta-times-cropped-error" style="display:none">
-        <?php __LINE__ . " - " . _e('No deliveries available for the chosen delivery address', 'montapacking-checkout'); ?>
+        <?php _e('No deliveries available for the chosen delivery address.', 'montapacking-checkout'); ?>
         <div class="clear:both"></div>
     </div>
 
     <div class="monta-times-croppped-error-pickup monta-times-cropped-error" style="display:none">
-        <?php __LINE__ . " - " . _e('No pickups available for the chosen delivery address', 'montapacking-checkout'); ?>
+        <?php _e('No pickups available for the chosen delivery address.', 'montapacking-checkout'); ?>
         <div class="clear:both"></div>
     </div>
 
