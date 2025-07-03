@@ -3,7 +3,7 @@ Contributors: monta
 Donate link: 
 Tags: monta, checkout, woocommerce, extension, monta
 Requires at least: 5.0.0
-Tested up to: 6.8.1
+Tested up to: 9.9.5
 Stable tag: 1.58.53
 Requires PHP: 8.0
 License: GPLv3 or later License
