@@ -297,12 +297,13 @@ class Packing
 
             switch ($shipment['type']) {
                 case 'delivery':
-                    $arr[] = "1 - No shippers available for the chosen delivery address";
+                    $errorMessage = translate("No shippers available for the chosen delivery address.");
+                    $arr[] = $errorMessage;
                     $arr = implode("\n\r", $arr);
-                    $item->add_meta_data('1 - No shippers available for the chosen delivery address', $arr, true);
+                    $item->add_meta_data($errorMessage, $arr, true);
                     break;
                 case 'pickup':
-                    $arr[] = "2 - No pickups available for the chosen delivery address";
+                    $arr[] = translate("No pickups available for the chosen delivery address.");
                     $arr = implode("\n\r", $arr);
                     $item->add_meta_data('2 - No pickup address chosen ', $arr, true);
                     break;
@@ -356,8 +357,15 @@ class Packing
         }
     }
 
+    /**
+     * @param $wc_price - Deprecated; Supposedly subtotal but sometimes includes shipping (other plugins calculate it)
+     * @return float
+     * @throws \Exception
+     */
     public static function shipping_total($wc_price = 0)
     {
+        // Get subtotal from cart directly
+        $subtotal = WC()->cart->get_subtotal();
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -365,7 +373,7 @@ class Packing
 
         $price = (float)self::get_shipping_total($data);
 
-        return $wc_price + $price;
+        return $subtotal + $price;
     }
 
     public static function shipping_calculate_html_output($data)
@@ -422,7 +430,7 @@ class Packing
         do_action('monta_shipping_calculate_html_output', ['price' => $price, 'selectedOption' => $selectedOption]);
     }
 
-    public static function stringCurrencyToFloat($money)
+    protected static function stringCurrencyToFloat($money)
     {
         $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
         $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
@@ -487,75 +495,73 @@ class Packing
         if (isset($data['montapacking'])) {
             $monta = $data['montapacking'];
 
-            if (isset($monta['shipment'])) {
-                $shipment = $monta['shipment'];
-            }
-            if (isset($monta['pickup'])) {
-                $pickup = $monta['pickup'];
-            }
-            if (isset($shipment['type'])) {
-                $type = $shipment['type'];
-            }
-            if (isset($shipment['shipper'])) {
-                $shipper = $shipment['shipper'];
-            }
-            if (isset($shipment['extras'])) {
-                $extras = $shipment['extras'];
-            }
+            $shipment = $monta['shipment'] ?? null;
+            $pickup = $monta['pickup'] ?? null;
+            $type = $shipment['type'] ?? null;
+            $shipper = $shipment['shipper'] ?? null;
+            $extras = $shipment['extras'] ?? null;
         }
 
         ## Check by type
         $isfound = false;
-        if ($type == 'delivery') {
-            ## Timeframes uit sessie ophalen
-            $frames = WC()->session->get('montapacking-frames');
-            if ($shipper == "MultipleShipper_ShippingDayUnknown") {
-                $price = $frames['StandardShipper']->price;
-                $isfound = true;
-            } else if (is_array($frames)) {
-                ## Check of gekozen timeframe bestaat
-                $frames = $frames['DeliveryOptions'];
-                if (isset($frames)) {
-                    $method = null;
+        switch ($type) {
+            case 'delivery':
+                ## Timeframes uit sessie ophalen
+                $frames = WC()->session->get('montapacking-frames');
+                if ($shipper == "MultipleShipper_ShippingDayUnknown") {
+                    $price = $frames['StandardShipper']->price;
+                    $isfound = true;
+                } else if (is_array($frames)) {
+                    ## Check of gekozen timeframe bestaat
+                    $frames = $frames['DeliveryOptions'];
+                    if (isset($frames)) {
+                        $method = null;
 
-                    ## Check of timeframe opties heeft
-                    foreach ($frames as $frame) {
-                        if (!is_array($options = $frame->options)) {
-                            throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
-                        }
-                        foreach ($options as $option) {
-                            if ($option->code == $shipper) {
-                                $method = $option;
-                                break;
+                        ## Check of timeframe opties heeft
+                        foreach ($frames as $frame) {
+                            if (!is_array($options = $frame->options)) {
+                                throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
+                            }
+                            foreach ($options as $option) {
+                                if ($option->code == $shipper) {
+                                    $method = $option;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    ## Check of verzendmethode is gevonden
-                    if ($method !== null) {
-                        ## Basis prijs bepalen
-                        $price += $method->price;
-                        $isfound = true;
+                        ## Check of verzendmethode is gevonden
+                        if ($method !== null) {
+                            ## Basis prijs bepalen
+                            $price += $method->price;
+                            $isfound = true;
 
-                        ## Eventuele extra's bijvoeren
-                        if (is_array($extras)) {
-                            ## Extra's toevoegen
-                            foreach ($extras as $extra) {
-                                foreach ($method->deliveryOptions as $deliveryOption) {
-                                    if ($extra == $deliveryOption->code) {
-                                        $price += $deliveryOption->price;
+                            ## Eventuele extra's bijvoeren
+                            if (is_array($extras)) {
+                                ## Extra's toevoegen
+                                foreach ($extras as $extra) {
+                                    foreach ($method->deliveryOptions as $deliveryOption) {
+                                        if ($extra == $deliveryOption->code) {
+                                            $price += $deliveryOption->price;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                } else {
+                    // TODO What if frames from session were incomplete? Maybe flush session here
                 }
-            }
-        } else if ($type == 'pickup' || $type == 'collect') {
-            $price = $pickup['price'];
-            $isfound = true;
+                break;
+            case 'pickup':
+            case 'collect':
+                $price = $pickup['price'];
+                $isfound = true;
+                break;
+            // no default case
         }
 
+        // When no TimeFrame information was found, fallback to configured Start price
         if (false === $isfound) {
             $start = esc_attr(get_option('monta_shippingcosts_start'));
 
@@ -584,40 +590,37 @@ class Packing
 
         $shipment = $type['shipment'];
 
+        $params = [];
         switch ($shipment['type']) {
             case 'delivery':
                 $frames = self::get_frames('delivery');
-
                 if ($frames !== null) {
                     ## Frames naar handige array zetten
                     $items = $frames['DeliveryOptions'];
-                    WC()->session->set('montapacking-frames', $frames);
 
                     if ($items !== null) {
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        // Cache frames in session on success
+                        WC()->session->set('montapacking-frames', $frames);
+                        $params = [
                             'success' => true,
                             'frames' => $items,
                             'standardShipper' => $frames['StandardShipper']
-                        ]);
+                        ];
                     } else {
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        $params = [
                             'success' => false,
-                            'message' => translate('3 - No shippers available for the chosen delivery address.', 'montapacking-checkout')
-                        ]);
+                            'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
+                        ];
                     }
                 } else {
-                    header('Content-Type: application/json');
-                    echo json_encode([
+                    $params = [
                         'success' => false,
-                        'message' => translate('4 - No shippers available for the chosen delivery address.', 'montapacking-checkout')
-                    ]);
+                        'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
+                    ];
                 }
 
                 break;
             case 'pickup':
-
                 #echo '<pre>';
                 $frames = self::get_frames('pickup');
                 if ($frames !== null) {
@@ -658,44 +661,29 @@ class Packing
                             $longitude = 0;
                         }
 
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        $params = [
                             'success' => true,
                             'default' => (object)[
                                 'lat' => $latitude,
                                 'lng' => $longitude,
                             ],
                             'pickups' => $items
-                        ]);
+                        ];
                     } else {
-                        header('Content-Type: application/json');
-
-                        echo json_encode([
+                        $params = [
                             'success' => false,
                             'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                        ]);
-
-                        //$logger = wc_get_logger();
-                        //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                        //$logger->notice('No pickups available for the chosen delivery address', $context);
-
+                        ];
                     }
                 } else {
-                    header('Content-Type: application/json');
-                    echo json_encode([
+                    $params = [
                         'success' => false,
                         'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                    ]);
-
-                    //$logger = wc_get_logger();
-                    //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                    //$logger->notice('No pickups available for the chosen delivery address', $context);
-
+                    ];
                 }
 
                 break;
             case 'collect':
-
                 $frames = self::get_frames('collect');
                 if ($frames !== null) {
                     $items = $frames['StoreLocation'];
@@ -735,43 +723,35 @@ class Packing
                             $longitude = 0;
                         }
 
-                        header('Content-Type: application/json');
-                        echo json_encode([
+                        $params = [
                             'success' => true,
                             'default' => (object)[
                                 'lat' => $latitude,
                                 'lng' => $longitude,
                             ],
                             'pickups' => $items
-                        ]);
+                        ];
                     } else {
-                        header('Content-Type: application/json');
-
-                        echo json_encode([
+                        $params = [
                             'success' => false,
                             'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                        ]);
-
-                        //$logger = wc_get_logger();
-                        //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                        //$logger->notice('No pickups available for the chosen delivery address', $context);
-
+                        ];
                     }
                 } else {
-                    header('Content-Type: application/json');
-                    echo json_encode([
+                    $params = [
                         'success' => false,
                         'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
-                    ]);
-
-                    //$logger = wc_get_logger();
-                    //$context = array('source' => 'Montapacking Checkout WooCommerce Extension');
-                    //$logger->notice('No pickups available for the chosen delivery address', $context);
+                    ];
                 }
 
                 break;
         }
 
+        // Send response with parameters
+        header('Content-Type: application/json');
+        echo json_encode($params);
+
+        // End execution here
         wp_die();
     }
 

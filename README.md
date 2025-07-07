@@ -1,7 +1,5 @@
 # Monta Checkout
 
-Requires WooCommerce version at least: **4.0.1** and tested up to **6.4.1**.
-
 ## Description
 
 WooCommerce plugin to integrate the Monta shipping options

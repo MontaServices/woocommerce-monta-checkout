@@ -218,7 +218,7 @@
     </div>
 
     <div class="monta-times-croppped-error-pickup monta-times-cropped-error" style="display:none">
-        <?php _e('No pickups available for the chosen delivery address', 'montapacking-checkout'); ?>
+        <?php _e('No pickups available for the chosen delivery address.', 'montapacking-checkout'); ?>
         <div class="clear:both"></div>
     </div>
 
