@@ -93,7 +93,7 @@ function montacheckout_init()
 
         ## Shipping cost calculation
         add_action('woocommerce_review_order_before_shipping', [Packing::class, 'shipping_calculate'], 10);
-        // Disabled this since is causing double calculated shipping rates
+        // TODO argument is deprecated
         add_filter('woocommerce_cart_get_total', [Packing::class, 'shipping_total'], PHP_INT_MAX, 1);
 
         ## Shipping cost calculation

@@ -357,8 +357,15 @@ class Packing
         }
     }
 
+    /**
+     * @param $wc_price - Deprecated; Supposedly subtotal but sometimes includes shipping (other plugins calculate it)
+     * @return float
+     * @throws \Exception
+     */
     public static function shipping_total($wc_price = 0)
     {
+        // Get subtotal from cart directly
+        $subtotal = WC()->cart->get_subtotal();
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -366,7 +373,7 @@ class Packing
 
         $price = (float)self::get_shipping_total($data);
 
-        return $wc_price + $price;
+        return $subtotal + $price;
     }
 
     public static function shipping_calculate_html_output($data)
@@ -423,7 +430,7 @@ class Packing
         do_action('monta_shipping_calculate_html_output', ['price' => $price, 'selectedOption' => $selectedOption]);
     }
 
-    public static function stringCurrencyToFloat($money)
+    protected static function stringCurrencyToFloat($money)
     {
         $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
         $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
@@ -554,6 +561,7 @@ class Packing
             // no default case
         }
 
+        // When no TimeFrame information was found, fallback to configured Start price
         if (false === $isfound) {
             $start = esc_attr(get_option('monta_shippingcosts_start'));
 

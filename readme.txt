@@ -44,6 +44,7 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 #1.58.54
 
+* Fix double calculation of shipping prices
 * Improve error messaging and clean up code
 * Update "tested up to" value
 
