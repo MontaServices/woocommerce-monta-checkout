@@ -365,7 +365,7 @@ class Packing
     public static function shipping_total($wc_price = 0)
     {
         // Get subtotal from cart directly
-        $subtotal = WC()->cart->get_subtotal();
+        $subtotal = self::cartSubtotal();
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -891,7 +891,7 @@ class Packing
             return null;
         }
 
-        $subtotal = (WC()->cart->get_subtotal() + WC()->cart->get_subtotal_tax());
+        $subtotal = self::cartSubtotal();
         $subtotal_ex = WC()->cart->get_subtotal_tax();
 
         $api->setOrder($subtotal, $subtotal_ex);
@@ -1064,4 +1064,15 @@ class Packing
         return $chosenMethod;
     }
 
+    /** Get Cart subtotal (incl. tax)
+     * TODO move to custom Helper to reduce class size
+     * @return float
+     */
+    protected static function cartSubtotal()
+    {
+        // cart subtotal (excl.)
+        return WC()->cart->get_subtotal()
+            // plus cart taxes
+            + WC()->cart->get_subtotal_tax();
+    }
 }
