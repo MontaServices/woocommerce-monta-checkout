@@ -165,6 +165,7 @@ class Packing
 
         $items = null;
         $standardShipper = null;
+        $shipperCodes = "";
         switch ($shipment['type']) {
             case 'delivery':
                 $frames = self::get_frames();
@@ -561,7 +562,7 @@ class Packing
             // no default case
         }
 
-        // When no TimeFrame information was found, fallback to configured Start price
+        // When no frame information was found, fallback to configured Start price
         if (false === $isfound) {
             $start = esc_attr(get_option('monta_shippingcosts_start'));
 
@@ -809,6 +810,9 @@ class Packing
                     language: get_bloginfo('language'),
                 );
                 break;
+            default:
+                // When type is anything else, something is wrong
+                throw new \Exception("Cannot get frames for unsupported type:  `" . $type . "`");
         }
 
         ## Monta packing API aanroepen
