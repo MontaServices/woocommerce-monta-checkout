@@ -203,6 +203,10 @@ function montacheckout_enqueue_scripts()
     }
 }
 
+/**
+ * @return void
+ * @deprecated - This method is not referenced anywhere
+ */
 function montacheckout_register_session()
 {
     if (!session_id()) {
