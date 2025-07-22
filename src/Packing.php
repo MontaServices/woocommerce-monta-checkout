@@ -520,14 +520,15 @@ class Packing
 
                         ## Check of timeframe opties heeft
                         foreach ($frames as $frame) {
-                            if (!is_array($options = $frame->options)) {
-                                throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
-                            }
-                            foreach ($options as $option) {
-                                if ($option->code == $shipper) {
-                                    $method = $option;
-                                    break;
+                            if (is_array($options = $frame->options)) {
+                                foreach ($options as $option) {
+                                    if ($option->code == $shipper) {
+                                        $method = $option;
+                                        break;
+                                    }
                                 }
+                            } else {
+                                throw new \Exception("Shipper options should be an array, actual: " . var_export($options, true));
                             }
                         }
 
