@@ -165,6 +165,7 @@ class Packing
 
         $items = null;
         $standardShipper = null;
+        $shipperCodes = "";
         switch ($shipment['type']) {
             case 'delivery':
                 $frames = self::get_frames();
@@ -550,7 +551,7 @@ class Packing
                         }
                     }
                 } else {
-                    // TODO What if frames from session were incomplete? Maybe flush session here
+                    // TODO What if timeframes from session were incomplete? Maybe flush session here
                 }
                 break;
             case 'pickup':
@@ -809,6 +810,9 @@ class Packing
                     language: get_bloginfo('language'),
                 );
                 break;
+            default:
+                // When type is anything else, something is wrong
+                throw new \Exception("Cannot get TimeFrames for unsupported type:  `" . $type . "`");
         }
 
         ## Monta packing API aanroepen

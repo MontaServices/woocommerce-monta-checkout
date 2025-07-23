@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.54
+ * Version: 1.58.55
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -12,8 +12,8 @@
  * Domain Path: /languages
  *
  * WC requires at least: 5.0.0
- * WC tested up to: 9.9.5
- * Requires PHP: 8.0
+ * WC tested up to: 10.0.2
+ * Requires PHP: 8.1
  *
  * Copyright: © 2009-2021 WooCommerce.
  * License: GNU General Public License v3.0
@@ -22,8 +22,8 @@
 
 use Monta\Packing;
 
+// Include config and autoload
 include('montapacking-config.php');
-include("src/Packing.php"); // Still required because core does not read PSR-4 when adding hooks
 
 if (esc_attr(get_option('monta_logerrors'))) {
     define('WC_LOG_HANDLER', 'WC_Log_Handler_DB');
@@ -203,6 +203,10 @@ function montacheckout_enqueue_scripts()
     }
 }
 
+/**
+ * @return void
+ * @deprecated - This method is not referenced anywhere
+ */
 function montacheckout_register_session()
 {
     if (!session_id()) {
