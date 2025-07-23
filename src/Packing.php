@@ -552,7 +552,7 @@ class Packing
                         }
                     }
                 } else {
-                    // TODO What if frames from session were incomplete? Maybe flush session here
+                    // TODO What if timeframes from session were incomplete? Maybe flush session here
                 }
                 break;
             case 'pickup':
@@ -563,7 +563,7 @@ class Packing
             // no default case
         }
 
-        // When no frame information was found, fallback to configured Start price
+        // When no TimeFrame information was found, fallback to configured Start price
         if (false === $isfound) {
             $start = esc_attr(get_option('monta_shippingcosts_start'));
 
@@ -813,7 +813,7 @@ class Packing
                 break;
             default:
                 // When type is anything else, something is wrong
-                throw new \Exception("Cannot get frames for unsupported type:  `" . $type . "`");
+                throw new \Exception("Cannot get TimeFrames for unsupported type:  `" . $type . "`");
         }
 
         ## Monta packing API aanroepen
