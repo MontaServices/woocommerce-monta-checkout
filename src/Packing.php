@@ -367,7 +367,7 @@ class Packing
     {
         // Get subtotal & discount total from cart directly
         $subtotal = self::cartSubtotal();
-        $discount_total = WC()->cart->get_cart_discount_total();
+        $discount_total = WC()->cart->get_cart_discount_total() + WC()->cart->get_cart_discount_tax_total();
         
         $data = null;
         if (isset($_POST['montapacking'])) {
