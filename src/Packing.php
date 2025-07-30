@@ -365,8 +365,10 @@ class Packing
      */
     public static function shipping_total($wc_price = 0)
     {
-        // Get subtotal from cart directly
+        // Get subtotal & discount total from cart directly
         $subtotal = self::cartSubtotal();
+        $discount_total = WC()->cart->get_cart_discount_total() + WC()->cart->get_cart_discount_tax_total();
+        
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -374,7 +376,7 @@ class Packing
 
         $price = (float)self::get_shipping_total($data);
 
-        return $subtotal + $price;
+        return $subtotal - $discount_total + $price;
     }
 
     public static function shipping_calculate_html_output($data)
