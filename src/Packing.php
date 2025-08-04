@@ -368,7 +368,7 @@ class Packing
         // Get subtotal & discount total from cart directly
         $subtotal = self::cartSubtotal();
         $discount_total = WC()->cart->get_cart_discount_total() + WC()->cart->get_cart_discount_tax_total();
-        
+
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -823,21 +823,21 @@ class Packing
             $api->setAddress(
                 $data->billing_address_1,
                 '',
-                $data->billing_address_2,
+                $data->billing_address_2 ?? null,
                 $data->billing_postcode,
                 $data->billing_city,
-                $data->billing_state,
+                $data->billing_state ?? null,
                 $data->billing_country
             );
         } else {
-            ## Set shipping adres of customer when different
+            ## Set shipping address of customer when different
             $api->setAddress(
                 $data->shipping_address_1,
                 '',
-                $data->shipping_address_2,
+                $data->shipping_address_2 ?? null,
                 $data->shipping_postcode,
                 $data->shipping_city,
-                $data->shipping_state,
+                $data->shipping_state ?? null,
                 $data->shipping_country
             );
         }
