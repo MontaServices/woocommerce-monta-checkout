@@ -54,7 +54,6 @@ class Packing
 
         switch ($shipment['type']) {
             case 'delivery':
-
                 $frames = self::get_frames('delivery');
 
                 if ($frames !== null) {
@@ -64,7 +63,6 @@ class Packing
 
                 break;
             case 'pickup':
-
                 if ((!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') && ($has_virtual_products == false)) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
@@ -907,23 +905,26 @@ class Packing
         $api->setOnStock($bStockStatus);
         do_action('woocommerce_cart_shipping_packages');
 
-        if ($type == 'delivery') {
-            $shippingOptions = $api->getShippingOptions($bStockStatus);
-            do_action('woocommerce_cart_shipping_packages');
-            if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
-                if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
-                    foreach ($shippingOptions[0]->options as $option) {
-                        $option->price = self::$WooCommerceShippingMethod['cost'];
-                    }
-                }
-
+        switch ($type) {
+            case 'delivery':
+                $shippingOptions = $api->getShippingOptions($bStockStatus);
                 do_action('woocommerce_cart_shipping_packages');
-            }
-            return $shippingOptions;
-        } else if ($type == 'pickup') {
-            return $api->getShippingOptions($bStockStatus);
-        } else if ($type == 'collect') {
-            return $api->getShippingOptions($bStockStatus);
+                if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
+                    if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
+                        foreach ($shippingOptions[0]->options as $option) {
+                            $option->price = self::$WooCommerceShippingMethod['cost'];
+                        }
+                    }
+
+                    do_action('woocommerce_cart_shipping_packages');
+                }
+                return $shippingOptions;
+            case 'pickup':
+            case 'collect':
+                return $api->getShippingOptions($bStockStatus);
+            default:
+                // TODO unsupported type returns nothing, warn
+                return null;
         }
     }
 
