@@ -54,7 +54,6 @@ class Packing
 
         switch ($shipment['type']) {
             case 'delivery':
-
                 $frames = self::get_frames('delivery');
 
                 if ($frames !== null) {
@@ -64,7 +63,6 @@ class Packing
 
                 break;
             case 'pickup':
-
                 if ((!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') && ($has_virtual_products == false)) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
@@ -368,7 +366,7 @@ class Packing
         // Get subtotal & discount total from cart directly
         $subtotal = self::cartSubtotal();
         $discount_total = WC()->cart->get_cart_discount_total() + WC()->cart->get_cart_discount_tax_total();
-        
+
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
@@ -823,21 +821,21 @@ class Packing
             $api->setAddress(
                 $data->billing_address_1,
                 '',
-                $data->billing_address_2,
+                $data->billing_address_2 ?? null,
                 $data->billing_postcode,
                 $data->billing_city,
-                $data->billing_state,
+                $data->billing_state ?? null,
                 $data->billing_country
             );
         } else {
-            ## Set shipping adres of customer when different
+            ## Set shipping address of customer when different
             $api->setAddress(
                 $data->shipping_address_1,
                 '',
-                $data->shipping_address_2,
+                $data->shipping_address_2 ?? null,
                 $data->shipping_postcode,
                 $data->shipping_city,
-                $data->shipping_state,
+                $data->shipping_state ?? null,
                 $data->shipping_country
             );
         }
@@ -903,45 +901,30 @@ class Packing
         $api->setOrder($subtotal, $subtotal_ex);
 
         ## Type timeframes ophalen
-        if (esc_attr(get_option('monta_leadingstock')) == '') {
-            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
-            $api->setOnStock($bStockStatus);
-        } else {
-            $bStockStatus = $bAllProductsAvailableAtMontapacking;
-            $api->setOnStock($bStockStatus);
-        }
+        $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+        $api->setOnStock($bStockStatus);
         do_action('woocommerce_cart_shipping_packages');
 
-        if ($type == 'delivery') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
+        switch ($type) {
+            case 'delivery':
                 $shippingOptions = $api->getShippingOptions($bStockStatus);
                 do_action('woocommerce_cart_shipping_packages');
-            } else {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action('woocommerce_cart_shipping_packages');
-            }
-            if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
-                if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
-                    foreach ($shippingOptions[0]->options as $option) {
-                        $option->price = self::$WooCommerceShippingMethod['cost'];
+                if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
+                    if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
+                        foreach ($shippingOptions[0]->options as $option) {
+                            $option->price = self::$WooCommerceShippingMethod['cost'];
+                        }
                     }
-                }
 
-                do_action('woocommerce_cart_shipping_packages');
-            }
-            return $shippingOptions;
-        } else if ($type == 'pickup') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
+                    do_action('woocommerce_cart_shipping_packages');
+                }
+                return $shippingOptions;
+            case 'pickup':
+            case 'collect':
                 return $api->getShippingOptions($bStockStatus);
-            } else {
-                return $api->getShippingOptions($bStockStatus);
-            }
-        } else if ($type == 'collect') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                return $api->getShippingOptions($bStockStatus);
-            } else {
-                return $api->getShippingOptions($bStockStatus);
-            }
+            default:
+                // TODO unsupported type returns nothing, warn
+                return null;
         }
     }
 

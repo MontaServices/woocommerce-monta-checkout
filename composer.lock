@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a93e0fbb211080fda08834fe96f561cd",
+    "content-hash": "e643b8c0bf2f4d8c6e05211b3dd2fd98",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -333,16 +333,16 @@
         },
         {
             "name": "monta/checkout-api-wrapper",
-            "version": "1.25.2",
+            "version": "1.25.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MontaServices/checkout-api-wrapper.git",
-                "reference": "9f8be72711b2a80d32e987551101bbdb1cc5bf8e"
+                "reference": "e4a08c877af29930259e73d940ba4aa9b562d1e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MontaServices/checkout-api-wrapper/zipball/9f8be72711b2a80d32e987551101bbdb1cc5bf8e",
-                "reference": "9f8be72711b2a80d32e987551101bbdb1cc5bf8e",
+                "url": "https://api.github.com/repos/MontaServices/checkout-api-wrapper/zipball/e4a08c877af29930259e73d940ba4aa9b562d1e0",
+                "reference": "e4a08c877af29930259e73d940ba4aa9b562d1e0",
                 "shasum": ""
             },
             "require": {
@@ -368,9 +368,9 @@
             "description": "An API Wrapper to connect to the Monta Backend",
             "support": {
                 "issues": "https://github.com/MontaServices/checkout-api-wrapper/issues",
-                "source": "https://github.com/MontaServices/checkout-api-wrapper/tree/1.25.2"
+                "source": "https://github.com/MontaServices/checkout-api-wrapper/tree/1.25.4"
             },
-            "time": "2025-06-23T06:57:46+00:00"
+            "time": "2025-08-05T07:32:35+00:00"
         },
         {
             "name": "psr/http-client",
@@ -4522,7 +4522,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0"
+        "php": "^8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
