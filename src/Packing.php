@@ -903,23 +903,13 @@ class Packing
         $api->setOrder($subtotal, $subtotal_ex);
 
         ## Type timeframes ophalen
-        if (esc_attr(get_option('monta_leadingstock')) == '') {
-            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
-            $api->setOnStock($bStockStatus);
-        } else {
-            $bStockStatus = $bAllProductsAvailableAtMontapacking;
-            $api->setOnStock($bStockStatus);
-        }
+        $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+        $api->setOnStock($bStockStatus);
         do_action('woocommerce_cart_shipping_packages');
 
         if ($type == 'delivery') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action('woocommerce_cart_shipping_packages');
-            } else {
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
-                do_action('woocommerce_cart_shipping_packages');
-            }
+            $shippingOptions = $api->getShippingOptions($bStockStatus);
+            do_action('woocommerce_cart_shipping_packages');
             if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                 if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
                     foreach ($shippingOptions[0]->options as $option) {
@@ -931,17 +921,9 @@ class Packing
             }
             return $shippingOptions;
         } else if ($type == 'pickup') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                return $api->getShippingOptions($bStockStatus);
-            } else {
-                return $api->getShippingOptions($bStockStatus);
-            }
+            return $api->getShippingOptions($bStockStatus);
         } else if ($type == 'collect') {
-            if (esc_attr(get_option('monta_checkproductsonsku'))) {
-                return $api->getShippingOptions($bStockStatus);
-            } else {
-                return $api->getShippingOptions($bStockStatus);
-            }
+            return $api->getShippingOptions($bStockStatus);
         }
     }
 
