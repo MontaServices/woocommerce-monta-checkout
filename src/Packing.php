@@ -30,9 +30,13 @@ class Packing
 
         // Controleer elk product in de winkelwagen
         foreach ($cart_items as $cart_item) {
-            $product = wc_get_product($cart_item['product_id']);
+            if ($cart_item['variation_id']) {
+                $product = wc_get_product($cart_item['variation_id']);
+            } else {
+                $product = wc_get_product($cart_item['product_id']);
+            }
 
-            if ($product && $product->get_virtual()) {
+            if ($product && $product->is_virtual()) {
                 $has_virtual_products = true;
             }
         }
@@ -126,7 +130,7 @@ class Packing
                     $product = wc_get_product($cart_item['product_id']);
                 }
 
-                $virtual = $product->get_virtual();
+                $virtual = $product->is_virtual();
 
                 if ($virtual) {
                     $hasDigitalProducts = true;
@@ -464,7 +468,7 @@ class Packing
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
         foreach ($items as $values) {
-            $virtual = $values['data']->get_virtual();
+            $virtual = $values['data']->is_virtual();
 
             if ($virtual) {
                 $hasDigitalProducts = true;
@@ -866,7 +870,7 @@ class Packing
                     $x++;
                 }
 
-                $virtual = $product->get_virtual();
+                $virtual = $product->is_virtual();
 
                 if ($virtual) {
                     $hasDigitalProducts = true;
