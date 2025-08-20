@@ -18,7 +18,8 @@ class Packing
         return [];
     }
 
-    /**
+    /** Validate checkout data
+     *
      * @param $data
      * @param $errors
      * @return void
@@ -34,7 +35,7 @@ class Packing
 
         $has_virtual_products = false;
 
-        // Controleer elk product in de winkelwagen
+        // Check if cart contains virtual products
         foreach ($cart_items as $cart_item) {
             // Load either variation ID or product itself
             // Since "virtual" attribute is not on the main parent product in case of Variation product.
@@ -70,6 +71,7 @@ class Packing
 
                 break;
             case 'pickup':
+                // Selecting location is only required when cart has no virtual products.
                 if (!$has_virtual_products) {
                     if ((!isset($pickup) || empty($pickup['code']))) {
                         $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
@@ -79,13 +81,12 @@ class Packing
                         $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
                     }
                 }
-
                 break;
-
             case 'collect':
                 if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && !$has_virtual_products) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
+                break;
         }
 
         ## Check of timeframes bekend zijn en niet van een te oude sessie
@@ -765,6 +766,11 @@ class Packing
         wp_die();
     }
 
+    /**
+     * @param $type
+     * @return array|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public static function get_frames($type = 'delivery')
     {
         global $woocommerce;
