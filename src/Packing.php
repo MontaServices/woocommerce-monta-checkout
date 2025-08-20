@@ -1,4 +1,5 @@
 <?php
+
 namespace Monta;
 
 use Monta\CheckoutApiWrapper\MontapackingShipping;
@@ -339,11 +340,11 @@ class Packing
             $rate = new \WC_Shipping_Rate('flat_rate_shipping' . $id, 'Webshop verzendmethode', (double)$price - $tax, $tax, 'flat_rate');
 
             $item->set_props([
-                    'method_title' => $rate->label,
-                    'method_id' => $rate->id,
-                    'total' => wc_format_decimal($rate->cost),
-                    'taxes' => $rate->taxes,
-                    'meta_data' => $rate->get_meta_data()
+                'method_title' => $rate->label,
+                'method_id' => $rate->id,
+                'total' => wc_format_decimal($rate->cost),
+                'taxes' => $rate->taxes,
+                'meta_data' => $rate->get_meta_data()
             ]);
 
             $order->add_item($item);
@@ -353,9 +354,9 @@ class Packing
             $order->calculate_totals(true);
         } else {
             $item->set_props([
-                    'method_title' => 'Webshop verzendmethode',
-                    'method_id' => 0,
-                    'total' => $price,
+                'method_title' => 'Webshop verzendmethode',
+                'method_id' => 0,
+                'total' => $price,
             ]);
 
             $order->add_item($item);
@@ -613,20 +614,20 @@ class Packing
                         // Cache frames in session on success
                         WC()->session->set('montapacking-frames', $frames);
                         $params = [
-                                'success' => true,
-                                'frames' => $items,
-                                'standardShipper' => $frames['StandardShipper']
+                            'success' => true,
+                            'frames' => $items,
+                            'standardShipper' => $frames['StandardShipper']
                         ];
                     } else {
                         $params = [
-                                'success' => false,
-                                'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
+                            'success' => false,
+                            'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
                         ];
                     }
                 } else {
                     $params = [
-                            'success' => false,
-                            'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
+                        'success' => false,
+                        'message' => translate('No shippers available for the chosen delivery address.', 'montapacking-checkout')
                     ];
                 }
 
@@ -642,16 +643,16 @@ class Packing
                         // Get order location (lat and long by address)
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
                             $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
-                                    sanitize_text_field($_POST['shipping_address_2']) . ' ' .
-                                    sanitize_text_field($_POST['shipping_postcode']) . ', ' .
-                                    sanitize_text_field($_POST['shipping_city']) . ' ' .
-                                    sanitize_text_field($_POST['shipping_country']) . '';
+                                sanitize_text_field($_POST['shipping_address_2']) . ' ' .
+                                sanitize_text_field($_POST['shipping_postcode']) . ', ' .
+                                sanitize_text_field($_POST['shipping_city']) . ' ' .
+                                sanitize_text_field($_POST['shipping_country']) . '';
                         } else {
                             $address = sanitize_text_field($_POST['billing_address_1']) . ' ' .
-                                    sanitize_text_field($_POST['billing_address_2']) . ' ' .
-                                    sanitize_text_field($_POST['billing_postcode']) . ', ' .
-                                    sanitize_text_field($_POST['billing_city']) . ' ' .
-                                    sanitize_text_field($_POST['billing_country']) . '';
+                                sanitize_text_field($_POST['billing_address_2']) . ' ' .
+                                sanitize_text_field($_POST['billing_postcode']) . ', ' .
+                                sanitize_text_field($_POST['billing_city']) . ' ' .
+                                sanitize_text_field($_POST['billing_country']) . '';
                         }
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
@@ -673,23 +674,23 @@ class Packing
                         }
 
                         $params = [
-                                'success' => true,
-                                'default' => (object)[
-                                        'lat' => $latitude,
-                                        'lng' => $longitude,
-                                ],
-                                'pickups' => $items
+                            'success' => true,
+                            'default' => (object)[
+                                'lat' => $latitude,
+                                'lng' => $longitude,
+                            ],
+                            'pickups' => $items
                         ];
                     } else {
                         $params = [
-                                'success' => false,
-                                'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
+                            'success' => false,
+                            'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                         ];
                     }
                 } else {
                     $params = [
-                            'success' => false,
-                            'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
+                        'success' => false,
+                        'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                     ];
                 }
 
@@ -704,16 +705,16 @@ class Packing
                         // Get order location (long and lat by address)
                         if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
                             $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
-                                    sanitize_text_field($_POST['shipping_address_2']) . ' ' .
-                                    sanitize_text_field($_POST['shipping_postcode']) . ', ' .
-                                    sanitize_text_field($_POST['shipping_city']) . ' ' .
-                                    sanitize_text_field($_POST['shipping_country']) . '';
+                                sanitize_text_field($_POST['shipping_address_2']) . ' ' .
+                                sanitize_text_field($_POST['shipping_postcode']) . ', ' .
+                                sanitize_text_field($_POST['shipping_city']) . ' ' .
+                                sanitize_text_field($_POST['shipping_country']) . '';
                         } else {
                             $address = sanitize_text_field($_POST['billing_address_1']) . ' ' .
-                                    sanitize_text_field($_POST['billing_address_2']) . ' ' .
-                                    sanitize_text_field($_POST['billing_postcode']) . ', ' .
-                                    sanitize_text_field($_POST['billing_city']) . ' ' .
-                                    sanitize_text_field($_POST['billing_country']) . '';
+                                sanitize_text_field($_POST['billing_address_2']) . ' ' .
+                                sanitize_text_field($_POST['billing_postcode']) . ', ' .
+                                sanitize_text_field($_POST['billing_city']) . ' ' .
+                                sanitize_text_field($_POST['billing_country']) . '';
                         }
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
@@ -735,23 +736,23 @@ class Packing
                         }
 
                         $params = [
-                                'success' => true,
-                                'default' => (object)[
-                                        'lat' => $latitude,
-                                        'lng' => $longitude,
-                                ],
-                                'pickups' => $items
+                            'success' => true,
+                            'default' => (object)[
+                                'lat' => $latitude,
+                                'lng' => $longitude,
+                            ],
+                            'pickups' => $items
                         ];
                     } else {
                         $params = [
-                                'success' => false,
-                                'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
+                            'success' => false,
+                            'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                         ];
                     }
                 } else {
                     $params = [
-                            'success' => false,
-                            'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
+                        'success' => false,
+                        'message' => translate('No pickups available for the chosen delivery address.', 'montapacking-checkout')
                     ];
                 }
 
@@ -803,15 +804,15 @@ class Packing
         }
 
         $settings = new Settings(
-                origin: esc_attr(get_option('monta_shop')),
-                user: esc_attr(get_option('monta_username')),
-                password: esc_attr(get_option('monta_password')),
-                pickupPointsEnabled: !esc_attr(get_option('monta_disablepickup')),
-                maxPickupPoints: esc_attr(get_option('monta_max_pickuppoints')),
-                googleKey: esc_attr(get_option('monta_google_key')),
-                defaultCosts: (get_option('monta_shippingcosts')),
-                excludeShippingDiscount: $excludeShippingDiscount,
-                hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations'))
+            origin: esc_attr(get_option('monta_shop')),
+            user: esc_attr(get_option('monta_username')),
+            password: esc_attr(get_option('monta_password')),
+            pickupPointsEnabled: !esc_attr(get_option('monta_disablepickup')),
+            maxPickupPoints: esc_attr(get_option('monta_max_pickuppoints')),
+            googleKey: esc_attr(get_option('monta_google_key')),
+            defaultCosts: (get_option('monta_shippingcosts')),
+            excludeShippingDiscount: $excludeShippingDiscount,
+            hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations'))
         );
         // Add SystemInfo to API call
         $settings->setSystemInfo(System::getInfo());
@@ -821,8 +822,8 @@ class Packing
             case 'pickup':
             case 'collect':
                 $api = new MontapackingShipping(
-                        settings: $settings,
-                        language: get_bloginfo('language'),
+                    settings: $settings,
+                    language: get_bloginfo('language'),
                 );
                 break;
             default:
@@ -834,24 +835,24 @@ class Packing
         if (!isset($data->ship_to_different_address)) {
             ## Set address of customer
             $api->setAddress(
-                    $data->billing_address_1,
-                    '',
-                    $data->billing_address_2 ?? null,
-                    $data->billing_postcode,
-                    $data->billing_city,
-                    $data->billing_state ?? null,
-                    $data->billing_country
+                $data->billing_address_1,
+                '',
+                $data->billing_address_2 ?? null,
+                $data->billing_postcode,
+                $data->billing_city,
+                $data->billing_state ?? null,
+                $data->billing_country
             );
         } else {
             ## Set shipping address of customer when different
             $api->setAddress(
-                    $data->shipping_address_1,
-                    '',
-                    $data->shipping_address_2 ?? null,
-                    $data->shipping_postcode,
-                    $data->shipping_city,
-                    $data->shipping_state ?? null,
-                    $data->shipping_country
+                $data->shipping_address_1,
+                '',
+                $data->shipping_address_2 ?? null,
+                $data->shipping_postcode,
+                $data->shipping_city,
+                $data->shipping_state ?? null,
+                $data->shipping_country
             );
         }
 
@@ -985,10 +986,10 @@ class Packing
                 /* translators: %s: country name */
                 $estimated_text = WC()->customer->is_customer_outside_base() && !WC()->customer->has_calculated_shipping() ? sprintf(' ' . __('estimated for %s', 'woocommerce'), WC()->countries->estimated_for_prefix($taxable_address[0]) . WC()->countries->countries[$taxable_address[0]]) : '';
                 $value .= '<small class="includes_tax">'
-                        /* translators: includes tax information */
-                        . sprintf(__('(includes %s)', 'woocommerce'), implode(', ', $tax_string_array))
-                        . esc_html($estimated_text)
-                        . '</small>';
+                    /* translators: includes tax information */
+                    . sprintf(__('(includes %s)', 'woocommerce'), implode(', ', $tax_string_array))
+                    . esc_html($estimated_text)
+                    . '</small>';
             }
         }
 
@@ -1030,10 +1031,10 @@ class Packing
         foreach ($shipping_zone->get_shipping_methods(true) as $class) {
             // Method's ID and custom name
             $item = [
-                    'id' => $class->method_title,
-                    'name' => $class->title,
-                    'cost' => !empty($class->instance_settings["cost"]) ? $class->instance_settings["cost"] : 0,
-                    'requires' => !empty($class->requires) ? $class->requires : null
+                'id' => $class->method_title,
+                'name' => $class->title,
+                'cost' => !empty($class->instance_settings["cost"]) ? $class->instance_settings["cost"] : 0,
+                'requires' => !empty($class->requires) ? $class->requires : null
             ];
 
             // If minimum amount is required
@@ -1076,7 +1077,7 @@ class Packing
     {
         // cart subtotal (excl.)
         return WC()->cart->get_subtotal()
-                // plus cart taxes
-                + WC()->cart->get_subtotal_tax();
+            // plus cart taxes
+            + WC()->cart->get_subtotal_tax();
     }
 }
