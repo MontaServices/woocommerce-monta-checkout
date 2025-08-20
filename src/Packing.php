@@ -36,6 +36,8 @@ class Packing
 
             if ($product && $product->get_virtual()) {
                 $has_virtual_products = true;
+                // End loop, no need to check other products, we have virtual products in cart.
+                break;
             }
         }
 
