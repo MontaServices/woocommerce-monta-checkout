@@ -32,6 +32,7 @@ class Packing
             return;
         }
 
+        // TODO move duplicate code to central method
         $cart_items = WC()->cart->get_cart();
 
         $has_virtual_products = false;
@@ -126,6 +127,7 @@ class Packing
 
     public static function checkout_store(\WC_Abstract_Order $order)
     {
+        // TODO move duplicate code to central method
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
 
@@ -472,6 +474,7 @@ class Packing
             }
         }
 
+        // TODO move duplicate code to central method
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
         foreach ($items as $values) {
