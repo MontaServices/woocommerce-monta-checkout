@@ -46,19 +46,16 @@ class Packing
         $shipment = $type['shipment'];
         $time = $shipment['time'];
 
-        $shipper = "";
-        if (isset($shipment['shipper'])) {
-            $shipper = $shipment['shipper'];
-        }
+        $shipper = $shipment['shipper'] ?? "";
 
         $items = null;
-        if (!isset($shipment['type']) || $shipment['type'] == '') {
+        if (empty($shipment['type'])) {
             $errors->add('shipment', __('Select a shipping method.', 'montapacking-checkout'));
         }
 
         switch ($shipment['type']) {
             case 'delivery':
-                $frames = self::get_frames('delivery');
+                $frames = self::get_frames();
 
                 if ($frames !== null) {
                     // Frames naar handige array zetten
@@ -67,18 +64,20 @@ class Packing
 
                 break;
             case 'pickup':
-                if ((!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') && ($has_virtual_products == false)) {
-                    $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
-                }
+                if (!$has_virtual_products) {
+                    if ((!isset($pickup) || empty($pickup['code']))) {
+                        $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
+                    }
 
-                if (isset($pickup['postnumber']) && trim($pickup['postnumber']) == '' && $has_virtual_products == false) {
-                    $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
+                    if (isset($pickup['postnumber']) && trim($pickup['postnumber']) == '') {
+                        $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
+                    }
                 }
 
                 break;
 
             case 'collect':
-                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && ($has_virtual_products == false)) {
+                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && !$has_virtual_products) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
         }
