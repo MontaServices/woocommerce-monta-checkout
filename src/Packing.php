@@ -30,7 +30,9 @@ class Packing
 
         // Controleer elk product in de winkelwagen
         foreach ($cart_items as $cart_item) {
-            $product = wc_get_product($cart_item['product_id']);
+            // Load either variation ID or product itself
+            // Since "virtual" attribute is not on the main parent product in case of Variation product.
+            $product = wc_get_product($cart_item['variation_id'] ?? $cart_item['product_id']);
 
             if ($product && $product->get_virtual()) {
                 $has_virtual_products = true;
