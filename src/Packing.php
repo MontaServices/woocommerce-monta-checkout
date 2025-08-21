@@ -1,4 +1,5 @@
 <?php
+
 namespace Monta;
 
 use Monta\CheckoutApiWrapper\MontapackingShipping;
@@ -18,22 +19,34 @@ class Packing
         return [];
     }
 
+    /** Validate checkout data
+     *
+     * @param $data
+     * @param $errors
+     * @return void
+     * @throws \Exception
+     */
     public static function checkout_validate($data, $errors)
     {
         if (empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
             return;
         }
 
+        // TODO move duplicate code to central method
         $cart_items = WC()->cart->get_cart();
 
         $has_virtual_products = false;
 
-        // Controleer elk product in de winkelwagen
+        // Check if cart contains virtual products
         foreach ($cart_items as $cart_item) {
-            $product = wc_get_product($cart_item['product_id']);
+            // Load either variation ID or product itself
+            // Since "virtual" attribute is not on the main parent product in case of Variation product.
+            $product = wc_get_product($cart_item['variation_id'] ?? $cart_item['product_id']);
 
             if ($product && $product->get_virtual()) {
                 $has_virtual_products = true;
+                // End loop, no need to check other products, we have virtual products in cart.
+                break;
             }
         }
 
@@ -42,19 +55,16 @@ class Packing
         $shipment = $type['shipment'];
         $time = $shipment['time'];
 
-        $shipper = "";
-        if (isset($shipment['shipper'])) {
-            $shipper = $shipment['shipper'];
-        }
+        $shipper = $shipment['shipper'] ?? "";
 
         $items = null;
-        if (!isset($shipment['type']) || $shipment['type'] == '') {
+        if (empty($shipment['type'])) {
             $errors->add('shipment', __('Select a shipping method.', 'montapacking-checkout'));
         }
 
         switch ($shipment['type']) {
             case 'delivery':
-                $frames = self::get_frames('delivery');
+                $frames = self::get_frames();
 
                 if ($frames !== null) {
                     // Frames naar handige array zetten
@@ -63,20 +73,22 @@ class Packing
 
                 break;
             case 'pickup':
-                if ((!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') && ($has_virtual_products == false)) {
-                    $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
-                }
+                // Selecting location is only required when cart has no virtual products.
+                if (!$has_virtual_products) {
+                    if ((!isset($pickup) || empty($pickup['code']))) {
+                        $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
+                    }
 
-                if (isset($pickup['postnumber']) && trim($pickup['postnumber']) == '' && $has_virtual_products == false) {
-                    $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
+                    if (isset($pickup['postnumber']) && trim($pickup['postnumber']) == '') {
+                        $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
+                    }
                 }
-
                 break;
-
             case 'collect':
-                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && ($has_virtual_products == false)) {
+                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && !$has_virtual_products) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
+                break;
         }
 
         ## Check of timeframes bekend zijn en niet van een te oude sessie
@@ -115,6 +127,7 @@ class Packing
 
     public static function checkout_store(\WC_Abstract_Order $order)
     {
+        // TODO move duplicate code to central method
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
 
@@ -461,6 +474,7 @@ class Packing
             }
         }
 
+        // TODO move duplicate code to central method
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
         foreach ($items as $values) {
@@ -756,6 +770,11 @@ class Packing
         wp_die();
     }
 
+    /**
+     * @param $type
+     * @return array|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public static function get_frames($type = 'delivery')
     {
         global $woocommerce;
