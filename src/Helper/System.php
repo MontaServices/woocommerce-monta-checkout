@@ -3,6 +3,7 @@
  * @author Jacco.Amersfoort <jacco.amersfoort@monta.nl>
  * @created 17/06/2025 16:02
  */
+
 namespace Monta\Helper;
 
 use Composer\InstalledVersions;
