@@ -923,7 +923,11 @@ class Packing
         $api->setOrder($subtotal, $subtotal_ex);
 
         ## Type timeframes ophalen
-        $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+        if (esc_attr(get_option('monta_leadingstock')) == '') {
+            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+        } else {
+            $bStockStatus = $bAllProductsAvailableAtMontapacking;
+        }
         $api->setOnStock($bStockStatus);
         do_action('woocommerce_cart_shipping_packages');
 
