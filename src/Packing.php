@@ -865,7 +865,6 @@ class Packing
         ## Fill products
         $items = $woocommerce->cart->get_cart();
 
-        $bAllProductsAvailableAtMontapacking = true;
         $bAllProductsAvailableAtWooCommerce = true;
 
         $hasDigitalProducts = false;
@@ -923,10 +922,9 @@ class Packing
         $api->setOrder($subtotal, $subtotal_ex);
 
         ## Type timeframes ophalen
+        $bStockStatus = true;
         if (esc_attr(get_option('monta_leadingstock')) == '') {
             $bStockStatus = $bAllProductsAvailableAtWooCommerce;
-        } else {
-            $bStockStatus = $bAllProductsAvailableAtMontapacking;
         }
         $api->setOnStock($bStockStatus);
         do_action('woocommerce_cart_shipping_packages');
