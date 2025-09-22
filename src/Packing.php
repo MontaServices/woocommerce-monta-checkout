@@ -775,10 +775,11 @@ class Packing
     /**
      * @param $type
      * @return array|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
     public static function get_frames($type = 'delivery')
     {
+        /** @var \WooCommerce $woocommerce */
         global $woocommerce;
 
         ## Postdata escapen
@@ -926,9 +927,9 @@ class Packing
         $api->setOnStock($bStockStatus);
         do_action('woocommerce_cart_shipping_packages');
 
+        $shippingOptions = $api->getShippingOptions($bStockStatus);
         switch ($type) {
             case 'delivery':
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
                 do_action('woocommerce_cart_shipping_packages');
                 if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                     if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
@@ -942,7 +943,7 @@ class Packing
                 return $shippingOptions;
             case 'pickup':
             case 'collect':
-                return $api->getShippingOptions($bStockStatus);
+                return $shippingOptions;
             default:
                 // TODO unsupported type returns nothing, warn
                 return null;
