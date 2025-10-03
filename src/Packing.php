@@ -1,4 +1,5 @@
 <?php
+
 namespace Monta;
 
 use Monta\CheckoutApiWrapper\MontapackingShipping;
@@ -18,19 +19,27 @@ class Packing
         return [];
     }
 
+    /** Validate checkout data
+     *
+     * @param $data
+     * @param $errors
+     * @return void
+     * @throws \Exception
+     */
     public static function checkout_validate($data, $errors)
     {
         if (empty($_POST['montapacking']) || !is_array($_POST['montapacking'])) {
             return;
         }
 
+        // TODO move duplicate code to central method
         $cart_items = WC()->cart->get_cart();
 
         $has_virtual_products = false;
 
-        // Controleer elk product in de winkelwagen
+        // Check if cart contains virtual products
         foreach ($cart_items as $cart_item) {
-            if ($cart_item['variation_id']) {
+            if (!empty($cart_item['variation_id'])) {
                 $product = wc_get_product($cart_item['variation_id']);
             } else {
                 $product = wc_get_product($cart_item['product_id']);
@@ -38,6 +47,8 @@ class Packing
 
             if ($product && $product->is_virtual()) {
                 $has_virtual_products = true;
+                // End loop, no need to check other products, we have virtual products in cart.
+                break;
             }
         }
 
@@ -46,19 +57,16 @@ class Packing
         $shipment = $type['shipment'];
         $time = $shipment['time'];
 
-        $shipper = "";
-        if (isset($shipment['shipper'])) {
-            $shipper = $shipment['shipper'];
-        }
+        $shipper = $shipment['shipper'] ?? "";
 
         $items = null;
-        if (!isset($shipment['type']) || $shipment['type'] == '') {
+        if (empty($shipment['type'])) {
             $errors->add('shipment', __('Select a shipping method.', 'montapacking-checkout'));
         }
 
         switch ($shipment['type']) {
             case 'delivery':
-                $frames = self::get_frames('delivery');
+                $frames = self::get_frames();
 
                 if ($frames !== null) {
                     // Frames naar handige array zetten
@@ -67,20 +75,22 @@ class Packing
 
                 break;
             case 'pickup':
-                if ((!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '') && ($has_virtual_products == false)) {
-                    $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
-                }
+                // Selecting location is only required when cart has no virtual products.
+                if (!$has_virtual_products) {
+                    if ((!isset($pickup) || empty($pickup['code']))) {
+                        $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
+                    }
 
-                if (isset($pickup['postnumber']) && trim($pickup['postnumber']) == '' && $has_virtual_products == false) {
-                    $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
+                    if (isset($pickup['postnumber']) && trim($pickup['postnumber']) == '') {
+                        $errors->add('shipment', __('Please enter a postal number, this is mandatory for this pick-up option', 'montapacking-checkout'));
+                    }
                 }
-
                 break;
-
             case 'collect':
-                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && ($has_virtual_products == false)) {
+                if (!isset($pickup) || !isset($pickup['code']) || $pickup['code'] == '' && !$has_virtual_products) {
                     $errors->add('shipment', __('Select a pickup location.', 'montapacking-checkout'));
                 }
+                break;
         }
 
         ## Check of timeframes bekend zijn en niet van een te oude sessie
@@ -119,6 +129,7 @@ class Packing
 
     public static function checkout_store(\WC_Abstract_Order $order)
     {
+        // TODO move duplicate code to central method
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
 
@@ -367,18 +378,23 @@ class Packing
      */
     public static function shipping_total($wc_price = 0)
     {
-        // Get subtotal & discount total from cart directly
-        $subtotal = self::cartSubtotal();
-        $discount_total = WC()->cart->get_cart_discount_total() + WC()->cart->get_cart_discount_tax_total();
+        // Calculate base cart total without shipping
+        $subtotal = WC()->cart->get_cart_contents_total();
+        $subtotal_tax = WC()->cart->get_cart_contents_tax();
+        $fees_total = WC()->cart->get_fee_total();
+        
+        // Calculate total without shipping
+        $base_total = $subtotal + $subtotal_tax + $fees_total;
 
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
         }
 
-        $price = (float)self::get_shipping_total($data);
+        $shipping_price = (float)self::get_shipping_total($data);
 
-        return $subtotal - $discount_total + $price;
+        // Return base total + shipping costs
+        return $base_total + $shipping_price;
     }
 
     public static function shipping_calculate_html_output($data)
@@ -465,6 +481,7 @@ class Packing
             }
         }
 
+        // TODO move duplicate code to central method
         $hasDigitalProducts = false;
         $hasPhysicalProducts = false;
         foreach ($items as $values) {
@@ -760,6 +777,11 @@ class Packing
         wp_die();
     }
 
+    /**
+     * @param $type
+     * @return array|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public static function get_frames($type = 'delivery')
     {
         global $woocommerce;
@@ -1057,15 +1079,13 @@ class Packing
         return $chosenMethod;
     }
 
-    /** Get Cart subtotal (incl. tax)
+    /** Get Cart subtotal (incl. tax and discounts)
      * TODO move to custom Helper to reduce class size
      * @return float
      */
     protected static function cartSubtotal()
     {
-        // cart subtotal (excl.)
-        return WC()->cart->get_subtotal()
-            // plus cart taxes
-            + WC()->cart->get_subtotal_tax();
+        // Get cart contents total (after discounts) + tax
+        return WC()->cart->get_cart_contents_total() + WC()->cart->get_cart_contents_tax();
     }
 }
