@@ -200,6 +200,9 @@ jQuery(document).ready(function () {
                              if (result.frames !== undefined) {
                                 monta_shipping.frames = result.frames;
                                 monta_shipping.standardShipper = result.standardShipper
+                                 if(result.frames.length === 0 && result.standardShipper) {
+                                     $('#othersendmethod').prop('checked', true).click();
+                                 }
                             } else if (result.pickups !== undefined) {
                                 monta_shipping.pickups = result.pickups;
                                 monta_shipping.pickup_default = result.default;
@@ -242,7 +245,7 @@ jQuery(document).ready(function () {
                         $(".monta-times-cropped-error").css("display", "none");
 
                         if (success) {
-                            if (checked === 'delivery' && Object.keys(monta_shipping.frames).length > 0) {
+                            if (checked === 'delivery' && (Object.keys(monta_shipping.frames).length > 0 || monta_shipping.standardShipper != null)) {
                                 // empty fields when pickup was already choosen
                                 $(".monta-pickup-fields").val("");
                                 //$("#initialPickupRadioDummy").removeAttribute("checked");
@@ -341,7 +344,6 @@ jQuery(document).ready(function () {
                                         }
                                     }
                                 });
-
                                 if(monta_shipping.standardShipper != null && !monta_shipping.standard_shipper_set){
 
                                     let standardShipper = monta_shipping.standardShipper;
@@ -391,7 +393,6 @@ jQuery(document).ready(function () {
                                     shippers.append(html);
 
                                     monta_shipping.standard_shipper_set = true;
-
                                 }
 
                                 if (hidedatebar === true && monta_shipping.first_preferred === null) {
