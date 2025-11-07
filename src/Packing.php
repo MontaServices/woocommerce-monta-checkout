@@ -378,18 +378,23 @@ class Packing
      */
     public static function shipping_total($wc_price = 0)
     {
-        // Get subtotal & discount total from cart directly
-        $subtotal = self::cartSubtotal();
-        $discount_total = WC()->cart->get_cart_discount_total() + WC()->cart->get_cart_discount_tax_total();
+        // Calculate base cart total without shipping
+        $subtotal = WC()->cart->get_cart_contents_total();
+        $subtotal_tax = WC()->cart->get_cart_contents_tax();
+        $fees_total = WC()->cart->get_fee_total();
+        
+        // Calculate total without shipping
+        $base_total = $subtotal + $subtotal_tax + $fees_total;
 
         $data = null;
         if (isset($_POST['montapacking'])) {
             $data = sanitize_post($_POST);
         }
 
-        $price = (float)self::get_shipping_total($data);
+        $shipping_price = (float)self::get_shipping_total($data);
 
-        return $subtotal - $discount_total + $price;
+        // Return base total + shipping costs
+        return $base_total + $shipping_price;
     }
 
     public static function shipping_calculate_html_output($data)
@@ -1074,15 +1079,13 @@ class Packing
         return $chosenMethod;
     }
 
-    /** Get Cart subtotal (incl. tax)
+    /** Get Cart subtotal (incl. tax and discounts)
      * TODO move to custom Helper to reduce class size
      * @return float
      */
     protected static function cartSubtotal()
     {
-        // cart subtotal (excl.)
-        return WC()->cart->get_subtotal()
-            // plus cart taxes
-            + WC()->cart->get_subtotal_tax();
+        // Get cart contents total (after discounts) + tax
+        return WC()->cart->get_cart_contents_total() + WC()->cart->get_cart_contents_tax();
     }
 }
