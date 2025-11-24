@@ -467,7 +467,7 @@ class Packing
 
         // verzendkosten op 0 zetten
         // dit is voor de instelling 'sta gratis verzending toe' bij waardebonnen, zodat nu verzendprijs dan ook werkelijk op 0 wordt gezet
-        // dan hoef je de prijs verder ook niet meer te berekenen   
+        // dan hoef je de prijs verder ook niet meer te berekenen
         $applied_coupons = WC()->cart->get_applied_coupons();
         foreach ($applied_coupons as $coupon_code) {
             $coupon = new \WC_Coupon($coupon_code);
@@ -775,10 +775,11 @@ class Packing
     /**
      * @param $type
      * @return array|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
     public static function get_frames($type = 'delivery')
     {
+        /** @var \WooCommerce $woocommerce */
         global $woocommerce;
 
         ## Postdata escapen
@@ -864,7 +865,6 @@ class Packing
         ## Fill products
         $items = $woocommerce->cart->get_cart();
 
-        $bAllProductsAvailableAtMontapacking = true;
         $bAllProductsAvailableAtWooCommerce = true;
 
         $hasDigitalProducts = false;
@@ -922,13 +922,16 @@ class Packing
         $api->setOrder($subtotal, $subtotal_ex);
 
         ## Type timeframes ophalen
-        $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+        $bStockStatus = true;
+        if (esc_attr(get_option('monta_leadingstock')) == '') {
+            $bStockStatus = $bAllProductsAvailableAtWooCommerce;
+        }
         $api->setOnStock($bStockStatus);
         do_action('woocommerce_cart_shipping_packages');
 
+        $shippingOptions = $api->getShippingOptions($bStockStatus);
         switch ($type) {
             case 'delivery':
-                $shippingOptions = $api->getShippingOptions($bStockStatus);
                 do_action('woocommerce_cart_shipping_packages');
                 if (esc_attr(get_option('monta_shippingcosts_fallback_woocommerce'))) {
                     if ($shippingOptions != null && isset($shippingOptions[0]->code) == 'Monta' && isset($shippingOptions[0]->description) == 'Monta') {
@@ -942,7 +945,7 @@ class Packing
                 return $shippingOptions;
             case 'pickup':
             case 'collect':
-                return $api->getShippingOptions($bStockStatus);
+                return $shippingOptions;
             default:
                 // TODO unsupported type returns nothing, warn
                 return null;

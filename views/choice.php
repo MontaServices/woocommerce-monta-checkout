@@ -2,32 +2,6 @@
     var site_url = '<?php echo site_url();?>';
     var sustainableDeliveryText = '<?php _e('Sustainably delivered', 'montapacking-checkout');?>';
 
-    <?php /*
-    jQuery(document).ready(function () {
-        setTimeout(function () {
-            var radios = document.getElementsByName("montapacking[shipment][type]");
-
-            radios[1].click();
-
-            var val = localStorage.getItem('montapacking[shipment][type]');
-            for (var i = 0; i < radios.length; i++) {
-
-                if (radios[i].value == val) {
-                    radios[i].click();
-                    //radios[i].checked = true;
-                }
-            }
-
-        }, 1000);
-
-        jQuery('.selectshipment').on('click', function () {
-            localStorage.setItem('montapacking[shipment][type]', jQuery(this).val());
-        });
-
-
-    });
-    */ ?>
-
 </script>
 
 <input id="maxpickuppoints" type="hidden" name="maxpickuppoints"
