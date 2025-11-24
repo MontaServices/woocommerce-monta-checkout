@@ -1,5 +1,6 @@
 {
     "name": "monta/woocommerce-checkout",
+    "description": "Monta Checkout module",
     "authors": [
         {
             "name": "Monta",
