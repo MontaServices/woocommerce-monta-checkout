@@ -3,7 +3,7 @@
  * Plugin Name: Monta Checkout
  * Plugin URI: https://github.com/Montapacking/woocommerce-monta-checkout
  * Description: Monta Check-out extension
- * Version: 1.58.58
+ * Version: 1.58.59
  * Author: Monta
  * Author URI: https://www.monta.nl/
  * Developer: Monta
@@ -12,10 +12,10 @@
  * Domain Path: /languages
  *
  * WC requires at least: 5.0.0
- * WC tested up to: 10.0.4
+ * WC tested up to: 10.1.2
  * Requires PHP: 8.1
  *
- * Copyright: © 2009-2021 WooCommerce.
+ * Copyright: © 2009-2025 WooCommerce.
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
