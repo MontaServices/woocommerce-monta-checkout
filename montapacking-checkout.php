@@ -12,7 +12,7 @@
  * Domain Path: /languages
  *
  * WC requires at least: 5.0.0
- * WC tested up to: 10.0.4
+ * WC tested up to: 10.1.2
  * Requires PHP: 8.1
  *
  * Copyright: © 2009-2025 WooCommerce.
