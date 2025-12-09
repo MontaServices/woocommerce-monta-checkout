@@ -10,15 +10,13 @@ class Packing
 {
     private static $WooCommerceShippingMethod = null;
 
-    public static function shipping_package($packages = [])
+    public static function shipping_package($packages)
     {
         if (isset($packages[0])) {
             self::$WooCommerceShippingMethod = self::getWooCommerceShippingMethod($packages[0]);
         }
 
-        // Do not clear packages; returning [] makes WooCommerce pass "false" to WC_Shipping_Zones downstream
-        // which triggers "Trying to access array offset on value of type bool".
-        return $packages;
+        return [];
     }
 
     /** Validate checkout data
@@ -1022,12 +1020,12 @@ class Packing
     }
 
     /**
-     * @param $package - Should be an array but sometimes a string?
+     * @param $package - Should be an array but sometimes a string? TODO investigate #110809
      * @return array|null
      */
     public static function getWooCommerceShippingMethod($package): ?array
     {
-        if ($package == "" || !is_array($package)) {
+        if ($package == "") {
             $address = [];
             $address['destination'] = [];
             $address['destination']['country'] = WC()->customer->get_shipping_country();
