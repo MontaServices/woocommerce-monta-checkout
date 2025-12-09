@@ -4,7 +4,7 @@ Donate link:
 Tags: monta, checkout, woocommerce, extension, monta
 Requires at least: 5.0.0
 Tested up to: 10.0.4
-Stable tag: 1.58.59
+Stable tag: 1.58.60
 Requires PHP: 8.1
 License: GPLv3 or later License
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,9 @@ Blue menu bar > Settings > Checkout options > Edit for a webshop.
 
 
 == Changelog ==
+
+#1.58.60
+* Revert "Fix issue with packages being invalid" (errors on some versions)
 
 #1.58.59
 * Fix issue with packages being invalid
