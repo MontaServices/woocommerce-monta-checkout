@@ -1020,7 +1020,7 @@ class Packing
     }
 
     /**
-     * @param $package
+     * @param $package - Should be an array but sometimes a string? TODO investigate #110809
      * @return array|null
      */
     public static function getWooCommerceShippingMethod($package): ?array
