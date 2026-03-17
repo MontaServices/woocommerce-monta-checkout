@@ -25,9 +25,6 @@ use Monta\Packing;
 // Include config and autoload
 include('montapacking-config.php');
 
-if (esc_attr(get_option('monta_logerrors'))) {
-    define('WC_LOG_HANDLER', 'WC_Log_Handler_DB');
-}
 // Declare WooCommerce HPOS compatibility
 add_action('before_woocommerce_init', function () {
     if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
