@@ -22,7 +22,7 @@ jQuery(document).ready(function () {
                 pickup_selected: null,
                 first_preferred: null,
                 standard_shipper: null,
-                standard_shipper_set : false,
+                standard_shipper_set: false,
 
                 pickupLocator: null,
 
@@ -104,7 +104,7 @@ jQuery(document).ready(function () {
                     const ship_country = $('#shipping_country').val();
 
                     // delivery options disabled
-                    if($('.monta-option-delivery.monta-hide').length === 1){
+                    if ($('.monta-option-delivery.monta-hide').length === 1) {
                         monta_shipping.enableRadio();
                         monta_shipping.hideAddressMsg();
                         $('.monta-options input[value=pickup]').prop('checked', true).click();
@@ -197,12 +197,12 @@ jQuery(document).ready(function () {
 
                     $.post(ajax_url, data).done(function (result) {
                         if (result.success) {
-                             if (result.frames !== undefined) {
+                            if (result.frames !== undefined) {
                                 monta_shipping.frames = result.frames;
                                 monta_shipping.standardShipper = result.standardShipper
-                                 if(result.frames.length === 0 && result.standardShipper) {
-                                     $('#othersendmethod').prop('checked', true).click();
-                                 }
+                                if (result.frames.length === 0 && result.standardShipper) {
+                                    $('#othersendmethod').prop('checked', true).click();
+                                }
                             } else if (result.pickups !== undefined) {
                                 monta_shipping.pickups = result.pickups;
                                 monta_shipping.pickup_default = result.default;
@@ -344,7 +344,7 @@ jQuery(document).ready(function () {
                                         }
                                     }
                                 });
-                                if(monta_shipping.standardShipper != null && !monta_shipping.standard_shipper_set){
+                                if (monta_shipping.standardShipper != null && !monta_shipping.standard_shipper_set) {
 
                                     let standardShipper = monta_shipping.standardShipper;
                                     let html = '<label>\n\n' +
@@ -367,7 +367,7 @@ jQuery(document).ready(function () {
                                         '        <div class="clearboth"></div>\n\n' +
                                         '    </label>';
                                     html = html.replace(/{.code}/g, standardShipper.code);
-                                    html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png">');
+                                    html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + monta_plugin_assets_url + '/img/DEF.png">');
                                     html = html.replace(/{.name}/g, standardShipper.displayName);
                                     html = html.replace(/{.preferred}/g, standardShipper.isPreferred);
 
@@ -384,7 +384,7 @@ jQuery(document).ready(function () {
                                     html = html.replace(/{.class}/g, discountclass);
 
                                     if (standardShipper.isSustainable) {
-                                        html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + standardShipper.code + '" id="sustainable-' + standardShipper.code + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + standardShipper.code + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + standardShipper.code + '" data-popper-arrow></div></div>');
+                                        html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + standardShipper.code + '" id="sustainable-' + standardShipper.code + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + monta_plugin_assets_url + '/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + standardShipper.code + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + standardShipper.code + '" data-popper-arrow></div></div>');
                                     } else {
                                         html = html.replace(/{.isSustainable}/g, '');
                                     }
@@ -520,7 +520,7 @@ jQuery(document).ready(function () {
                             $("#PCPostNummer input").attr("disabled", "disabled");
                         }
 
-                        const imageUrl = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + loc.raw.shipperCode + ".png";
+                        const imageUrl = monta_plugin_assets_url + '/img/' + loc.raw.shipperCode + ".png";
 
                         let html = '';
                         html += '<div class="loadedimage"><img src="' + imageUrl + '" style="width:30px;"></div>';
@@ -631,7 +631,7 @@ jQuery(document).ready(function () {
                                 '        <div class="clearboth"></div>\n\n' +
                                 '    </label>';
                             html = html.replace(/{.code}/g, realCode);
-                            html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.shipperCodes[0] + '.png">');
+                            html = html.replace(/{.img}/g, '<img class="loadedLogo" src="' + monta_plugin_assets_url + '/img/' + item.shipperCodes[0] + '.png">');
                             html = html.replace(/{.name}/g, item.displayName);
                             html = html.replace(/{.preferred}/g, item.isPreferred);
                             html = html.replace(/{.time}/g, time);
@@ -652,7 +652,7 @@ jQuery(document).ready(function () {
                             html = html.replace(/{.ships_on}/g, item.ships_on);
 
                             if (item.isSustainable) {
-                                html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
+                                html = html.replace(/{.isSustainable}/g, ' <img aria-describedby="sustainabletooltip-' + realCode + '" id="sustainable-' + realCode + '" style="z-index:100; width: 20px; height: 20px; margin-left: 5px;" src="' + monta_plugin_assets_url + '/img/sustainable.png"/><div class="tooltip" id="sustainabletooltip-' + realCode + '" role="tooltip">' + sustainableDeliveryText + '<div class="arrow" id="arrow-' + realCode + '" data-popper-arrow></div></div>');
                             } else {
                                 html = html.replace(/{.isSustainable}/g, '');
                             }
@@ -666,7 +666,7 @@ jQuery(document).ready(function () {
                             }
 
                             $(".loadedLogo").on("error", function () {
-                                $(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png");
+                                $(this).attr("src", monta_plugin_assets_url + "/img/DEF.png");
                             });
 
                         });
@@ -832,7 +832,7 @@ jQuery(document).ready(function () {
         }
 
         jQuery(".monta-times-croppped").find(".loadedLogo").on("error", function () {
-            jQuery(this).attr("src", site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DEF.png");
+            jQuery(this).attr("src", monta_plugin_assets_url + "/img/DEF.png");
         });
     }
 
@@ -840,7 +840,7 @@ jQuery(document).ready(function () {
         $ = jQuery;
         monta_shipping.storeLocatorDestroy();
 
-        let store_collect_image_url = site_url + "/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/AFH.png";
+        let store_collect_image_url = monta_plugin_assets_url + "/img/AFH.png";
         if (isCollect && $('#afh-image').val() !== "") {
             const image_path = $('#afh-image').val();
             store_collect_image_url = site_url + image_path;
@@ -849,8 +849,8 @@ jQuery(document).ready(function () {
         const config = {
             'debug': false,
             'pagination': false,
-            'infowindowTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/infowindow-description.html',
-            'listTemplatePath': site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/js/templates/list-location.html',
+            'infowindowTemplatePath': monta_plugin_assets_url + '/js/templates/infowindow-description.html',
+            'listTemplatePath': monta_plugin_assets_url + '/js/templates/list-location.html',
             'distanceAlert': -1,
             'dataType': "json",
             'dataRaw': JSON.stringify(markers, null, 2),
@@ -867,13 +867,13 @@ jQuery(document).ready(function () {
                 'category': 'category-filters',
             },
             catMarkers: {
-                'PAK': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/PostNL.png', 32, 32],
+                'PAK': [monta_plugin_assets_url + '/img/PostNL.png', 32, 32],
                 'AFH': [store_collect_image_url, 32, 32],
-                'DHLservicepunt': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLservicepunt.png', 32, 32],
-                'DHLFYPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DHLFYPickupPoint.png', 32, 32],
-                'DPDparcelstore': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/DPD.png', 32, 32],
-                'BudbeePickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/BudbeePickupPoint.png', 32, 32],
-                'GLSPickupPoint': [site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/GLSPickupPoint.png', 32, 32]
+                'DHLservicepunt': [monta_plugin_assets_url + '/img/DHLservicepunt.png', 32, 32],
+                'DHLFYPickupPoint': [monta_plugin_assets_url + '/img/DHLFYPickupPoint.png', 32, 32],
+                'DPDparcelstore': [monta_plugin_assets_url + '/img/DPD.png', 32, 32],
+                'BudbeePickupPoint': [monta_plugin_assets_url + '/img/BudbeePickupPoint.png', 32, 32],
+                'GLSPickupPoint': [monta_plugin_assets_url + '/img/GLSPickupPoint.png', 32, 32]
             },
             callbackMarkerClick: function (marker, markerId, $selectedLocation, location) {
                 monta_shipping.selectPickup(location, markerId);
@@ -885,7 +885,7 @@ jQuery(document).ready(function () {
                 runListTrim(monta_shipping);
             },
             callbackNotify: function (error) {
-                $('#monta-stores').storeLocator('mapping', {lat: defaultLat, lng: defaultLng});
+                $('#monta-stores').storeLocator('mapping', { lat: defaultLat, lng: defaultLng });
                 document.getElementsByClassName('monta-more-pickup-points')[0].style.display = 'none';
             }
         };
@@ -927,7 +927,7 @@ jQuery(document).ready(function () {
         let markers = [];
         //document.getElementById('category-filters').innerHTML = "";
         jQuery.each(pickups, function (key, item) {
-            let store_collect_image_url = site_url + '/wp-content/plugins/montapacking-checkout-woocommerce-extension/assets/img/' + item.shipperCode + ".png"
+            let store_collect_image_url = monta_plugin_assets_url + '/img/' + item.shipperCode + ".png"
 
             if (item.code === "AFH" && jQuery('#afh-image').val() !== "") {
                 const image_path = jQuery('#afh-image').val();

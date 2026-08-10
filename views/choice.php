@@ -1,5 +1,6 @@
 <script>
-    var site_url = '<?php echo site_url();?>';
+    var site_url = '<?php echo esc_url( site_url() ); ?>';
+    var monta_plugin_assets_url = '<?php echo esc_url( rtrim( MONTAPACKING_PLUGIN_URL, '/' ) . '/assets' ); ?>';
     var sustainableDeliveryText = '<?php _e('Sustainably delivered', 'montapacking-checkout');?>';
 
 </script>

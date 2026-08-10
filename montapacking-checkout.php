@@ -25,6 +25,8 @@ use Monta\Packing;
 // Include config and autoload
 include('montapacking-config.php');
 
+define('MONTAPACKING_PLUGIN_URL', plugin_dir_url(__FILE__));
+
 // Declare WooCommerce HPOS compatibility
 add_action('before_woocommerce_init', function () {
     if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
@@ -170,15 +172,15 @@ function montacheckout_enqueue_scripts()
 {
     // CSS
     if (is_cart() || is_checkout()) {
-        wp_enqueue_style('montapacking_checkout_plugin', plugins_url('montapacking-checkout-woocommerce-extension/assets/css/monta-shipping.css'), [], date("h:i:s"));
+        wp_enqueue_style('montapacking_checkout_plugin', MONTAPACKING_PLUGIN_URL . 'assets/css/monta-shipping.css', [], date("h:i:s"));
 
         // Javascript
         wp_enqueue_script('montapacking_checkout_plugin_map', 'https://maps.google.com/maps/api/js?key=' . esc_attr(get_option('monta_google_key')), ['jquery']);
-        wp_enqueue_script('montapacking_checkout_plugin_handlebars', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-handlebars.js'), ['jquery'], date("h:i:s"));
-        wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-storelocator.js'), ['jquery'], date("h:i:s"));
-        wp_enqueue_script('montapacking_checkout_plugin_monta', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/monta-shipping.js'), ['jquery'], date("h:i:s"));
-        wp_enqueue_script('montapacking_checkout_plugin_popper', plugins_url('montapacking-checkout-woocommerce-extension/assets/js/popper.min.js'), date("h:i:s"));
-        wp_enqueue_script('wc-price-js', plugin_dir_url(__FILE__) . 'assets/js/wc_price.js', ['jquery'], '1.0', false);
+        wp_enqueue_script('montapacking_checkout_plugin_handlebars', MONTAPACKING_PLUGIN_URL . 'assets/js/monta-handlebars.js', ['jquery'], date("h:i:s"));
+        wp_enqueue_script('montapacking_checkout_plugin_storelocator_js', MONTAPACKING_PLUGIN_URL . 'assets/js/monta-storelocator.js', ['jquery'], date("h:i:s"));
+        wp_enqueue_script('montapacking_checkout_plugin_monta', MONTAPACKING_PLUGIN_URL . 'assets/js/monta-shipping.js', ['jquery'], date("h:i:s"));
+        wp_enqueue_script('montapacking_checkout_plugin_popper', MONTAPACKING_PLUGIN_URL . 'assets/js/popper.min.js', date("h:i:s"));
+        wp_enqueue_script('wc-price-js', MONTAPACKING_PLUGIN_URL . 'assets/js/wc_price.js', ['jquery'], '1.0', false);
 
         $wc_store_object = [
             'html' => false,
