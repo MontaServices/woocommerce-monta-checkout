@@ -846,6 +846,11 @@ jQuery(document).ready(function () {
             store_collect_image_url = site_url + image_path;
         }
 
+        // (0,0) is not a real location - it's the "geocode failed" fallback from the server.
+        // Reverse-geocoding it always returns ZERO_RESULTS and still costs a billable Google API call.
+        const hasValidDefault = defaultLat !== null && defaultLng !== null && defaultLat !== undefined && defaultLng !== undefined
+            && !(parseFloat(defaultLat) === 0 && parseFloat(defaultLng) === 0);
+
         const config = {
             'debug': false,
             'pagination': false,
@@ -858,7 +863,7 @@ jQuery(document).ready(function () {
             'inlineDirections': true,
             'originMarker': true,
             'dragSearch': false,
-            'defaultLoc': true,
+            'defaultLoc': hasValidDefault,
             'defaultLat': defaultLat,
             'defaultLng': defaultLng,
             'lengthUnit': 'km',

@@ -674,8 +674,8 @@ class Packing
                             $latitude = $result->geometry->location->lat;
                             $longitude = $result->geometry->location->lng;
                         } else {
-                            $latitude = 0;
-                            $longitude = 0;
+                            $latitude = null;
+                            $longitude = null;
                         }
 
                         $params = [
@@ -736,8 +736,8 @@ class Packing
                             $latitude = $result->geometry->location->lat;
                             $longitude = $result->geometry->location->lng;
                         } else {
-                            $latitude = 0;
-                            $longitude = 0;
+                            $latitude = null;
+                            $longitude = null;
                         }
 
                         $params = [
