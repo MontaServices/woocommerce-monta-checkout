@@ -516,8 +516,7 @@ function montacheckout_render_settings()
                                value="<?php echo esc_attr(get_option('monta_google_server_key')); ?>" size="50"/>
                         <br><i style="font-size:12px">Optional, used for geocoding from the server. If the key
                             above is restricted by HTTP referrer, add a key restricted by IP address here.
-                            Leave empty to use the key above. Can also be set through the
-                            <code>MONTA_GOOGLE_SERVER_KEY</code> constant.</i>
+                            Leave empty to use the key above.
                     </td>
                 </tr>
             </table>
