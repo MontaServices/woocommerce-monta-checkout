@@ -662,7 +662,7 @@ class Packing
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
 
-                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr(get_option('monta_google_key')));
+                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr(\montapacking_get_google_server_key()));
                         if (isset($geocode['body'])) {
                             $geocode = $geocode['body'];
                         }
@@ -724,7 +724,7 @@ class Packing
                         $prepAddr = str_replace('  ', ' ', $address);
                         $prepAddr = str_replace(' ', '+', $prepAddr);
 
-                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr(get_option('monta_google_key')));
+                        $geocode = wp_remote_get('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&sensor=false&key=' . esc_attr(\montapacking_get_google_server_key()));
                         if (isset($geocode['body'])) {
                             $geocode = $geocode['body'];
                         }
@@ -815,7 +815,7 @@ class Packing
             password: esc_attr(get_option('monta_password')),
             pickupPointsEnabled: !esc_attr(get_option('monta_disablepickup')),
             maxPickupPoints: esc_attr(get_option('monta_max_pickuppoints')),
-            googleKey: esc_attr(get_option('monta_google_key')),
+            googleKey: esc_attr(\montapacking_get_google_server_key()),
             defaultCosts: (get_option('monta_shippingcosts')),
             excludeShippingDiscount: $excludeShippingDiscount,
             hideDHLPackstations: esc_attr(get_option('monta_hidedhlpackstations'))
