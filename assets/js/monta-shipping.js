@@ -864,6 +864,9 @@ jQuery(document).ready(function () {
             'originMarker': true,
             'dragSearch': false,
             'defaultLoc': hasValidDefault,
+            // Without an origin nothing triggers a render and the list stays empty,
+            // so fall back to showing all points. Distance comes from the API anyway.
+            'fullMapStart': !hasValidDefault,
             'defaultLat': defaultLat,
             'defaultLng': defaultLng,
             'lengthUnit': 'km',

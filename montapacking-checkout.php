@@ -42,6 +42,7 @@ add_action('admin_init', function () {
     register_setting('montapacking-plugin-settings', 'monta_username');
     register_setting('montapacking-plugin-settings', 'monta_password');
     register_setting('montapacking-plugin-settings', 'monta_google_key');
+    register_setting('montapacking-plugin-settings', 'monta_google_server_key');
     register_setting('montapacking-plugin-settings', 'monta_logerrors');
     register_setting('montapacking-plugin-settings', 'monta_pickupname');
     register_setting('montapacking-plugin-settings', 'monta_shippingcosts_fallback_woocommerce');
@@ -166,6 +167,27 @@ function montacheckout_plugin_add_settings_link($links)
 
     #array_push( $links, $settings_link );
     return array_merge($settings_link, $links);
+}
+
+/**
+ * Google refuses referrer restricted keys on the Geocoding API, so the Maps key we
+ * use in the browser can't be reused here. Falls back to that key when no separate
+ * one is configured.
+ *
+ * @return string
+ */
+function montapacking_get_google_server_key()
+{
+    if (defined('MONTA_GOOGLE_SERVER_KEY') && trim((string)MONTA_GOOGLE_SERVER_KEY) !== '') {
+        return trim((string)MONTA_GOOGLE_SERVER_KEY);
+    }
+
+    $serverKey = trim((string)get_option('monta_google_server_key'));
+    if ($serverKey !== '') {
+        return $serverKey;
+    }
+
+    return (string)get_option('monta_google_key');
 }
 
 function montacheckout_enqueue_scripts()
@@ -486,6 +508,16 @@ function montacheckout_render_settings()
                         <br><i style="font-size:12px">A Google API key is required if you want to make use of the world
                             map. A Google key can be created
                             <a target="_new" href="https://console.cloud.google.com/">here</a>.</i>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="monta_google_server_key">Server API Key</label></th>
+                    <td><input type="text" name="monta_google_server_key"
+                               value="<?php echo esc_attr(get_option('monta_google_server_key')); ?>" size="50"/>
+                        <br><i style="font-size:12px">Optional, used for geocoding from the server. If the key
+                            above is restricted by HTTP referrer, add a key restricted by IP address here.
+                            Leave empty to use the key above. Can also be set through the
+                            <code>MONTA_GOOGLE_SERVER_KEY</code> constant.</i>
                     </td>
                 </tr>
             </table>
