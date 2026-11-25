@@ -261,6 +261,7 @@
                            class="montapacking-search-zipcode-input">
                     <button type="button" class="button montapacking-search-zipcode-button"
                             id="montapacking-search-zipcode-button"><?php _e('Search', 'montapacking-checkout'); ?></button>
+                    <p class="montapacking-search-zipcode-message monta-hide"><?php _e('No pickups available for the chosen postal code.', 'montapacking-checkout'); ?></p>
                 </div>
             </div>
             <a class="monta-select-pickup"><?php _e('Use selection', 'montapacking-checkout'); ?></a>
