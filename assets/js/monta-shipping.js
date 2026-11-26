@@ -471,33 +471,51 @@ jQuery(document).ready(function () {
                         $("#initialPickupRadioDummy").prop("checked", true);
                     });
 
-                    document.getElementById('montapacking-search-zipcode-button').addEventListener('click', (e) => {
-                        let zipcode = document.getElementById('montapacking-search-zipcode').value;
-                        if (zipcode.length > 0) {
-                            let data = $('form.checkout').serialize();
+                    // Namespaced handler, so reopening the modal does not stack click handlers
+                    $(document).off('click.montaZipcodeSearch').on('click.montaZipcodeSearch', '#montapacking-search-zipcode-button', function () {
+                        monta_shipping.searchPickupsByZipcode();
+                    });
 
-                            data += '&action=monta_shipping_options';
-                            data += '&ship_to_different_address=1';
-                            data += '&shipping_address_1=""';
-                            data += '&shipping_address_2=""';
-                            data += '&shipping_city=""';
-
-                            data += '&shipping_postcode=' + zipcode;
-
-                            $.post(ajax_url, data).done(function (result) {
-                                if (result.success) {
-                                    if (result.pickups !== undefined) {
-                                        monta_shipping.pickups = result.pickups;
-                                        monta_shipping.pickup_default = result.default;
-
-                                        document.getElementById('category-filters').style.visibility = 'hidden';
-                                        let markers = formatMarkers(result.pickups);
-                                        InitializeStoreLocator(markers, result.default.lat, result.default.lng, monta_shipping);
-                                    }
-                                }
-                            });
+                    // Enter in the postal code field searches instead of submitting the checkout form
+                    $(document).off('keydown.montaZipcodeSearch').on('keydown.montaZipcodeSearch', '#montapacking-search-zipcode', function (e) {
+                        if (e.key === 'Enter' || e.keyCode === 13) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            monta_shipping.searchPickupsByZipcode();
                         }
-                    })
+                    });
+                },
+                searchPickupsByZipcode: function () {
+                    const zipcode = ($('#montapacking-search-zipcode').val() || '').trim();
+                    const $message = $('.montapacking-search-zipcode-message');
+                    $message.addClass('monta-hide');
+
+                    if (zipcode.length === 0) {
+                        return;
+                    }
+
+                    // The backend searches by postal code only when this field is present,
+                    // the address fields of the form are left untouched
+                    let data = $('form.checkout').serialize();
+                    data += '&action=monta_shipping_options';
+                    data += '&monta_pickup_search_postcode=' + encodeURIComponent(zipcode);
+
+                    $.post(ajax_url, data).done(function (result) {
+                        if (!result.success || !Array.isArray(result.pickups) || result.pickups.length === 0) {
+                            // Keep the current pickup points instead of emptying the modal
+                            $message.removeClass('monta-hide');
+                            return;
+                        }
+
+                        monta_shipping.pickups = result.pickups;
+                        monta_shipping.pickup_default = result.default;
+
+                        document.getElementById('category-filters').style.visibility = 'hidden';
+                        let markers = formatMarkers(result.pickups);
+                        InitializeStoreLocator(markers, result.default.lat, result.default.lng, monta_shipping);
+                    }).fail(function () {
+                        $message.removeClass('monta-hide');
+                    });
                 },
                 selectPickup: function (location, markerId) {
                     monta_shipping.pickup_selected = location;

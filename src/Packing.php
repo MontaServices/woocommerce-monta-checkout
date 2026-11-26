@@ -646,7 +646,10 @@ class Packing
 
                     if ($items !== null) {
                         // Get order location (lat and long by address)
-                        if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
+                        if (($searchPostcode = self::getPickupSearchPostcode()) !== null) {
+                            // Searching pickup points by postal code only (modal search)
+                            $address = $searchPostcode . ', ' . self::getCustomerCountry();
+                        } else if (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1) {
                             $address = sanitize_text_field($_POST['shipping_address_1']) . ' ' .
                                 sanitize_text_field($_POST['shipping_address_2']) . ' ' .
                                 sanitize_text_field($_POST['shipping_postcode']) . ', ' .
@@ -777,6 +780,32 @@ class Packing
      * @return array|null
      * @throws \Exception
      */
+    /**
+     * Postal code entered in the pickup modal search, or null when this is not a postal code search
+     */
+    protected static function getPickupSearchPostcode(): ?string
+    {
+        if (empty($_POST['monta_pickup_search_postcode'])) {
+            return null;
+        }
+
+        $postcode = trim(sanitize_text_field(wp_unslash($_POST['monta_pickup_search_postcode'])));
+
+        return $postcode !== '' ? $postcode : null;
+    }
+
+    /**
+     * Country of the address the order is shipped to
+     */
+    protected static function getCustomerCountry(): string
+    {
+        $field = (isset($_POST['ship_to_different_address']) && $_POST['ship_to_different_address'] == 1)
+            ? 'shipping_country'
+            : 'billing_country';
+
+        return sanitize_text_field(wp_unslash($_POST[$field] ?? ''));
+    }
+
     public static function get_frames($type = 'delivery')
     {
         /** @var \WooCommerce $woocommerce */
@@ -838,7 +867,19 @@ class Packing
         }
 
         ## Monta packing API aanroepen
-        if (!isset($data->ship_to_different_address)) {
+        if (($searchPostcode = self::getPickupSearchPostcode()) !== null) {
+            ## Search pickup points by postal code only (pickup modal search).
+            ## The API wrapper requires a street or house number, so the postal code is passed as street as well.
+            $api->setAddress(
+                $searchPostcode,
+                '',
+                null,
+                $searchPostcode,
+                '',
+                null,
+                self::getCustomerCountry()
+            );
+        } else if (!isset($data->ship_to_different_address)) {
             ## Set address of customer
             $api->setAddress(
                 $data->billing_address_1,
